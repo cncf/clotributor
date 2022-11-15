@@ -1,0 +1,11 @@
+/target
+**/node_modules
+Chart.lock
+chart/charts
+web/build
+web/src/media
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+.vscode
