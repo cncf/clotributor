@@ -1,0 +1,29 @@
+[package]
+name = "cloradar-registrar"
+description = "Process that registers projects in the CLORadar database"
+version.workspace = true
+license.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+anyhow = { workspace = true }
+async-trait = { workspace = true }
+bincode = { workspace = true }
+clap = { workspace = true }
+config = { workspace = true }
+deadpool-postgres = { workspace = true }
+futures = { workspace = true }
+hex = { workspace = true }
+http = { workspace = true }
+openssl = { workspace = true }
+postgres-openssl = { workspace = true }
+reqwest = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+serde_yaml = { workspace = true }
+sha2 = { workspace = true }
+tokio = { workspace = true }
+tokio-postgres = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }

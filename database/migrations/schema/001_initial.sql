@@ -13,13 +13,13 @@ create table if not exists project (
     name text not null check (name <> ''),
     display_name text check (display_name <> ''),
     description text check (description <> ''),
-    keywords text[],
     logo_url text check (logo_url <> ''),
     devstats_url text check (devstats_url <> ''),
     accepted_at date,
+    maturity maturity not null,
+    digest text,
     created_at timestamptz not null default current_timestamp,
     updated_at timestamptz not null default current_timestamp,
-    maturity maturity not null,
     foundation_id text not null references foundation on delete restrict,
     unique (foundation_id, name)
 );
