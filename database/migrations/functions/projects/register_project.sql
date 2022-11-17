@@ -51,7 +51,9 @@ begin
             v_project_id
         )
         on conflict (project_id, url) do update
-        set name = excluded.name;
+        set
+            name = excluded.name,
+            updated_at = current_timestamp;
     end loop;
 
     -- Delete repositories that are no longer available

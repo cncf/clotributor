@@ -1,0 +1,39 @@
+query RepoView($repo: String!, $owner: String!) {
+    repository(name: $repo, owner: $owner) {
+        stargazerCount
+        repositoryTopics (first: 10) {
+            nodes {
+                topic {
+                    name
+                }
+            }
+        }
+        languages (first: 5, orderBy: {field: SIZE, direction: DESC}) {
+            nodes {
+                name
+            }
+        }
+        issues (
+            first: 50,
+            filterBy: {
+                assignee: null,
+                labels: ["help wanted"],
+                states: [OPEN]
+            },
+            orderBy: {field: CREATED_AT, direction: DESC},
+        ) {
+            nodes {
+                databaseId
+                title
+                url
+                number
+                publishedAt
+                labels (first: 10, orderBy: {field: NAME, direction: ASC}) {
+                    nodes {
+                        name
+                    }
+                }
+            }
+        }
+    }
+}

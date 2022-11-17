@@ -4,7 +4,7 @@ RUN apk --no-cache add git
 RUN go install github.com/jackc/tern@latest
 
 # Build final image
-FROM alpine:3.16.2
+FROM alpine:3.16.3
 RUN addgroup -S cloradar && adduser -S cloradar -G cloradar
 USER cloradar
 WORKDIR /home/cloradar
