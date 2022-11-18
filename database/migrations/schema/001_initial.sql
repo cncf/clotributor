@@ -1,3 +1,7 @@
+do $$ begin execute
+'alter database ' || current_database() || ' set default_text_search_config = simple';
+end; $$;
+
 create extension if not exists pgcrypto;
 
 create table if not exists foundation (
