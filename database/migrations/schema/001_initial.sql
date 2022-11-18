@@ -29,6 +29,7 @@ create index project_foundation_id_idx on project (foundation_id);
 create table if not exists repository (
     repository_id uuid primary key default gen_random_uuid(),
     name text not null check (name <> ''),
+    description text,
     url text not null check (url <> ''),
     topics text[],
     languages text[],

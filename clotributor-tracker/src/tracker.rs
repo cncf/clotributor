@@ -22,6 +22,7 @@ const REPOSITORY_TRACK_TIMEOUT: u64 = 300;
 pub(crate) struct Repository {
     pub repository_id: Uuid,
     pub name: String,
+    pub description: Option<String>,
     pub url: String,
     pub topics: Option<Vec<String>>,
     pub languages: Option<Vec<String>>,
@@ -33,6 +34,9 @@ pub(crate) struct Repository {
 impl Repository {
     /// Update repository's GitHub data.
     fn update_gh_data(&mut self, gh_repo: &repo_view::RepoViewRepository) -> Result<bool> {
+        // Description
+        self.description = gh_repo.description.clone();
+
         // Topics
         self.topics = gh_repo.repository_topics.nodes.as_ref().map(|nodes| {
             nodes
@@ -64,7 +68,12 @@ impl Repository {
 
     /// Update repository's digest.
     fn update_digest(&mut self) -> Result<()> {
-        let data = bincode::serialize(&(&self.topics, &self.languages, &self.stars))?;
+        let data = bincode::serialize(&(
+            &self.description,
+            &self.topics,
+            &self.languages,
+            &self.stars,
+        ))?;
         let digest = hex::encode(Sha256::digest(data));
         self.digest = Some(digest);
         Ok(())
@@ -99,13 +108,20 @@ impl Issue {
         let weight_a = format!("{} {}", &repo.project_name, &repo.name);
 
         // Weight B
-        let mut weight_b = String::new();
-        if let Some(topics) = &repo.topics {
-            weight_b.push_str(topics.join(" ").as_str());
-        }
-        if let Some(languages) = &repo.languages {
-            weight_b.push_str(languages.join(" ").as_str());
-        }
+        let weight_b = format!(
+            "{} {} {}",
+            &repo.description.clone().unwrap_or_default(),
+            &repo
+                .topics
+                .as_ref()
+                .map(|topics| topics.join(" "))
+                .unwrap_or_default(),
+            &repo
+                .languages
+                .as_ref()
+                .map(|languages| languages.join(" "))
+                .unwrap_or_default()
+        );
 
         // Weight C
         let weight_c = format!("{} {}", self.title, self.labels.join(" "));

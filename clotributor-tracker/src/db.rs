@@ -57,6 +57,7 @@ impl DB for PgDB {
                 select
                     r.repository_id,
                     r.name,
+                    r.description,
                     r.url,
                     r.topics,
                     r.languages,
@@ -76,6 +77,7 @@ impl DB for PgDB {
             .map(|row| Repository {
                 repository_id: row.get("repository_id"),
                 name: row.get("name"),
+                description: row.get("description"),
                 url: row.get("url"),
                 topics: row.get("topics"),
                 languages: row.get("languages"),
@@ -179,15 +181,17 @@ impl DB for PgDB {
         db.execute(
             "
             update repository set
-                topics = $2,
-                languages = $3,
-                stars = $4,
-                digest = $5,
+                description = $2,
+                topics = $3,
+                languages = $4,
+                stars = $5,
+                digest = $6,
                 updated_at = current_timestamp
             where repository_id = $1;
             ",
             &[
                 &repository.repository_id,
+                &repository.description,
                 &repository.topics,
                 &repository.languages,
                 &repository.stars,

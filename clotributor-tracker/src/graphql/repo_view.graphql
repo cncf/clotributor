@@ -1,5 +1,6 @@
 query RepoView($repo: String!, $owner: String!) {
     repository(name: $repo, owner: $owner) {
+        description
         stargazerCount
         repositoryTopics (first: 10) {
             nodes {
