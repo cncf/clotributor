@@ -21,11 +21,13 @@ const REPOSITORY_TRACK_TIMEOUT: u64 = 300;
 #[derive(Debug, Clone)]
 pub(crate) struct Repository {
     pub repository_id: Uuid,
+    pub name: String,
     pub url: String,
     pub topics: Option<Vec<String>>,
     pub languages: Option<Vec<String>>,
     pub stars: Option<i32>,
     pub digest: Option<String>,
+    pub project_name: String,
 }
 
 impl Repository {
@@ -90,6 +92,37 @@ impl Issue {
         let digest = hex::encode(Sha256::digest(data));
         self.digest = Some(digest);
     }
+
+    /// Prepare texts for text search document.
+    fn prepare_ts_texts(&self, repo: &Repository) -> IssueTsTexts {
+        // Weight A
+        let weight_a = format!("{} {}", &repo.project_name, &repo.name);
+
+        // Weight B
+        let mut weight_b = String::new();
+        if let Some(topics) = &repo.topics {
+            weight_b.push_str(topics.join(" ").as_str());
+        }
+        if let Some(languages) = &repo.languages {
+            weight_b.push_str(languages.join(" ").as_str());
+        }
+
+        // Weight C
+        let weight_c = format!("{} {}", self.title, self.labels.join(" "));
+
+        IssueTsTexts {
+            weight_a,
+            weight_b,
+            weight_c,
+        }
+    }
+}
+
+/// Texts used to build the issue's text search document.
+pub(crate) struct IssueTsTexts {
+    pub weight_a: String,
+    pub weight_b: String,
+    pub weight_c: String,
 }
 
 /// Track repositories that need to be tracked.
@@ -179,7 +212,6 @@ async fn track_repository(
 
     // Fetch repository data from GitHub
     let gh_repo = gh.repository(&gh_token, &repo.url).await?;
-    // println!("{:?}", gh_repo);
 
     // Update repository's GitHub data in db if needed
     let changed = repo.update_gh_data(&gh_repo)?;
@@ -196,7 +228,9 @@ async fn track_repository(
     for issue in &issues_in_gh {
         let digest = find_issue(issue.issue_id, &issues_in_db);
         if digest.is_none() || digest != issue.digest {
-            db.register_issue(repo.repository_id, issue).await?;
+            let issue_ts_texts = issue.prepare_ts_texts(&repo);
+            db.register_issue(repo.repository_id, issue, &issue_ts_texts)
+                .await?;
             debug!("registering issue #{}", issue.number);
         }
     }

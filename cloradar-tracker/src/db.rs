@@ -1,4 +1,4 @@
-use crate::tracker::{Issue, Repository};
+use crate::tracker::{Issue, IssueTsTexts, Repository};
 use anyhow::Result;
 use async_trait::async_trait;
 use deadpool_postgres::Pool;
@@ -18,7 +18,12 @@ pub(crate) trait DB {
     async fn get_repository_issues(&self, repository_id: Uuid) -> Result<Vec<Issue>>;
 
     /// Register issue provided in the database.
-    async fn register_issue(&self, repository_id: Uuid, issue: &Issue) -> Result<()>;
+    async fn register_issue(
+        &self,
+        repository_id: Uuid,
+        issue: &Issue,
+        ts: &IssueTsTexts,
+    ) -> Result<()>;
 
     /// Unregister issue provided from the database.
     async fn unregister_issue(&self, issue_id: i64) -> Result<()>;
@@ -50,16 +55,19 @@ impl DB for PgDB {
             .query(
                 "
                 select
-                    repository_id,
-                    url,
-                    topics,
-                    languages,
-                    stars,
-                    digest
-                from repository
-                where tracked_at is null
-                or tracked_at < current_timestamp - '1 hour'::interval
-                order by url asc;
+                    r.repository_id,
+                    r.name,
+                    r.url,
+                    r.topics,
+                    r.languages,
+                    r.stars,
+                    r.digest,
+                    p.name as project_name
+                from repository r
+                join project p using (project_id)
+                where r.tracked_at is null
+                or r.tracked_at < current_timestamp - '1 hour'::interval
+                order by r.url asc;
                 ",
                 &[],
             )
@@ -67,11 +75,13 @@ impl DB for PgDB {
             .iter()
             .map(|row| Repository {
                 repository_id: row.get("repository_id"),
+                name: row.get("name"),
                 url: row.get("url"),
                 topics: row.get("topics"),
                 languages: row.get("languages"),
                 stars: row.get("stars"),
                 digest: row.get("digest"),
+                project_name: row.get("project_name"),
             })
             .collect();
         Ok(repositories)
@@ -110,7 +120,12 @@ impl DB for PgDB {
         Ok(issues_ids)
     }
 
-    async fn register_issue(&self, repository_id: Uuid, issue: &Issue) -> Result<()> {
+    async fn register_issue(
+        &self,
+        repository_id: Uuid,
+        issue: &Issue,
+        ts_texts: &IssueTsTexts,
+    ) -> Result<()> {
         let db = self.pool.get().await?;
         db.execute(
             "
@@ -122,9 +137,13 @@ impl DB for PgDB {
                 labels,
                 digest,
                 published_at,
-                repository_id
+                repository_id,
+                tsdoc
             ) values (
-                $1, $2, $3, $4, $5, $6, $7, $8
+                $1, $2, $3, $4, $5, $6, $7, $8,
+                setweight(to_tsvector($9), 'A') ||
+                setweight(to_tsvector($10), 'B') ||
+                setweight(to_tsvector($11), 'C')
             ) on conflict (issue_id) do update
             set
                 title = excluded.title,
@@ -139,6 +158,9 @@ impl DB for PgDB {
                 &issue.digest,
                 &issue.published_at,
                 &repository_id,
+                &ts_texts.weight_a,
+                &ts_texts.weight_b,
+                &ts_texts.weight_c,
             ],
         )
         .await?;

@@ -50,12 +50,12 @@ create table if not exists issue (
     number integer not null,
     labels text[] not null,
     digest text,
-    -- tsdoc tsvector not null,
+    tsdoc tsvector not null,
     published_at timestamptz not null default current_timestamp,
     created_at timestamptz not null default current_timestamp,
     updated_at timestamptz not null default current_timestamp,
     repository_id uuid not null references repository on delete cascade
 );
 
--- create index issue_tsdoc_idx on issue using gin (tsdoc);
+create index issue_tsdoc_idx on issue using gin (tsdoc);
 create index issue_repository_id_idx on issue (repository_id);
