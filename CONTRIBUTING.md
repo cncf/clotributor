@@ -1,10 +1,10 @@
 # Contributing Guide
 
-The CLORadar project accepts contributions via [GitHub pull requests](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests). This document outlines the process to help get your contribution accepted.
+The CLOTributor project accepts contributions via [GitHub pull requests](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests). This document outlines the process to help get your contribution accepted.
 
 ## Issues and discussions
 
-Feature requests, bug reports, and support requests all occur through GitHub issues and discussions. If you would like to file an issue, view existing issues, or comment on an issue please engage with issues at <https://github.com/cncf/cloradar/issues>. You can create new discussions, view existing ones and comment on them at <https://github.com/cncf/cloradar/discussions>.
+Feature requests, bug reports, and support requests all occur through GitHub issues and discussions. If you would like to file an issue, view existing issues, or comment on an issue please engage with issues at <https://github.com/cncf/clotributor/issues>. You can create new discussions, view existing ones and comment on them at <https://github.com/cncf/clotributor/discussions>.
 
 ## Pull Requests
 
@@ -12,11 +12,11 @@ All changes to the source code and documentation are made through [GitHub pull r
 
 If you are unsure if the change will be welcome you may want to file an issue first. The issue can detail the change and you can get feedback from the maintainers prior to starting to make the change.
 
-You can find the existing pull requests at <https://github.com/cncf/cloradar/pulls>.
+You can find the existing pull requests at <https://github.com/cncf/clotributor/pulls>.
 
 ## Developer Certificate of Origin
 
-The CLORadar project uses a [Developers Certificate of Origin (DCO)](https://developercertificate.org/) to sign-off that you have the right to contribute the code being contributed. The full text of the DCO reads:
+The CLOTributor project uses a [Developers Certificate of Origin (DCO)](https://developercertificate.org/) to sign-off that you have the right to contribute the code being contributed. The full text of the DCO reads:
 
 ```text
 Developer Certificate of Origin

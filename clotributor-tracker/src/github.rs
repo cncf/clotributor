@@ -149,7 +149,7 @@ impl GH for GHGraphQL {
 // Setup a new authenticated http client to interact with the GitHub API.
 pub(crate) fn setup_http_client(github_token: &str) -> Result<reqwest::Client, reqwest::Error> {
     reqwest::Client::builder()
-        .user_agent("cloradar")
+        .user_agent("clotributor")
         .default_headers(
             std::iter::once((
                 reqwest::header::AUTHORIZATION,

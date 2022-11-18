@@ -5,8 +5,8 @@ RUN go install github.com/jackc/tern@latest
 
 # Build final image
 FROM alpine:3.16.3
-RUN addgroup -S cloradar && adduser -S cloradar -G cloradar
-USER cloradar
-WORKDIR /home/cloradar
+RUN addgroup -S clotributor && adduser -S clotributor -G clotributor
+USER clotributor
+WORKDIR /home/clotributor
 COPY --from=tern /go/bin/tern /usr/local/bin
 COPY database/migrations .

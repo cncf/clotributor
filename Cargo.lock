@@ -160,11 +160,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "cloradar-apiserver"
+name = "clotributor-apiserver"
 version = "0.1.0"
 
 [[package]]
-name = "cloradar-registrar"
+name = "clotributor-registrar"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -190,7 +190,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "cloradar-tracker"
+name = "clotributor-tracker"
 version = "0.1.0"
 dependencies = [
  "anyhow",

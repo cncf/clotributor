@@ -1,6 +1,6 @@
 [package]
-name = "cloradar-apiserver"
-description = "Server that exposes the CLORadar HTTP API and serves static assets"
+name = "clotributor-apiserver"
+description = "Server that exposes the CLOTributor HTTP API and serves static assets"
 version.workspace = true
 license.workspace = true
 edition.workspace = true

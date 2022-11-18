@@ -1,5 +1,5 @@
 [workspace]
-members = ["cloradar-apiserver", "cloradar-registrar", "cloradar-tracker"]
+members = ["clotributor-apiserver", "clotributor-registrar", "clotributor-tracker"]
 
 [workspace.package]
 version = "0.1.0"
