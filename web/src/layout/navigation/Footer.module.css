@@ -1,0 +1,18 @@
+.logo {
+  height: 30px;
+}
+
+.miniIcon {
+  font-size: 0.75rem;
+}
+
+.footerCol {
+  padding-right: 5rem;
+}
+
+@media only screen and (max-width: 991.98px) {
+  .footerCol {
+    padding: 0 1rem;
+    padding-bottom: 1.5rem;
+  }
+}

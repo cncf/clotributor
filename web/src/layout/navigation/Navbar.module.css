@@ -1,0 +1,49 @@
+.navInHome {
+  min-height: 81px;
+}
+
+.logo {
+  height: 25px;
+}
+
+.link {
+  letter-spacing: 2px;
+}
+
+.alpha {
+  background-color: var(--color-white-25);
+  top: -8px;
+  font-size: 0.6rem;
+}
+
+@media (hover: hover) {
+  .link:hover::before {
+    content: '';
+    position: absolute;
+    top: -28px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: var(--bs-white);
+    opacity: 0.5;
+  }
+}
+
+@media only screen and (max-width: 575.98px) {
+  .searchWrapper {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 767.98px) {
+  .line {
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  :global(.noScroll-modal) .navbar,
+  :global(.noScroll-sidebar) .navbar {
+    min-height: 81px;
+  }
+}

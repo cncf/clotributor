@@ -1,0 +1,153 @@
+:root {
+  --project-info: 340px;
+}
+
+.projectWrapper {
+  background-color: var(--bg-color);
+  padding: 0.9rem 1rem;
+  min-width: var(--project-info);
+  width: var(--project-info);
+}
+
+.imageWrapper {
+  height: 75px;
+  width: 75px;
+  min-width: 75px;
+  font-size: 3rem;
+}
+
+.miniImageWrapper {
+  height: 40px;
+  width: 40px;
+  min-width: 40px;
+  font-size: 2rem;
+}
+
+.imageWrapper img,
+.miniImageWrapper img {
+  max-height: 100%;
+  max-width: 100%;
+}
+
+.projectInfo {
+  width: calc(100% - 28px);
+}
+
+.title {
+  font-size: 1.3rem;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 0.8rem;
+}
+
+.statsIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.calendarIcon {
+  width: 18px;
+  height: 18px;
+}
+
+.issueContent {
+  width: calc(100% - var(--project-info));
+}
+
+.repoName {
+  top: 1px;
+}
+
+.star {
+  font-size: 0.85rem;
+}
+
+.legend {
+  font-size: 0.75rem;
+}
+
+.statsIcon path {
+  stroke: inherit;
+}
+
+.issueDesc {
+  color: var(--color-font);
+  font-size: 1.25rem;
+}
+
+.repoInfo {
+  opacity: 75%;
+}
+
+.tooltipMessage {
+  margin-left: 10px;
+}
+
+.moreInfo {
+  font-size: 0.9rem;
+}
+
+.cardWrapper {
+  padding: 0.75rem 0;
+}
+
+.topicsWrapper {
+  max-height: 25px;
+}
+
+.languagesWrapper {
+  max-height: 22px;
+}
+
+.badge {
+  margin: 1px 0;
+}
+
+.badgeLanguage {
+  background-color: var(--clo-secondary-5);
+  border-color: var(--clo-secondary-5) !important;
+}
+
+@media only screen and (max-width: 575.98px) {
+  .description {
+    -webkit-line-clamp: 4;
+    max-height: 86px;
+    height: auto;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .issueDesc {
+    font-size: 1rem;
+  }
+
+  .repoInfo {
+    font-size: 0.85rem;
+  }
+
+  .repoLink,
+  .star {
+    font-size: 0.75rem;
+  }
+}
+
+@media only screen and (max-width: 1199.98px) {
+  .title {
+    font-size: 1.15rem;
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+  .cardWrapper {
+    padding: 1.3rem 0;
+  }
+
+  .link,
+  .subtitle {
+    font-size: 0.9rem;
+  }
+}

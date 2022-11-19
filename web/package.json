@@ -1,0 +1,65 @@
+{
+  "name": "clotributor",
+  "version": "0.0.1",
+  "description": "CLOTributor makes it easier to discover great opportunities to become a Cloud Native contributor.",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "classnames": "^2.3.2",
+    "clo-ui": "file:./clo-ui",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.6.0",
+    "react-router-dom": "^6.4.3",
+    "source-map-explorer": "^2.5.3",
+    "tinycolor2": "^1.4.2"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^13.0.0",
+    "@testing-library/user-event": "^13.2.1",
+    "@types/jest": "^27.0.1",
+    "@types/lodash": "^4.14.187",
+    "@types/node": "^16.7.13",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-simple-import-sort": "^8.0.0",
+    "postcss": "^8.2.13",
+    "prettier": "^2.7.1",
+    "react-scripts": "5.0.1",
+    "sass": "^1.55.0",
+    "shx": "^0.3.4",
+    "typescript": "^4.4.2"
+  },
+  "scripts": {
+    "copy:static": "shx rm -rf src/static && shx mkdir src/static && shx cp -r public/static/* src",
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "start": "yarn copy:static && react-scripts start",
+    "build": "yarn copy:static && INLINE_RUNTIME_CHUNK=false IMAGE_INLINE_SIZE_LIMIT=0 react-scripts build && shx cp -r build/static/* build && shx rm -rf build/static",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx src --fix"
+  },
+  "proxy": "http://localhost:8000",
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

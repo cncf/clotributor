@@ -1,0 +1,42 @@
+.banner {
+  background-color: var(--clo-secondary-15);
+}
+
+.tipText {
+  font-size: 90%;
+  font-weight: 300;
+}
+
+.midFont {
+  font-size: calc(1.375rem + 1.5vw);
+}
+
+.bigFont {
+  font-size: 3.5rem;
+}
+
+.legend {
+  max-width: 1000px;
+  font-size: 1.25rem;
+  line-height: 2;
+}
+
+.link {
+  font-size: inherit;
+  vertical-align: baseline;
+}
+
+@media only screen and (max-width: 991.98px) {
+  .midFont {
+    font-size: 1.25rem;
+  }
+
+  .bigFont {
+    font-size: 1.75rem;
+  }
+
+  .legend {
+    font-size: 0.95rem;
+    line-height: 1.25rem;
+  }
+}

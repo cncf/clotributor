@@ -1,0 +1,6 @@
+@media (hover: hover) {
+  .hoverable:hover {
+    border-color: var(--clo-primary);
+    box-shadow: 0px 0px 5px 0px var(--clo-primary-50);
+  }
+}
