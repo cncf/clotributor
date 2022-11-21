@@ -1,0 +1,20 @@
+apiVersion: v2
+name: clotributor
+description: Discover great opportunities to become a Cloud Native contributors
+type: application
+version: 0.1.0
+appVersion: 0.1.0
+kubeVersion: ">= 1.19.0-0"
+keywords:
+  - cncf
+  - contributor
+maintainers:
+  - name: Sergio
+    email: tegioz@icloud.com
+  - name: Cintia
+    email: cynthiasg@icloud.com
+dependencies:
+  - name: postgresql
+    version: 8.2.1
+    repository: https://charts.helm.sh/stable
+    condition: postgresql.enabled

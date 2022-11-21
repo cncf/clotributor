@@ -1,0 +1,101 @@
+# CLOTributor chart default configuration values
+
+imagePullSecrets: []
+imageTag: ""
+nameOverride: ""
+pullPolicy: IfNotPresent
+
+# Enable dynamic resource name prefix
+#
+# Enabling the dynamic resource name prefix ensures that the resources are named dynamically based on the Helm
+# installation's name. This allows multiple installations of this chart in a single Kubernetes namespace. The prefix
+# can be defined by using the `fullnameOverride`.
+dynamicResourceNamePrefixEnabled: false
+
+# Overwrites the installation's fullname generation (used for the dynamic resource name prefix)
+fullnameOverride: ""
+
+# Directory path where the configuration files should be mounted
+configDir: "/home/clotributor/.config/clotributor"
+
+# Database configuration
+db:
+  host: ""
+  port: "5432"
+  dbname: clotributor
+  user: postgres
+  password: postgres
+
+# Credentials
+creds:
+  githubTokens: []
+
+# Log configuration
+log:
+  # Output format [json|pretty]
+  format: json
+
+# Database migrator configuration
+dbmigrator:
+  job:
+    image:
+      # Database migrator image repository (without the tag)
+      repository: clotributor/dbmigrator
+
+# API server configuration
+apiserver:
+  # Address to listen on
+  addr: 0.0.0.0:8000
+  # Path with static assets
+  staticPath: /home/clotributor/web/build
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    rules: []
+    tls: []
+  service:
+    type: NodePort
+    port: 80
+  deploy:
+    replicaCount: 1
+    image:
+      # API server image repository (without the tag)
+      repository: clotributor/apiserver
+    resources: {}
+
+# Registrar configuration
+registrar:
+  cronjob:
+    image:
+      # Registrar image repository (without the tag)
+      repository: clotributor/registrar
+    resources: {}
+  # Number of foundations to process concurrently
+  concurrency: 1
+
+# Tracker configuration
+tracker:
+  cronjob:
+    image:
+      # Tracker image repository (without the tag)
+      repository: clotributor/tracker
+    resources: {}
+  # Number of repositories to process concurrently
+  # The number of tokens defined in creds.githubTokens must be equal or greater
+  # than the concurrency value, otherwise the concurrency will be limited to
+  # the number of tokens available.
+  concurrency: 10
+
+# Values for postgresql chart dependency
+postgresql:
+  enabled: true
+  image:
+    repository: artifacthub/postgres
+    tag: latest
+  persistence:
+    mountPath: /data
+  postgresqlUsername: postgres
+  postgresqlPassword: postgres
+  postgresqlDatabase: clotributor
+  postgresqlDataDir: /data/pgdata
