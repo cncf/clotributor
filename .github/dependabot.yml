@@ -1,0 +1,44 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/web"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+    ignore:
+      - dependency-name: "bootstrap"
+        versions: ["5.2.x"]
+      - dependency-name: "postcss"
+  - package-ecosystem: "cargo"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+  - package-ecosystem: "docker"
+    directory: "/clotributor-apiserver"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+    ignore:
+      - dependency-name: "node"
+        versions: ["18-alpine3.16", "19-alpine3.16"]
+  - package-ecosystem: "docker"
+    directory: "/clotributor-registrar"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+  - package-ecosystem: "docker"
+    directory: "/clotributor-tracker"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+  - package-ecosystem: "docker"
+    directory: "/database/migrations"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
