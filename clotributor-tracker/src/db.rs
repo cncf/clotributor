@@ -149,7 +149,8 @@ impl DB for PgDB {
             ) on conflict (issue_id) do update
             set
                 title = excluded.title,
-                labels = excluded.labels;
+                labels = excluded.labels,
+                digest = excluded.digest;
             ",
             &[
                 &issue.issue_id,

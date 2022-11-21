@@ -242,8 +242,8 @@ async fn track_repository(
 
     // Register/update new or outdated issues
     for issue in &issues_in_gh {
-        let digest = find_issue(issue.issue_id, &issues_in_db);
-        if digest.is_none() || digest != issue.digest {
+        let digest_in_db = find_issue(issue.issue_id, &issues_in_db);
+        if issue.digest != digest_in_db {
             let issue_ts_texts = issue.prepare_ts_texts(&repo);
             db.register_issue(repo.repository_id, issue, &issue_ts_texts)
                 .await?;
