@@ -105,11 +105,12 @@ impl Issue {
     /// Prepare texts for text search document.
     fn prepare_ts_texts(&self, repo: &Repository) -> IssueTsTexts {
         // Weight A
-        let weight_a = format!("{} {}", &repo.project_name, &repo.name);
+        let weight_a = repo.project_name.clone();
 
         // Weight B
         let weight_b = format!(
-            "{} {} {}",
+            "{} {} {} {}",
+            &repo.name,
             &repo.description.clone().unwrap_or_default(),
             &repo
                 .topics
