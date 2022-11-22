@@ -1,19 +1,7 @@
 query RepoView($repo: String!, $owner: String!) {
     repository(name: $repo, owner: $owner) {
         description
-        stargazerCount
-        repositoryTopics (first: 10) {
-            nodes {
-                topic {
-                    name
-                }
-            }
-        }
-        languages (first: 5, orderBy: {field: SIZE, direction: DESC}) {
-            nodes {
-                name
-            }
-        }
+        homepageUrl
         issues (
             first: 50,
             filterBy: {
@@ -36,5 +24,18 @@ query RepoView($repo: String!, $owner: String!) {
                 }
             }
         }
+        languages (first: 5, orderBy: {field: SIZE, direction: DESC}) {
+            nodes {
+                name
+            }
+        }
+        repositoryTopics (first: 10) {
+            nodes {
+                topic {
+                    name
+                }
+            }
+        }
+        stargazerCount
     }
 }

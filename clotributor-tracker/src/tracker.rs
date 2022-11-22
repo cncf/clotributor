@@ -24,6 +24,7 @@ pub(crate) struct Repository {
     pub name: String,
     pub description: Option<String>,
     pub url: String,
+    pub homepage_url: Option<String>,
     pub topics: Option<Vec<String>>,
     pub languages: Option<Vec<String>>,
     pub stars: Option<i32>,
@@ -37,14 +38,8 @@ impl Repository {
         // Description
         self.description = gh_repo.description.clone();
 
-        // Topics
-        self.topics = gh_repo.repository_topics.nodes.as_ref().map(|nodes| {
-            nodes
-                .iter()
-                .flatten()
-                .map(|node| node.topic.name.clone())
-                .collect()
-        });
+        // Homepage url
+        self.homepage_url = gh_repo.homepage_url.clone();
 
         // Languages
         self.languages = gh_repo.languages.as_ref().and_then(|languages| {
@@ -60,6 +55,15 @@ impl Repository {
         // Stars
         self.stars = Some(gh_repo.stargazer_count as i32);
 
+        // Topics
+        self.topics = gh_repo.repository_topics.nodes.as_ref().map(|nodes| {
+            nodes
+                .iter()
+                .flatten()
+                .map(|node| node.topic.name.clone())
+                .collect()
+        });
+
         // Digest
         let prev_digest = self.digest.clone();
         self.update_digest()?;
@@ -70,8 +74,9 @@ impl Repository {
     fn update_digest(&mut self) -> Result<()> {
         let data = bincode::serialize(&(
             &self.description,
-            &self.topics,
+            &self.homepage_url,
             &self.languages,
+            &self.topics,
             &self.stars,
         ))?;
         let digest = hex::encode(Sha256::digest(data));

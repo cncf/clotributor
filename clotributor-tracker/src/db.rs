@@ -59,6 +59,7 @@ impl DB for PgDB {
                     r.name,
                     r.description,
                     r.url,
+                    r.homepage_url,
                     r.topics,
                     r.languages,
                     r.stars,
@@ -79,6 +80,7 @@ impl DB for PgDB {
                 name: row.get("name"),
                 description: row.get("description"),
                 url: row.get("url"),
+                homepage_url: row.get("homepage_url"),
                 topics: row.get("topics"),
                 languages: row.get("languages"),
                 stars: row.get("stars"),
@@ -183,19 +185,21 @@ impl DB for PgDB {
             "
             update repository set
                 description = $2,
-                topics = $3,
+                homepage_url = $3,
                 languages = $4,
                 stars = $5,
-                digest = $6,
+                topics = $6,
+                digest = $7,
                 updated_at = current_timestamp
             where repository_id = $1;
             ",
             &[
                 &repository.repository_id,
                 &repository.description,
-                &repository.topics,
+                &repository.homepage_url,
                 &repository.languages,
                 &repository.stars,
+                &repository.topics,
                 &repository.digest,
             ],
         )

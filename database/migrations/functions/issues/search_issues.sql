@@ -44,6 +44,7 @@ begin
             i.published_at as issue_published_at,
             r.name as repository_name,
             r.url as repository_url,
+            r.homepage_url as repository_homepage_url,
             r.topics as repository_topics,
             r.languages as repository_languages,
             r.stars as repository_stars,
@@ -82,6 +83,7 @@ begin
                 'repository', json_build_object(
                     'name', repository_name,
                     'url', repository_url,
+                    'homepage_url', repository_homepage_url,
                     'topics', repository_topics,
                     'languages', repository_languages,
                     'stars', repository_stars
