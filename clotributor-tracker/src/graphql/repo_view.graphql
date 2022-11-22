@@ -1,4 +1,4 @@
-query RepoView($repo: String!, $owner: String!) {
+query RepoView($repo: String!, $owner: String!, $issues_since: DateTime!) {
     repository(name: $repo, owner: $owner) {
         description
         homepageUrl
@@ -7,6 +7,7 @@ query RepoView($repo: String!, $owner: String!) {
             filterBy: {
                 assignee: null,
                 labels: ["help wanted"],
+                since: $issues_since,
                 states: [OPEN]
             },
             orderBy: {field: CREATED_AT, direction: DESC},
