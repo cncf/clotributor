@@ -49,6 +49,8 @@ begin
             r.stars as repository_stars,
             p.name as project_name,
             p.logo_url as project_logo_url,
+            p.devstats_url as project_devstats_url,
+            p.accepted_at as project_accepted_at,
             p.maturity as project_maturity,
             p.foundation_id as project_foundation,
             (
@@ -87,6 +89,8 @@ begin
                 'project', json_build_object(
                     'name', project_name,
                     'logo_url', project_logo_url,
+                    'devstats_url', project_devstats_url,
+                    'accepted_at', project_accepted_at,
                     'maturity', project_maturity,
                     'foundation', project_foundation
                 ),
