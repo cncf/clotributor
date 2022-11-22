@@ -41,6 +41,7 @@ begin
             i.number as issue_number,
             i.title as issue_title,
             i.url as issue_url,
+            i.labels as issue_labels,
             i.published_at as issue_published_at,
             r.name as repository_name,
             r.url as repository_url,
@@ -49,6 +50,7 @@ begin
             r.languages as repository_languages,
             r.stars as repository_stars,
             p.name as project_name,
+            p.display_name as project_display_name,
             p.logo_url as project_logo_url,
             p.devstats_url as project_devstats_url,
             p.accepted_at as project_accepted_at,
@@ -79,6 +81,7 @@ begin
                 'number', issue_number,
                 'title', issue_title,
                 'url', issue_url,
+                'labels', issue_labels,
                 'published_at', floor(extract(epoch from issue_published_at)),
                 'repository', json_build_object(
                     'name', repository_name,
@@ -90,6 +93,7 @@ begin
                 ),
                 'project', json_build_object(
                     'name', project_name,
+                    'display_name', project_display_name,
                     'logo_url', project_logo_url,
                     'devstats_url', project_devstats_url,
                     'accepted_at', project_accepted_at,
