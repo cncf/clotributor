@@ -5,7 +5,11 @@ use lazy_static::lazy_static;
 use regex::Regex;
 use reqwest::StatusCode;
 use std::sync::Arc;
-use time::{format_description::well_known::Rfc3339, OffsetDateTime};
+use time::{
+    ext::NumericalDuration,
+    format_description::well_known::{Iso8601, Rfc3339},
+    OffsetDateTime,
+};
 
 use crate::tracker::Issue;
 
@@ -117,7 +121,14 @@ impl GH for GHGraphQL {
         // Do request to GraphQL API
         let http_client = setup_http_client(token)?;
         let (owner, repo) = get_owner_and_repo(url)?;
-        let vars = repo_view::Variables { owner, repo };
+        let issues_since = OffsetDateTime::now_utc()
+            .saturating_sub(365.days())
+            .format(&Iso8601::DEFAULT)?;
+        let vars = repo_view::Variables {
+            owner,
+            repo,
+            issues_since,
+        };
         let req_body = &RepoView::build_query(vars);
         let resp = http_client
             .post(GITHUB_GRAPHQL_API_URL)

@@ -25,6 +25,7 @@ To achieve this, **CLOTributor** scans periodically hundreds of repositories, in
 - Contain the `help wanted` label
 - Their state is `OPEN`
 - They are `unassigned`
+- Updated within the last year
 
 In addition to some issue's details, like the *title* or *labels*, we also collect and index some metadata from the corresponding repository, like its *topics* or the *programming languages* used. We are also working on trying to normalize some labels we've observed across issues on different repositories to make it easier to categorize and filter them.
 
