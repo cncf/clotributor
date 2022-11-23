@@ -8,6 +8,10 @@
   border: 1px solid transparent;
 }
 
+.reset {
+  padding-left: 0.35rem;
+}
+
 .content {
   padding: 0.1rem 0;
 }

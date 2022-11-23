@@ -43,6 +43,11 @@ label {
   margin-right: 1.5rem;
 }
 
+.btnMobileFilters {
+  height: 2rem;
+  width: 2rem;
+}
+
 .list {
   margin-top: 1.3rem;
 }
@@ -63,11 +68,6 @@ label {
     width: calc(100% - 250px - 1.3rem);
     max-width: calc(100% - 250px - 1.3rem);
   }
-
-  .list {
-    /* padding-left: 1.3rem; */
-    margin-top: 1.3rem;
-  }
 }
 
 @media only screen and (max-width: 991.98px) {
@@ -77,6 +77,10 @@ label {
 
   .loadingWithFilters {
     top: 167px !important;
+  }
+
+  .list {
+    margin-top: 1rem;
   }
 }
 

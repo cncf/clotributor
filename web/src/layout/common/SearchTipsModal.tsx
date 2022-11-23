@@ -39,7 +39,8 @@ const SearchTipsModal = (props: Props) => {
         <ul className={`mb-0 ${styles.list}`}>
           {SEARCH_TIPS.map((tip: SearchTipItem, index: number) => (
             <li className="my-1" key={`searchBarTip_${index}`}>
-              {tip.content} <small className="text-muted">Example:</small>{' '}
+              {tip.content} <br className="d-inline-block d-lg-none" />
+              <small className="text-muted">Example:</small>{' '}
               <Link
                 className="fw-bold text-dark p-0"
                 onClick={() => props.setOpenTips(false)}

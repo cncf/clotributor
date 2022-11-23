@@ -1,11 +1,11 @@
 import { isNull } from 'lodash';
 import React, { ChangeEvent, useRef } from 'react';
 
-import styles from './SortOptions.module.css';
-
 export interface ISortOptionsProps {
+  width: number;
   options: any[];
   by: string;
+  className?: string;
   onSortChange: (by: string) => void;
 }
 
@@ -24,11 +24,12 @@ export const SortOptions: React.FC<ISortOptionsProps> = (props: ISortOptionsProp
   };
 
   return (
-    <div className="d-flex flex-nowrap align-items-center me-2 me-md-4">
+    <div className={`d-flex flex-nowrap align-items-center me-2 me-md-4 ${props.className}`}>
       <label className="form-label me-2 mb-0">Sort:</label>
       <select
         ref={selectEl}
-        className={`form-select form-select-sm rounded-0 cursorPointer ${styles.select}`}
+        className="form-select form-select-sm rounded-0 cursorPointer"
+        style={{ width: `${props.width}px` }}
         value={props.by}
         onChange={handleChange}
         aria-label="Sort options select"

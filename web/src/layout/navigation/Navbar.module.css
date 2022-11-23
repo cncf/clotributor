@@ -33,12 +33,6 @@
   }
 }
 
-@media only screen and (max-width: 575.98px) {
-  .searchWrapper {
-    width: 100%;
-  }
-}
-
 @media only screen and (max-width: 767.98px) {
   .line {
     width: 100%;
@@ -49,5 +43,11 @@
   :global(.noScroll-modal) .navbar,
   :global(.noScroll-sidebar) .navbar {
     min-height: 81px;
+  }
+}
+
+@media only screen and (max-width: 575.98px) {
+  .navInHome {
+    min-height: 56px;
   }
 }

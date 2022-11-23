@@ -1,5 +1,6 @@
 :root {
   --project-info: 340px;
+  --mini-project-info: 240px;
 }
 
 .projectWrapper {
@@ -7,6 +8,11 @@
   padding: 0.9rem 1rem;
   min-width: var(--project-info);
   width: var(--project-info);
+}
+
+.smProjectWrapper {
+  background-color: var(--bg-color);
+  padding: 0.9rem 1rem;
 }
 
 .imageWrapper {
@@ -17,9 +23,9 @@
 }
 
 .miniImageWrapper {
-  height: 40px;
-  width: 40px;
-  min-width: 40px;
+  height: 20px;
+  width: 20px;
+  min-width: 20px;
   font-size: 2rem;
 }
 
@@ -106,22 +112,18 @@
 }
 
 @media only screen and (max-width: 575.98px) {
-  .description {
-    -webkit-line-clamp: 4;
-    max-height: 86px;
-    height: auto;
-  }
-
   .title {
     font-size: 1rem;
   }
 
   .issueDesc {
-    font-size: 1rem;
+    font-size: 0.75rem;
   }
 
   .repoInfo {
     font-size: 0.85rem;
+    width: 100%;
+    min-width: 0;
   }
 
   .repoLink,
@@ -132,17 +134,31 @@
 
 @media only screen and (max-width: 1199.98px) {
   .title {
-    font-size: 1.15rem;
+    font-size: 1rem;
+  }
+
+  .projectWrapper {
+    min-width: var(--mini-project-info);
+    width: var(--mini-project-info);
+  }
+
+  .issueDesc,
+  .issueIcon {
+    font-size: 0.9rem;
+  }
+
+  .issueContent {
+    width: calc(100% - var(--mini-project-info));
   }
 }
 
-@media only screen and (min-width: 1400px) {
-  .cardWrapper {
-    padding: 1.3rem 0;
+@media only screen and (max-width: 767.98px) {
+  .projectWrapper {
+    min-width: 100%;
+    width: 100%;
   }
 
-  .link,
-  .subtitle {
-    font-size: 0.9rem;
+  .issueContent {
+    width: 100%;
   }
 }

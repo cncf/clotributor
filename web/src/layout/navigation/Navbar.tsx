@@ -45,7 +45,7 @@ const Navbar = (props: Props) => {
           />
         )}
 
-        <div className={`d-none d-md-flex flex-row align-items-center ms-auto ${styles.searchWrapper}`}>
+        <div className="d-none d-md-flex flex-row align-items-center ms-auto">
           <ExternalLink
             className="btn btn-md text-light fs-5"
             label="Github link"

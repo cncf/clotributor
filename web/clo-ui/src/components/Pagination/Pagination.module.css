@@ -10,4 +10,8 @@
   .btnIcon {
     line-height: 1rem;
   }
+
+  :global(.page-link) {
+    line-height: 1.15rem;
+  }
 }

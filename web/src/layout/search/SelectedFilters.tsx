@@ -84,7 +84,7 @@ const SelectedFilters = (props: Props) => {
                 aria-label="Remove all filters"
               >
                 <div className="d-flex flex-row align-items-center">
-                  <div className="fw-bold me-1">Reset all</div>
+                  <div className="fw-bold me-1">Clear all</div>
                   <IoMdCloseCircleOutline />
                 </div>
               </button>
