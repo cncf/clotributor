@@ -9,6 +9,7 @@ export interface IDropdownProps {
   btnContent: JSX.Element | string;
   children: JSX.Element;
   btnClassName?: string;
+  dropdownClassName?: string;
 }
 
 export const Dropdown: React.FC<IDropdownProps> = (props: IDropdownProps) => {
@@ -32,7 +33,12 @@ export const Dropdown: React.FC<IDropdownProps> = (props: IDropdownProps) => {
         {props.btnContent}
       </button>
 
-      <div role="menu" className={classNames('dropdown-menu rounded-0', styles.dropdown, { show: visibleDropdown })}>
+      <div
+        role="menu"
+        className={classNames('dropdown-menu rounded-0', styles.dropdown, props.dropdownClassName, {
+          show: visibleDropdown,
+        })}
+      >
         <div className={`dropdown-arrow ${styles.arrow}`} />
         {React.cloneElement(props.children, { closeDropdown: closeDropdown })}
       </div>

@@ -40,6 +40,7 @@ const Filters = (props: Props) => {
             activeFilters={props.activeFilters[section.name]}
             section={section}
             onChange={props.onChange}
+            visibleTitle
           />
         </React.Fragment>
       ))}

@@ -1,3 +1,4 @@
+import classnames from 'classnames';
 import { isUndefined } from 'lodash';
 import React, { ChangeEvent } from 'react';
 
@@ -19,6 +20,7 @@ export interface Filter {
 
 export interface IFiltersSectionProps {
   section: Section;
+  visibleTitle: boolean;
   device: string;
   activeFilters?: string[];
   onChange: (name: string, value: string, checked: boolean) => void;
@@ -27,11 +29,13 @@ export interface IFiltersSectionProps {
 export const FiltersSection: React.FC<IFiltersSectionProps> = (props: IFiltersSectionProps) => {
   return (
     <>
-      <div className={`fw-bold text-uppercase text-primary ${styles.categoryTitle}`}>
-        <small>{props.section.title}</small>
-      </div>
+      {props.visibleTitle && (
+        <div className={`fw-bold text-uppercase text-primary ${styles.categoryTitle}`}>
+          <small>{props.section.title}</small>
+        </div>
+      )}
 
-      <div className="mt-2">
+      <div className={classnames({ 'mt-2': props.visibleTitle })}>
         {props.section.filters.map((filter: Filter) => {
           return (
             <CheckBox
