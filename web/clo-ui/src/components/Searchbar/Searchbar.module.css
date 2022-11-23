@@ -1,7 +1,7 @@
 .searchBar {
   height: 33px;
   width: 300px;
-  box-shadow: 0 0 0 .3rem var(--color-white-25);
+  box-shadow: 0 0 0 0.3rem var(--color-white-25);
   margin-right: 0.3rem;
   margin: 0 0.3rem;
 }

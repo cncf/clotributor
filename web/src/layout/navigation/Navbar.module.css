@@ -16,6 +16,10 @@
   font-size: 0.6rem;
 }
 
+[data-theme='dark'] .alpha {
+  background-color: var(--color-black-25);
+}
+
 @media (hover: hover) {
   .link:hover::before {
     content: '';
