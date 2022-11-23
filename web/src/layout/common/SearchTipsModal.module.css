@@ -11,3 +11,9 @@
     padding-inline-start: 20px;
   }
 }
+
+@media only screen and (max-width: 991.98px) {
+  .list {
+    font-size: 0.9rem;
+  }
+}

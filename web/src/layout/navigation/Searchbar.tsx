@@ -58,7 +58,15 @@ const Searchbar = (props: Props) => {
   };
 
   return (
-    <div className={classnames('d-flex flex-row justify-content-center', { [styles.bigSearch]: props.bigSize })}>
+    <div
+      className={classnames(
+        'd-flex flex-row justify-content-center',
+        { [styles.searchWrapper]: props.inNavbar },
+        {
+          [styles.bigSearch]: props.bigSize,
+        }
+      )}
+    >
       <SearchbarForm
         value={value}
         onValueChange={(newValue: string) => setValue(newValue)}
@@ -68,7 +76,7 @@ const Searchbar = (props: Props) => {
         classNameWrapper={props.classNameWrapper}
         bigSize={props.bigSize}
       />
-      <div className={styles.questionMark}>
+      <div className={`d-none d-sm-inline-block ${styles.questionMark}`}>
         <button
           className={classnames('btn btn-link text-decoration-none', { [styles.inNavbar]: props.inNavbar })}
           onClick={() => setOpenTips(!openTips)}

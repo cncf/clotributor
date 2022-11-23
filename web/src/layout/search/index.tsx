@@ -1,7 +1,9 @@
 import classNames from 'classnames';
-import { Loading, NoData, Pagination, PaginationLimitOptions, SortOptions } from 'clo-ui';
+import { Loading, NoData, Pagination, PaginationLimitOptions, Sidebar, SortOptions } from 'clo-ui';
 import { isEmpty, isUndefined } from 'lodash';
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
+import { FaFilter } from 'react-icons/fa';
+import { IoMdCloseCircleOutline } from 'react-icons/io';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 import API from '../../api';
@@ -11,6 +13,7 @@ import { Issue, SearchFiltersURL, SortBy } from '../../types';
 import buildSearchParams from '../../utils/buildSearchParams';
 import prepareQueryString from '../../utils/prepareQueryString';
 import Card from '../common/Card';
+import Filters from './Filters';
 import FiltersInLine from './FiltersInLine';
 // import Filters from './Filters';
 import styles from './Search.module.css';
@@ -177,27 +180,78 @@ const Search = (props: Props) => {
       <nav className={`navbar navbar-expand-sm ${styles.navbar}`} role="navigation">
         <div className="container-lg">
           <div className="d-flex flex-column w-100">
-            <div className="d-flex flex-row align-items-center justify-content-between">
-              <div className="text-truncate fw-bold w-100 Search_searchResults__hU0s2" role="status">
-                {total > 0 && (
-                  <span className="pe-1">
-                    {calculateOffset(pageNumber) + 1} - {total < limit * pageNumber ? total : limit * pageNumber}{' '}
-                    <span className="ms-1">of</span>{' '}
-                  </span>
-                )}
-                {total}
-                <span className="ps-1"> results </span>
-                {text && text !== '' && (
-                  <span className="d-none d-sm-inline ps-1">
-                    for "<span className="fw-bold">{text}</span>"
-                  </span>
-                )}
+            <div className="d-flex flex-column flex-sm-row align-items-center justify-content-between flex-nowrap">
+              <div className="d-flex flex-row flex-lg-column align-items-center align-items-lg-start w-100 text-truncate">
+                <Sidebar
+                  label="Filters"
+                  className="d-inline-block d-lg-none me-2"
+                  wrapperClassName="d-inline-block px-4"
+                  buttonType={`btn-primary btn-sm rounded-circle position-relative ${styles.btnMobileFilters}`}
+                  buttonIcon={<FaFilter />}
+                  closeButtonClassName={styles.closeSidebar}
+                  closeButton={
+                    <>
+                      {isLoading ? (
+                        <>
+                          <Loading spinnerClassName={styles.spinner} noWrapper smallSize />
+                          <span className="ms-2">Searching...</span>
+                        </>
+                      ) : (
+                        <>See {total} results</>
+                      )}
+                    </>
+                  }
+                  leftButton={
+                    <>
+                      {!isEmpty(filters) && (
+                        <div className="d-flex align-items-center">
+                          <IoMdCloseCircleOutline className={`text-dark ${styles.resetBtnDecorator}`} />
+                          <button
+                            className="btn btn-link btn-sm p-0 ps-1 text-dark"
+                            onClick={onResetFilters}
+                            aria-label="Reset filters"
+                          >
+                            Reset
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  }
+                  header={<div className="h6 text-uppercase mb-0 flex-grow-1">Filters</div>}
+                >
+                  <div role="menu">
+                    <Filters device="mobile" activeFilters={filters} onChange={onFiltersChange} visibleTitle={false} />
+                  </div>
+                </Sidebar>
+                <div className="text-truncate fw-bold w-100 Search_searchResults__hU0s2" role="status">
+                  {total > 0 && (
+                    <span className="pe-1">
+                      {calculateOffset(pageNumber) + 1} - {total < limit * pageNumber ? total : limit * pageNumber}{' '}
+                      <span className="ms-1">of</span>{' '}
+                    </span>
+                  )}
+                  {total}
+                  <span className="ps-1"> results </span>
+                  {text && text !== '' && (
+                    <span className="d-none d-sm-inline ps-1">
+                      for "<span className="fw-bold">{text}</span>"
+                    </span>
+                  )}
+                </div>
               </div>
 
-              <div className="d-flex flex-wrap flex-row justify-content-sm-end mt-3 mt-sm-0 ms-0 ms-md-3 w-100">
+              <div className="d-flex flex-nowrap flex-row justify-content-sm-end ms-0 ms-md-3 w-100">
                 <FiltersInLine activeFilters={filters} onChange={onFiltersChange} device="desktop" />
                 {/* Only display sort options when ts_query_web is defined */}
-                {text && text !== '' && <SortOptions options={SORT_OPTIONS} by={sort.by} onSortChange={onSortChange} />}
+                {text && text !== '' && (
+                  <SortOptions
+                    options={SORT_OPTIONS}
+                    by={sort.by}
+                    width={150}
+                    onSortChange={onSortChange}
+                    className="mt-3 mt-sm-0"
+                  />
+                )}
                 <PaginationLimitOptions limit={limit} onPaginationLimitChange={onPaginationLimitChange} />
               </div>
             </div>
@@ -207,7 +261,7 @@ const Search = (props: Props) => {
         </div>
       </nav>
 
-      <main role="main" className="container-lg flex-grow-1 mb-4 mb-md-5">
+      <main role="main" className="container-lg flex-grow-1 mb-5">
         {isLoading && <Loading className={styles.loading} position="fixed" transparentBg />}
         <div
           className={classNames('h-100 position-relative d-flex flex-row align-items-start', {

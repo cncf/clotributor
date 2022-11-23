@@ -30,11 +30,20 @@ const Home = (props: Props) => {
 
   return (
     <>
-      <div className={`p-4 p-md-5 mb-4 text-center ${styles.banner}`}>
+      <div className={`p-4 p-md-5 mb-3 mb-md-4 text-center ${styles.banner}`}>
         <div className="container-lg px-0">
-          <div className={styles.midFont}>Discover great opportunities to</div>
-          <div className={`mb-4 ${styles.bigFont}`}>
-            become a <span className="fw-bold extraLightText">Cloud Native</span> contributor
+          <div className="d-block d-sm-none">
+            <div className={styles.midFont}>Discover great opportunities to become</div>
+            <div className={`mb-1 mb-sm-4 ${styles.bigFont}`}>
+              a <span className="fw-bold extraLightText">Cloud Native</span> contributor
+            </div>
+          </div>
+
+          <div className="d-none d-sm-block">
+            <div className={styles.midFont}>Discover great opportunities to</div>
+            <div className={`mb-1 mb-sm-4 ${styles.bigFont}`}>
+              become a <span className="fw-bold extraLightText">Cloud Native</span> contributor
+            </div>
           </div>
 
           <div className="py-4">
@@ -42,8 +51,8 @@ const Home = (props: Props) => {
             <SearchTip />
           </div>
 
-          <div className="mx-3 mx-md-5 mt-3">
-            <p className={`px-0 px-md-5 mx-auto ${styles.legend}`}>
+          <div className="mx-3 mx-md-5 mt-2 mt-sm-3">
+            <p className={`d-none d-sm-block px-0 px-md-5 mx-auto ${styles.legend}`}>
               You can search for <span className="fst-italic">software categories</span> you are intested in or{' '}
               <span className="fst-italic">languages</span> you are familiar with to find the opportunities that suit
               you the best. You can also{' '}
@@ -56,14 +65,27 @@ const Home = (props: Props) => {
               </Link>{' '}
               available.
             </p>
+            <p className={`d-block d-sm-none px-0 mx-auto ${styles.legend}`}>
+              or{' '}
+              <Link
+                to="/search"
+                type="button"
+                className={`btn btn-link p-0 fw-bold text-decoration-underline text-dark ${styles.link}`}
+              >
+                explore all opportunities
+              </Link>{' '}
+              available
+            </p>
           </div>
         </div>
       </div>
 
       {latestOpportunities.length > 0 && (
         <div>
-          <div className="w-100 py-4">
-            <div className="h3 fw-bold text-center text-dark mt-3 mt-md-2 mb-4">Latest opportunities published</div>
+          <div className="w-100 py-3 py-sm-4">
+            <div className="h3 fw-bold text-center text-dark mt-0 mt-md-2 mb-3 mb-sm-4">
+              Latest opportunities <span className="d-none d-sm-inline-block">published</span>
+            </div>
 
             <div className="container-lg px-sm-4 px-lg-0">
               <div className="d-flex flex-wrap justify-content-center">

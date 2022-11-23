@@ -1,6 +1,6 @@
 import { Card as CardWrapper, ExternalLink, FoundationBadge, GenericBadge, Image, MaturityBadge } from 'clo-ui';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BsDot } from 'react-icons/bs';
 import { FaChartBar, FaGithub } from 'react-icons/fa';
 import { FiExternalLink, FiStar } from 'react-icons/fi';
@@ -59,50 +59,89 @@ const Card = (props: Props) => {
 
   return (
     <CardWrapper wrapperClassname={styles.cardWrapper} hoverable={false}>
-      <div className="d-flex flex-row align-items-stretch">
-        <div className={`d-flex flex-column flex-sm-row align-items-center ps-3 ${styles.projectWrapper}`}>
+      <div className="d-flex flex-column flex-md-row align-items-stretch">
+        <div
+          className={`d-flex flex-row justify-content-between align-items-center d-md-none ${styles.smProjectWrapper}`}
+        >
+          <div className="flex-grow-1 d-flex flex-row align-items-center truncateWrapper">
+            <div
+              className={`d-flex d-xl-none align-items-center justify-content-center me-2 ${styles.miniImageWrapper}`}
+            >
+              <Image
+                alt={`${props.issue.project.display_name || props.issue.project.name} logo`}
+                url={props.issue.project.logo_url}
+              />
+            </div>
+            <div className="truncateWrapper w-100">
+              {props.issue.repository.homepage_url ? (
+                <ExternalLink label="Project url" href={props.issue.repository.homepage_url}>
+                  <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
+                    <span className={`text-truncate fw-bold mb-0 ${styles.title}`}>
+                      {props.issue.project.display_name || props.issue.project.name}
+                    </span>
+                  </div>
+                </ExternalLink>
+              ) : (
+                <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
+                  <span className={`text-truncate fw-bold mb-0 ${styles.title}`}>
+                    {props.issue.project.display_name || props.issue.project.name}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="d-flex flex-row align-items-center ms-2">
+            <MaturityBadge maturityLevel={props.issue.project.maturity} className="d-none d-sm-flex me-2" />
+            <FoundationBadge foundation={props.issue.project.foundation} />
+          </div>
+        </div>
+
+        <div className={`d-none d-md-flex flex-column flex-sm-row align-items-center ps-3 ${styles.projectWrapper}`}>
           <div className={`d-none d-xl-flex align-items-center justify-content-center ${styles.imageWrapper}`}>
             <Image
               alt={`${props.issue.project.display_name || props.issue.project.name} logo`}
               url={props.issue.project.logo_url}
             />
           </div>
-          <div className="flex-grow-1 ms-0 ms-md-3 ms-lg-0 ms-xl-3 w-100 truncateWrapper">
-            <div className="p-2 pe-0">
+          <div className="ms-0 ms-lg-3 flex-grow-1 w-100 truncateWrapper">
+            <div className="p-0 p-lg-2 pe-lg-0">
               <div className="d-flex flex-row align-items-center">
-                <div
-                  className={`d-flex d-xl-none align-items-center justify-content-center me-3 ${styles.miniImageWrapper}`}
-                >
-                  <Image
-                    alt={`${props.issue.project.display_name || props.issue.project.name} logo`}
-                    url={props.issue.project.logo_url}
-                  />
-                </div>
                 <div className="d-flex flex-column w-100 truncateWrapper">
-                  {props.issue.repository.homepage_url ? (
-                    <ExternalLink label="Project url" href={props.issue.repository.homepage_url}>
-                      <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
-                        <span className={`text-truncate fw-bold mb-0 ${styles.title}`}>
-                          {props.issue.project.display_name || props.issue.project.name}
-                        </span>
-                      </div>
-                    </ExternalLink>
-                  ) : (
-                    <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
-                      <span className={`text-truncate fw-bold mb-0 ${styles.title}`}>
-                        {props.issue.project.display_name || props.issue.project.name}
-                      </span>
+                  <div className="d-flex flex-row w-100 truncateWrapper">
+                    <div
+                      className={`d-flex d-xl-none align-items-center justify-content-center me-2 ${styles.miniImageWrapper}`}
+                    >
+                      <Image
+                        alt={`${props.issue.project.display_name || props.issue.project.name} logo`}
+                        url={props.issue.project.logo_url}
+                      />
                     </div>
-                  )}
+                    <div className="truncateWrapper">
+                      {props.issue.repository.homepage_url ? (
+                        <ExternalLink label="Project url" href={props.issue.repository.homepage_url}>
+                          <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
+                            <span className={`text-truncate fw-bold mb-0 ${styles.title}`}>
+                              {props.issue.project.display_name || props.issue.project.name}
+                            </span>
+                          </div>
+                        </ExternalLink>
+                      ) : (
+                        <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
+                          <span className={`text-truncate fw-bold mb-0 ${styles.title}`}>
+                            {props.issue.project.display_name || props.issue.project.name}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
 
                   <div className="d-flex flex-row align-items-center my-2">
                     <FoundationBadge foundation={props.issue.project.foundation} />
-                    <MaturityBadge maturityLevel={props.issue.project.maturity} className="d-none d-md-flex ms-2" />
+                    <MaturityBadge maturityLevel={props.issue.project.maturity} className="ms-2" />
                   </div>
 
-                  <div
-                    className={`d-none d-md-flex d-lg-none d-xl-flex flex-row mt-0 mt-md-1 mt-lg-0 mt-xl-1 align-items-center ${styles.info}`}
-                  >
+                  <div className={`d-none d-md-flex flex-row mt-0 mt-md-1 align-items-center ${styles.info}`}>
                     {props.issue.project.devstats_url && (
                       <ExternalLink label="Dev stats link" href={props.issue.project.devstats_url} className="me-3">
                         <div className={`d-flex flex-row align-items-center text-muted ${styles.link}`}>
@@ -126,8 +165,19 @@ const Card = (props: Props) => {
           <div className="d-flex flex-column">
             <div className="d-flex flex-row align-items-center justify-content-between">
               <div className={`d-flex flex-row align-items-baseline ${styles.repoInfo}`}>
+                <div className="d-flex d-sm-none text-truncate">
+                  <div className="d-flex flex-row align-items-center text-truncate">
+                    <FaGithub className="me-2" />
+                    <div
+                      className={`text-uppercase text-nowrap fw-bold text-truncate position-relative ${styles.repoName}`}
+                    >
+                      {props.issue.repository.name}
+                    </div>
+                    <FiExternalLink className="d-none d-md-block ms-2" />
+                  </div>
+                </div>
                 <ExternalLink
-                  className={`btn btn-link p-0 ${styles.repoLink}`}
+                  className={`d-none d-sm-flex btn btn-link p-0 ${styles.repoLink}`}
                   label={`Repo ${props.issue.repository.name} link`}
                   href={props.issue.repository.url}
                 >
@@ -138,17 +188,19 @@ const Card = (props: Props) => {
                     >
                       {props.issue.repository.name}
                     </div>
-                    <FiExternalLink className="ms-2" />
+                    <FiExternalLink className="d-none d-md-block ms-2" />
                   </div>
                 </ExternalLink>
 
-                <div className={`d-flex lex-row align-items-center ms-3 me-2 ${styles.star}`}>
+                <div className={`d-flex flex-row align-items-center ms-3 me-2 ${styles.star}`}>
                   <FiStar className="me-1" />
                   <div>{prettifyNumber(props.issue.repository.stars)}</div>
                 </div>
               </div>
 
-              <div className={`d-flex flex-row flex-wrap overflow-hidden justify-content-end ${styles.topicsWrapper}`}>
+              <div
+                className={`d-none d-sm-flex flex-row flex-wrap overflow-hidden justify-content-end ${styles.topicsWrapper}`}
+              >
                 {availableTopics.slice(0, 4).map((lg: string) => {
                   return (
                     <GenericBadge content={lg} className={`text-secondary lighterText ${styles.badge} ms-2`} key={lg} />
@@ -162,12 +214,13 @@ const Card = (props: Props) => {
                 label="Issue url"
                 href={props.issue.url}
                 className="position-relative d-inline-block mw-100"
+                btnType
               >
                 <div className="d-flex flex-row align-items-center my-3 w-100">
-                  <div className={`fw-bold text-truncate ${styles.issueDesc}`}>
+                  <div className={`fw-bold text-start text-truncate ${styles.issueDesc}`}>
                     {removeLastDot(removeEmojis(props.issue.title))}
                   </div>
-                  <FiExternalLink className="ms-2" />
+                  <FiExternalLink className={`d-none d-md-block ms-2 ${styles.issueIcon}`} />
                 </div>
               </ExternalLink>
             </div>
@@ -177,15 +230,17 @@ const Card = (props: Props) => {
                 {moment.unix(props.issue.published_at!).format('Do MMM YYYY')}
               </small>
 
-              <BsDot className="mx-1" />
+              <div className="d-none d-sm-flex flex-row align-items-center">
+                <BsDot className="mx-1" />
 
-              <ExternalLink label="Issue url" href={props.issue.url}>
-                <small className="fw-normal">#{props.issue.number}</small>
-              </ExternalLink>
+                <ExternalLink label="Issue url" href={props.issue.url}>
+                  <small className="fw-normal">#{props.issue.number}</small>
+                </ExternalLink>
+              </div>
 
               {(isGoodFirstIssue || isBug) && (
-                <>
-                  <BsDot className="mx-1" />
+                <div className="d-flex flex-row align-items-center ms-auto ms-sm-0">
+                  <BsDot className="d-none d-sm-flex mx-1" />
 
                   {isGoodFirstIssue && (
                     <GenericBadge
@@ -197,12 +252,12 @@ const Card = (props: Props) => {
                   {isBug && (
                     <GenericBadge content="Bug" className={`ms-1 text-uppercase bg-red ${styles.badge} lighterText`} />
                   )}
-                </>
+                </div>
               )}
 
               {props.issue.repository.languages.length > 0 && (
                 <div
-                  className={`ms-auto d-flex flex-row flex-wrap overflow-hidden justify-content-end ${styles.languagesWrapper}`}
+                  className={`ms-auto d-none d-sm-flex flex-row flex-wrap overflow-hidden justify-content-end ${styles.languagesWrapper}`}
                 >
                   {props.issue.repository.languages.map((label: string) => {
                     return (
