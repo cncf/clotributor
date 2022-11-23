@@ -214,7 +214,6 @@ const Card = (props: Props) => {
                 label="Issue url"
                 href={props.issue.url}
                 className="position-relative d-inline-block mw-100"
-                btnType
               >
                 <div className="d-flex flex-row align-items-center my-3 w-100">
                   <div className={`fw-bold text-start text-truncate ${styles.issueDesc}`}>
