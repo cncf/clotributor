@@ -1,6 +1,6 @@
 import { Foundation, FOUNDATIONS } from 'clo-ui';
 import { isEmpty } from 'lodash';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 
 import { FILTER_CATEGORY_NAMES } from '../../data';
@@ -11,9 +11,22 @@ import styles from './SelectedFilters.module.css';
 interface Props {
   filters: { [key: string]: string[] };
   onChange: (name: string, value: string, checked: boolean) => void;
+  onResetFilters: () => void;
 }
 
 const SelectedFilters = (props: Props) => {
+  const [filtersNumber, setFiltersNumber] = useState<number>(0);
+
+  useEffect(() => {
+    let filters: number = 0;
+
+    Object.keys(props.filters).forEach((cat: string) => {
+      filters = filters + props.filters[cat].length;
+    });
+
+    setFiltersNumber(filters);
+  }, [props.filters]);
+
   if (isEmpty(props.filters)) return null;
 
   const getFilterName = (type: FilterKind, filter: string): string => {
@@ -62,6 +75,21 @@ const SelectedFilters = (props: Props) => {
               </Fragment>
             );
           })}
+
+          {filtersNumber > 1 && (
+            <span role="listitem" className={`d-inline-block me-3 ${styles.reset}`}>
+              <button
+                className={`btn btn-link text-secondary btn-sm lh-1 ${styles.btn}`}
+                onClick={props.onResetFilters}
+                aria-label="Remove all filters"
+              >
+                <div className="d-flex flex-row align-items-center">
+                  <div className="fw-bold me-1">Reset all</div>
+                  <IoMdCloseCircleOutline />
+                </div>
+              </button>
+            </span>
+          )}
         </div>
       </div>
     </div>

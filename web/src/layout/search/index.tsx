@@ -11,6 +11,7 @@ import { Issue, SearchFiltersURL, SortBy } from '../../types';
 import buildSearchParams from '../../utils/buildSearchParams';
 import prepareQueryString from '../../utils/prepareQueryString';
 import Card from '../common/Card';
+import FiltersInLine from './FiltersInLine';
 // import Filters from './Filters';
 import styles from './Search.module.css';
 import SelectedFilters from './SelectedFilters';
@@ -194,13 +195,14 @@ const Search = (props: Props) => {
               </div>
 
               <div className="d-flex flex-wrap flex-row justify-content-sm-end mt-3 mt-sm-0 ms-0 ms-md-3 w-100">
+                <FiltersInLine activeFilters={filters} onChange={onFiltersChange} device="desktop" />
                 {/* Only display sort options when ts_query_web is defined */}
                 {text && text !== '' && <SortOptions options={SORT_OPTIONS} by={sort.by} onSortChange={onSortChange} />}
                 <PaginationLimitOptions limit={limit} onPaginationLimitChange={onPaginationLimitChange} />
               </div>
             </div>
 
-            <SelectedFilters filters={filters} onChange={onFiltersChange} />
+            <SelectedFilters filters={filters} onChange={onFiltersChange} onResetFilters={onResetFilters} />
           </div>
         </div>
       </nav>
