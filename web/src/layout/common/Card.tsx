@@ -79,13 +79,21 @@ const Card = (props: Props) => {
                   />
                 </div>
                 <div className="d-flex flex-column w-100 truncateWrapper">
-                  <ExternalLink label="Project url" href={props.issue.repository.homepage_url}>
+                  {props.issue.repository.homepage_url ? (
+                    <ExternalLink label="Project url" href={props.issue.repository.homepage_url}>
+                      <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
+                        <span className={`text-truncate fw-bold mb-0 ${styles.title}`}>
+                          {props.issue.project.display_name || props.issue.project.name}
+                        </span>
+                      </div>
+                    </ExternalLink>
+                  ) : (
                     <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
                       <span className={`text-truncate fw-bold mb-0 ${styles.title}`}>
                         {props.issue.project.display_name || props.issue.project.name}
                       </span>
                     </div>
-                  </ExternalLink>
+                  )}
 
                   <div className="d-flex flex-row align-items-center my-2">
                     <FoundationBadge foundation={props.issue.project.foundation} />
