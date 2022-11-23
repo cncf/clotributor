@@ -105,7 +105,6 @@ export class LocalStoragePreferences {
       ...DEFAULT_PREFS,
       ...this.savedPreferences.guest,
     };
-    console.log(this.savedPreferences);
     return prefs;
   }
 }

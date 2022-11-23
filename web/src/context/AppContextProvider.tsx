@@ -133,7 +133,6 @@ function AppContextProvider(props: Props) {
   const [activeInitialTheme, setActiveInitialTheme] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log(activeProfilePrefs);
     const theme =
       activeProfilePrefs.theme.configured === 'automatic'
         ? detectActiveThemeMode()

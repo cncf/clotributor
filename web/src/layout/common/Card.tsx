@@ -18,6 +18,7 @@ interface Props {
 
 const Card = (props: Props) => {
   const [isGoodFirstIssue, setIsGoodFirstIssue] = useState<boolean>(false);
+  const [isBug, setIsBug] = useState<boolean>(false);
   const [availableTopics, setAvailableTopics] = useState<string[]>([]);
 
   useEffect(() => {
@@ -36,19 +37,24 @@ const Card = (props: Props) => {
       setAvailableTopics(topics);
     }
 
-    function checkIfGoodFirstIssue() {
+    function checkIfSpecialIssue() {
       if (props.issue.labels) {
         const lowerLabels = props.issue.labels.map((lg: string) => {
           return lg.toLowerCase();
         });
-        if (!lowerLabels.includes('good first issue')) {
+        if (lowerLabels.includes('good first issue')) {
           setIsGoodFirstIssue(true);
+        }
+        for (let index = 0; index < lowerLabels.length; index++) {
+          if (lowerLabels[index].includes('bug')) {
+            setIsBug(true);
+          }
         }
       }
     }
 
     cleanTopics();
-    checkIfGoodFirstIssue();
+    checkIfSpecialIssue();
   }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
 
   return (
@@ -90,16 +96,14 @@ const Card = (props: Props) => {
                     className={`d-none d-md-flex d-lg-none d-xl-flex flex-row mt-0 mt-md-1 mt-lg-0 mt-xl-1 align-items-center ${styles.info}`}
                   >
                     {props.issue.project.devstats_url && (
-                      <ExternalLink label="Dev stats link" href="props.issue.project.devstats_url">
+                      <ExternalLink label="Dev stats link" href={props.issue.project.devstats_url} className="me-3">
                         <div className={`d-flex flex-row align-items-center text-muted ${styles.link}`}>
                           <FaChartBar className={styles.statsIcon} />
                         </div>
                       </ExternalLink>
                     )}
 
-                    <div
-                      className={`d-flex flex-row align-items-center ms-3 ${styles.subtitle} ${styles.wrapperCalendar}`}
-                    >
+                    <div className={`d-flex flex-row align-items-center ${styles.subtitle} ${styles.wrapperCalendar}`}>
                       <GoCalendar className={`me-1 text-muted ${styles.calendarIcon}`} />
                       <div>{moment(props.issue.project.accepted_at, 'YYYY-MM-DD').format('YYYY')}</div>
                     </div>
@@ -138,7 +142,9 @@ const Card = (props: Props) => {
 
               <div className={`d-flex flex-row flex-wrap overflow-hidden justify-content-end ${styles.topicsWrapper}`}>
                 {availableTopics.slice(0, 4).map((lg: string) => {
-                  return <GenericBadge content={lg} className={`${styles.badge} text-secondary ms-2`} key={lg} />;
+                  return (
+                    <GenericBadge content={lg} className={`text-secondary lighterText ${styles.badge} ms-2`} key={lg} />
+                  );
                 })}
               </div>
             </div>
@@ -169,11 +175,20 @@ const Card = (props: Props) => {
                 <small className="fw-normal">#{props.issue.number}</small>
               </ExternalLink>
 
-              {isGoodFirstIssue && (
+              {(isGoodFirstIssue || isBug) && (
                 <>
                   <BsDot className="mx-1" />
 
-                  <div className="badge text-uppercase text-dark rounded-0 me-2 bg-green">Good first issue</div>
+                  {isGoodFirstIssue && (
+                    <GenericBadge
+                      content="Good first issue"
+                      className={`mx-1 text-uppercase bg-green ${styles.badge} lighterText`}
+                    />
+                  )}
+
+                  {isBug && (
+                    <GenericBadge content="Bug" className={`ms-1 text-uppercase bg-red ${styles.badge} lighterText`} />
+                  )}
                 </>
               )}
 
@@ -185,7 +200,7 @@ const Card = (props: Props) => {
                     return (
                       <GenericBadge
                         content={label}
-                        className={`badge text-secondary border border-secondary fw-normal text-uppercase rounded-0 ms-2 ${styles.badge} ${styles.badgeLanguage}`}
+                        className={`fw-normal text-secondary lighterText text-uppercase ms-2 bg-purple ${styles.badge}`}
                         key={`label_${props.issue.number}_${label}`}
                       />
                     );

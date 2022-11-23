@@ -72,8 +72,11 @@
     background-color: var(--highlighted) !important;
   }
 
-  .bg-green {
-    color: var(--bg-color) !important;
+  .bg-green,
+  .bg-purple,
+  .bg-red {
+    border-color: var(--default-border) !important;
+    background-color: transparent !important;
   }
 
   .border,

@@ -153,8 +153,20 @@ a,
 }
 
 .bg-green {
-  background-color: #cbe49f !important;
-  border-color: #cbe49f !important;
+  background-color: rgba(152, 202, 63, 0.1) !important;
+  border-color: rgba(152, 202, 63, 0.15) !important;
+  color: #2d3c12;
+}
+
+.bg-red {
+  background-color: rgba(232, 40, 43, 0.1) !important;
+  border-color: rgba(232, 40, 43, 0.15) !important;
+  color: #450c0c;
+}
+
+.bg-purple {
+  background-color: rgba(42, 5, 82, 0.05) !important;
+  border-color: rgba(42, 5, 82, 0.05) !important;
 }
 
 .btn-primary {

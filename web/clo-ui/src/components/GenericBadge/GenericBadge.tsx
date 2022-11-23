@@ -9,9 +9,7 @@ export interface IGenericBadgeProps {
 
 export const GenericBadge: React.FC<IGenericBadgeProps> = (props: IGenericBadgeProps) => {
   return (
-    <div
-      className={`badge border text-dark fw-normal lighterText rounded-0 position-relative ${styles.outlineBadge} ${props.className}`}
-    >
+    <div className={`badge fw-normal rounded-0 position-relative ${styles.outlineBadge} ${props.className}`}>
       {props.content}
     </div>
   );
