@@ -41,7 +41,9 @@
     "build": "yarn copy:static && INLINE_RUNTIME_CHUNK=false IMAGE_INLINE_SIZE_LIMIT=0 react-scripts build && shx cp -r build/static/* build && shx rm -rf build/static",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx src --fix"
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx src --color",
+    "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx src --fix",
+    "format:diff": "prettier --list-different \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
   "proxy": "http://localhost:8000",
   "eslintConfig": {
