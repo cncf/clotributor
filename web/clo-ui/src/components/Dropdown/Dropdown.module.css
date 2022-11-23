@@ -1,0 +1,10 @@
+.btn {
+  padding: 0.25rem 0.35rem;
+}
+
+.dropdown {
+  right: 0;
+  top: 30px;
+  font-size: 0.9rem;
+  width: 175px;
+}

@@ -1,0 +1,11 @@
+.footer {
+  background-color: var(--clo-secondary-900);
+}
+
+@media only screen and (max-width: 991.98px) {
+  .fullMobileSection {
+    padding: 0 1rem;
+    width: 100%;
+    text-align: center;
+  }
+}

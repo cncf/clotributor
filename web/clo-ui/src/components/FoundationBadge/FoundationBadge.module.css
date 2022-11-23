@@ -1,0 +1,5 @@
+.badge {
+  background-color: var(--clo-tertiary);
+  border: 1px solid var(--clo-tertiary);
+  padding: 0.2em 0.5em;
+}
