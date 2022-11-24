@@ -68,7 +68,7 @@ impl DB for PgDB {
                 from repository r
                 join project p using (project_id)
                 where r.tracked_at is null
-                or r.tracked_at < current_timestamp - '1 hour'::interval
+                or r.tracked_at < current_timestamp - '30 minutes'::interval
                 order by r.url asc;
                 ",
                 &[],
