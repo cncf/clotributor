@@ -4,7 +4,7 @@ import { isEmpty, isUndefined } from 'lodash';
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import { FaFilter } from 'react-icons/fa';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import API from '../../api';
 import { AppContext, updateLimit, updateSort } from '../../context/AppContextProvider';
@@ -15,7 +15,6 @@ import prepareQueryString from '../../utils/prepareQueryString';
 import Card from '../common/Card';
 import Filters from './Filters';
 import FiltersInLine from './FiltersInLine';
-// import Filters from './Filters';
 import styles from './Search.module.css';
 import SelectedFilters from './SelectedFilters';
 
@@ -30,7 +29,6 @@ interface Props {
 
 const Search = (props: Props) => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { ctx, dispatch } = useContext(AppContext);
   const { limit, sort } = ctx.prefs.search;
   const [searchParams] = useSearchParams();
@@ -41,7 +39,6 @@ const Search = (props: Props) => {
   const [issues, setIssues] = useState<Issue[] | null | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [apiError, setApiError] = useState<string | null>(null);
-  const currentState = location.state as { resetScrollPosition?: boolean };
 
   const onResetFilters = (): void => {
     props.setScrollPosition(0);
@@ -97,9 +94,9 @@ const Search = (props: Props) => {
     dispatch(updateSort(by as SortBy));
   };
 
-  const onPageNumberChange = (pageNumber: number): void => {
+  const onPageNumberChange = (pNumber: number): void => {
     updateCurrentPage({
-      pageNumber: pageNumber,
+      pageNumber: pNumber,
     });
   };
 
@@ -139,6 +136,9 @@ const Search = (props: Props) => {
 
     async function searchIssues() {
       setIsLoading(true);
+      // Update scroll position
+      updateWindowScrollPosition(0);
+
       try {
         const newSearchResults = await API.searchIssues({
           ts_query_web: formattedParams.ts_query_web,
@@ -153,12 +153,6 @@ const Search = (props: Props) => {
         setApiError('An error occurred searching issues.');
       } finally {
         setIsLoading(false);
-        let currentScrollPosition = props.scrollPosition || 0;
-        if (currentState && currentState.resetScrollPosition) {
-          currentScrollPosition = 0;
-        }
-        // Update scroll position
-        updateWindowScrollPosition(currentScrollPosition);
       }
     }
 
