@@ -1,15 +1,15 @@
 import classnames from 'classnames';
 import { Searchbar as SearchbarForm } from 'clo-ui';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaRegQuestionCircle } from 'react-icons/fa';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import prepareQueryString from '../../utils/prepareQueryString';
+import scrollToTop from '../../utils/scrollToTop';
 import SearchTipsModal from '../common/SearchTipsModal';
 import styles from './Searchbar.module.css';
 
 interface Props {
-  setScrollPosition: Dispatch<SetStateAction<number | undefined>>;
   bigSize: boolean;
   inNavbar: boolean;
   classNameWrapper?: string;
@@ -29,8 +29,7 @@ const Searchbar = (props: Props) => {
   }, [searchParams]);
 
   const search = () => {
-    props.setScrollPosition(0);
-
+    scrollToTop();
     navigate({
       pathname: '/search',
       search: prepareQueryString({
@@ -43,7 +42,7 @@ const Searchbar = (props: Props) => {
 
   const cleanSearchValue = () => {
     if (currentSearch === value) {
-      props.setScrollPosition(0);
+      scrollToTop();
       navigate({
         pathname: '/search',
         search: prepareQueryString({
