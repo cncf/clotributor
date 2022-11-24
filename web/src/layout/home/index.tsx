@@ -2,11 +2,11 @@ import classnames from 'classnames';
 import { Loading } from 'clo-ui';
 import { isUndefined } from 'lodash';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 
 import API from '../../api';
 import { DEFAULT_SORT_BY } from '../../data';
-import { Issue } from '../../types';
+import { Issue, OutletContext } from '../../types';
 import Card from '../common/Card';
 import Searchbar from '../navigation/Searchbar';
 import styles from './Home.module.css';
@@ -17,6 +17,7 @@ interface Props {
 }
 
 const Home = (props: Props) => {
+  const { setInvisibleFooter } = useOutletContext() as OutletContext;
   const [latestOpportunities, setLatestOpportunities] = useState<Issue[] | undefined>();
   const [loadingLatestOpportunities, setLoadingLatestOpportunities] = useState<boolean>(true);
 
@@ -24,6 +25,7 @@ const Home = (props: Props) => {
     window.scrollTo(0, 0);
 
     async function getLatestOpportunities() {
+      setInvisibleFooter(true);
       setLoadingLatestOpportunities(true);
       try {
         const opp = await API.searchIssues({
@@ -36,10 +38,11 @@ const Home = (props: Props) => {
         setLatestOpportunities([]);
       } finally {
         setLoadingLatestOpportunities(false);
+        setInvisibleFooter(false);
       }
     }
     getLatestOpportunities();
-  }, []);
+  }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
 
   return (
     <>

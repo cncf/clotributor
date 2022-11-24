@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import styles from './Layout.module.css';
@@ -10,13 +10,15 @@ interface Props {
 }
 
 const Layout = (props: Props) => {
+  const [invisibleFooter, setInvisibleFooter] = useState<boolean>(false);
+
   return (
     <div className="h-100 d-flex flex-column">
       <Navbar setScrollPosition={props.setScrollPosition} />
       <div className={`d-flex flex-column flex-grow-1 ${styles.wrapper}`}>
-        <Outlet />
+        <Outlet context={{ setInvisibleFooter }} />
       </div>
-      <Footer />
+      <Footer invisibleFooter={invisibleFooter} />
     </div>
   );
 };

@@ -5,11 +5,12 @@ import styles from './Footer.module.css';
 export interface IFooterProps {
   logo: JSX.Element;
   children: JSX.Element;
+  className?: string;
 }
 
 export const Footer: React.FC<IFooterProps> = (props: IFooterProps) => {
   return (
-    <footer className={`py-5 ${styles.footer}`}>
+    <footer className={`py-5 ${styles.footer} ${props.className}`}>
       <div className="container-lg">
         <div className="d-flex flex-row flex-wrap align-items-stretch justify-content-between text-light">
           {props.children}

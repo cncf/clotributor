@@ -1,5 +1,9 @@
 import { Foundation, Maturity } from 'clo-ui';
 
+export interface OutletContext {
+  setInvisibleFooter: (value: boolean) => void;
+}
+
 export interface Prefs {
   search: { limit: number; sort: { by: SortBy } };
   theme: ThemePrefs;

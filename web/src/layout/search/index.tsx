@@ -4,12 +4,12 @@ import { isEmpty, isUndefined } from 'lodash';
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import { FaFilter } from 'react-icons/fa';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useOutletContext, useSearchParams } from 'react-router-dom';
 
 import API from '../../api';
 import { AppContext, updateLimit, updateSort } from '../../context/AppContextProvider';
 import { DEFAULT_SORT_BY, SORT_OPTIONS } from '../../data';
-import { Issue, SearchFiltersURL, SortBy } from '../../types';
+import { Issue, OutletContext, SearchFiltersURL, SortBy } from '../../types';
 import buildSearchParams from '../../utils/buildSearchParams';
 import prepareQueryString from '../../utils/prepareQueryString';
 import Card from '../common/Card';
@@ -32,6 +32,7 @@ const Search = (props: Props) => {
   const { ctx, dispatch } = useContext(AppContext);
   const { limit, sort } = ctx.prefs.search;
   const [searchParams] = useSearchParams();
+  const { setInvisibleFooter } = useOutletContext() as OutletContext;
   const [text, setText] = useState<string | undefined>();
   const [filters, setFilters] = useState<FiltersProp>({});
   const [pageNumber, setPageNumber] = useState<number>(1);
@@ -136,6 +137,7 @@ const Search = (props: Props) => {
 
     async function searchIssues() {
       setIsLoading(true);
+      setInvisibleFooter(true);
       // Update scroll position
       updateWindowScrollPosition(0);
 
@@ -153,6 +155,7 @@ const Search = (props: Props) => {
         setApiError('An error occurred searching issues.');
       } finally {
         setIsLoading(false);
+        setInvisibleFooter(false);
       }
     }
 
