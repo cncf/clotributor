@@ -24,7 +24,7 @@ To achieve this, **CLOTributor** scans periodically hundreds of repositories, in
 
 In addition to some issue's details, like the *title* or *labels*, we also collect and index some metadata from the corresponding repository, like its *topics* or the *programming languages* used. We are also working on trying to normalize some labels we've observed across issues on different repositories to make it easier to categorize and filter them.
 
-At the moment some labels are highlighted in a special way, like `good first issue` or labels that contain the string `bug`. In general, the more context projects can provide in their issues via labels, the better. Labels like `frontend`, or even specific mentioning specific frameworks like `react` or `vue`, may help users finding issues that suit them best.
+At the moment some labels are highlighted in a special way, like `good first issue` or labels that contain the string `bug`. In general, the more context projects can provide in their issues via labels, the better. Labels like `frontend`, or even mentioning specific frameworks like `react` or `vue`, may help users finding issues that suit them best.
 
 The generated index can be searched from <https://clotributor.dev>. The following syntax can be used to narrow down the results:
 

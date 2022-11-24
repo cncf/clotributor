@@ -31,7 +31,11 @@ const MobileSettings = () => {
         <hr />
 
         <div className="dropdown-item mb-2">
-          <ExternalLink className="text-decoration-none fw-bold d-inline-block w-100" label="Github link" href="">
+          <ExternalLink
+            className="text-decoration-none fw-bold d-inline-block w-100"
+            label="Github link"
+            href="https://github.com/cncf/clotributor"
+          >
             <div className="d-flex flex-row align-items-center py-1">
               <FaGithub />
               <div className="ms-2">Github</div>

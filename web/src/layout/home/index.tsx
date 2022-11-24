@@ -1,3 +1,6 @@
+import classnames from 'classnames';
+import { Loading } from 'clo-ui';
+import { isUndefined } from 'lodash';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -14,16 +17,26 @@ interface Props {
 }
 
 const Home = (props: Props) => {
-  const [latestOpportunities, setLatestOpportunities] = useState<Issue[]>([]);
+  const [latestOpportunities, setLatestOpportunities] = useState<Issue[] | undefined>();
+  const [loadingLatestOpportunities, setLoadingLatestOpportunities] = useState<boolean>(true);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+
     async function getLatestOpportunities() {
-      const opp = await API.searchIssues({
-        limit: 10,
-        offset: 0,
-        sort_by: DEFAULT_SORT_BY,
-      });
-      setLatestOpportunities(opp.items);
+      setLoadingLatestOpportunities(true);
+      try {
+        const opp = await API.searchIssues({
+          limit: 10,
+          offset: 0,
+          sort_by: DEFAULT_SORT_BY,
+        });
+        setLatestOpportunities(opp.items);
+      } catch {
+        setLatestOpportunities([]);
+      } finally {
+        setLoadingLatestOpportunities(false);
+      }
     }
     getLatestOpportunities();
   }, []);
@@ -42,7 +55,7 @@ const Home = (props: Props) => {
           <div className="d-none d-sm-block">
             <div className={styles.midFont}>Discover great opportunities to</div>
             <div className={`mb-1 mb-sm-4 ${styles.bigFont}`}>
-              become a <span className="fw-bold extraLightText">Cloud Native</span> contributor
+              become a <span className="fw-bold lightText">Cloud Native</span> contributor
             </div>
           </div>
 
@@ -53,9 +66,9 @@ const Home = (props: Props) => {
 
           <div className="mx-3 mx-md-5 mt-2 mt-sm-3">
             <p className={`d-none d-sm-block px-0 px-md-5 mx-auto ${styles.legend}`}>
-              You can search for <span className="fst-italic">software categories</span> you are intested in or{' '}
-              <span className="fst-italic">languages</span> you are familiar with to find the opportunities that suit
-              you the best. You can also{' '}
+              You can search for <span className="fst-italic">projects</span> or{' '}
+              <span className="fst-italic">technologies</span> you are interested in to find the opportunities that suit
+              you the best, or{' '}
               <Link
                 to="/search"
                 type="button"
@@ -80,35 +93,39 @@ const Home = (props: Props) => {
         </div>
       </div>
 
-      {latestOpportunities.length > 0 && (
-        <div>
-          <div className="w-100 py-3 py-sm-4">
-            <div className="h3 fw-bold text-center text-dark mt-0 mt-md-2 mb-3 mb-sm-4">
-              Latest opportunities <span className="d-none d-sm-inline-block">published</span>
-            </div>
+      <div className={classnames({ 'd-none': !isUndefined(latestOpportunities) && latestOpportunities.length === 0 })}>
+        <div className="w-100 py-3 py-sm-4">
+          <div className="h3 fw-bold text-center text-dark mt-0 mt-md-2 mb-3 mb-sm-4">
+            Latest opportunities <span className="d-none d-sm-inline-block">published</span>
+          </div>
 
-            <div className="container-lg px-sm-4 px-lg-0">
-              <div className="d-flex flex-wrap justify-content-center">
-                <div className="pt-2 mb-5 row g-0 justify-content-center w-100" role="list">
-                  {latestOpportunities.map((issue: Issue, index: number) => {
-                    return <Card key={`issue_${issue.number}_${index}`} issue={issue} />;
-                  })}
-                </div>
-
-                <div className="text-center mb-5">
-                  <Link
-                    to="/search"
-                    type="button"
-                    className="btn btn-md rounded-0 btn-primary text-uppercase text-decoration-none"
-                  >
-                    Explore all
-                  </Link>
-                </div>
-              </div>
+          <div className="container-lg px-sm-4 px-lg-0">
+            <div
+              className={`d-flex flex-wrap justify-content-center position-relative ${styles.latestOpportunitiesWrapper}`}
+            >
+              {loadingLatestOpportunities && <Loading transparentBg />}
+              {!isUndefined(latestOpportunities) && (
+                <>
+                  <div className="pt-2 mb-5 row g-0 justify-content-center w-100" role="list">
+                    {latestOpportunities.map((issue: Issue, index: number) => {
+                      return <Card key={`issue_${issue.number}_${index}`} issue={issue} />;
+                    })}
+                  </div>
+                  <div className="text-center mb-5">
+                    <Link
+                      to="/search"
+                      type="button"
+                      className="btn btn-md rounded-0 btn-primary text-uppercase text-decoration-none"
+                    >
+                      Explore all
+                    </Link>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 };

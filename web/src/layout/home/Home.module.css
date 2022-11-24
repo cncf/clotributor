@@ -16,7 +16,7 @@
 }
 
 .legend {
-  max-width: 1000px;
+  max-width: 900px;
   font-size: 1.25rem;
   line-height: 2;
 }
@@ -24,6 +24,10 @@
 .link {
   font-size: inherit;
   vertical-align: baseline;
+}
+
+.latestOpportunitiesWrapper {
+  min-height: 200px;
 }
 
 @media only screen and (max-width: 991.98px) {
