@@ -6,9 +6,16 @@ import { FiExternalLink } from 'react-icons/fi';
 import logo from '../../media/clotributor.svg';
 import styles from './Footer.module.css';
 
-const Footer = () => {
+interface Props {
+  invisibleFooter: boolean;
+}
+
+const Footer = (props: Props) => {
   return (
-    <FooterWrapper logo={<img className={styles.logo} alt="Logo" src={logo} />}>
+    <FooterWrapper
+      className={props.invisibleFooter ? 'opacity-0' : ''}
+      logo={<img className={styles.logo} alt="Logo" src={logo} />}
+    >
       <>
         <div className={styles.footerCol}>
           <div className="h6 fw-bold text-uppercase">Project</div>
