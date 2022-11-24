@@ -1,5 +1,7 @@
 # CLOTributor
 
+[![CI](https://github.com/cncf/clotributor/workflows/CI/badge.svg)](https://github.com/cncf/clotributor/actions?query=workflow%3ACI)
+
 [**CLOTributor**](https://clotributor.dev) makes it easier to discover great opportunities to become a [**Cloud Native**](https://www.cncf.io) contributor.
 
 <table>
@@ -26,10 +28,10 @@ At the moment some labels are highlighted in a special way, like `good first iss
 
 The generated index can be searched from <https://clotributor.dev>. The following syntax can be used to narrow down the results:
 
-- Use multiple words to refine the search. **Example:** *serverless microservices*
-- Use `-` to exclude words from the search. **Example:** *rust -webassembly*
-- Put a phrase inside `double quotes` for an exact match. **Example:** *"machine learning"*
-- Use `or` to combine multiple searches. **Example:** *rust or go*
+- Use multiple words to refine the search. **Example:** [*gitops go*](https://clotributor.dev/search?ts_query_web=gitops+go)
+- Use `-` to exclude words from the search. **Example:** [*rust -webassembly*](https://clotributor.dev/search?ts_query_web=rust+-webassembly)
+- Put a phrase inside `double quotes` for an exact match. **Example:** [*"machine learning"*](https://clotributor.dev/search?ts_query_web=%22machine+learning%22)
+- Use `or` to combine multiple searches. **Example:** [*networking or security*](https://clotributor.dev/search?ts_query_web=networking+or+security)
 
 ## Projects and repositories
 
