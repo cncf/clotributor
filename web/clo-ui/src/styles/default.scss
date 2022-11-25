@@ -148,23 +148,49 @@ a,
 .bg-pink {
   background-color: #ffe5f6 !important;
   border-color: #ffe5f6 !important;
+
+  &.clickable:hover,
+  &.clickable:active {
+    background-color: #ffe5f6 !important;
+    border-color: #ffe5f6 !important;
+  }
 }
 
 .bg-green {
   background-color: rgba(152, 202, 63, 0.1) !important;
   border-color: rgba(152, 202, 63, 0.15) !important;
   color: #2d3c12;
+
+  &.clickable:hover,
+  &.clickable:active {
+    background-color: rgba(152, 202, 63, 0.1) !important;
+    border-color: rgba(152, 202, 63, 0.15) !important;
+    color: #2d3c12;
+  }
 }
 
 .bg-red {
   background-color: rgba(232, 40, 43, 0.1) !important;
   border-color: rgba(232, 40, 43, 0.15) !important;
   color: #450c0c;
+
+  &.clickable:hover,
+  &.clickable:active {
+    background-color: rgba(232, 40, 43, 0.1) !important;
+    border-color: rgba(232, 40, 43, 0.15) !important;
+    color: #450c0c;
+  }
 }
 
 .bg-purple {
   background-color: rgba(42, 5, 82, 0.05) !important;
   border-color: rgba(42, 5, 82, 0.05) !important;
+
+  &.clickable:hover,
+  &.clickable:active {
+    background-color: rgba(42, 5, 82, 0.05) !important;
+    border-color: rgba(42, 5, 82, 0.05) !important;
+  }
 }
 
 .btn-primary {
@@ -177,8 +203,8 @@ a,
   &.active,
   &:active,
   &:focus {
-    background-color: var(--clo-primary);
-    border-color: var(--clo-primary);
+    background-color: var(--clo-primary) !important;
+    border-color: var(--clo-primary) !important;
   }
 }
 
@@ -205,8 +231,8 @@ a,
   &.active,
   &:active,
   &:focus {
-    background-color: var(--clo-secondary);
-    border-color: var(--clo-secondary);
+    background-color: var(--clo-secondary) !important;
+    border-color: var(--clo-secondary) !important;
   }
 }
 
@@ -228,7 +254,7 @@ a,
 .btn-outline-secondary.active,
 .btn-outline-secondary:active,
 .btn-outline-secondary:focus {
-  background-color: var(--body-bg);
+  background-color: var(--body-bg) !important;
   border-color: var(--color-black-25) !important;
   color: var(--font-color);
 }

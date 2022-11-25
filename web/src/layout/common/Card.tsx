@@ -5,8 +5,10 @@ import { BsDot } from 'react-icons/bs';
 import { FaChartBar, FaGithub } from 'react-icons/fa';
 import { FiExternalLink, FiStar } from 'react-icons/fi';
 import { GoCalendar } from 'react-icons/go';
+import { useNavigate } from 'react-router-dom';
 
 import { Issue } from '../../types';
+import prepareQueryString from '../../utils/prepareQueryString';
 import prettifyNumber from '../../utils/prettifyNumber';
 import removeEmojis from '../../utils/removeEmojis';
 import removeLastDot from '../../utils/removeLastDot';
@@ -17,9 +19,21 @@ interface Props {
 }
 
 const Card = (props: Props) => {
+  const navigate = useNavigate();
   const [isGoodFirstIssue, setIsGoodFirstIssue] = useState<boolean>(false);
   const [isBug, setIsBug] = useState<boolean>(false);
   const [availableTopics, setAvailableTopics] = useState<string[]>([]);
+
+  const searchByText = (text: string) => {
+    navigate({
+      pathname: '/search',
+      search: prepareQueryString({
+        pageNumber: 1,
+        ts_query_web: text.toLowerCase(),
+        filters: {},
+      }),
+    });
+  };
 
   useEffect(() => {
     function cleanTopics() {
@@ -203,7 +217,12 @@ const Card = (props: Props) => {
               >
                 {availableTopics.slice(0, 4).map((lg: string) => {
                   return (
-                    <GenericBadge content={lg} className={`text-secondary lighterText ${styles.badge} ms-2`} key={lg} />
+                    <GenericBadge
+                      content={lg}
+                      className={`text-secondary lighterText ${styles.badge} ms-2`}
+                      key={lg}
+                      onClick={() => searchByText(lg)}
+                    />
                   );
                 })}
               </div>
@@ -245,11 +264,16 @@ const Card = (props: Props) => {
                     <GenericBadge
                       content="Good first issue"
                       className={`mx-1 text-uppercase bg-green ${styles.badge} lighterText`}
+                      onClick={() => searchByText('good first issue')}
                     />
                   )}
 
                   {isBug && (
-                    <GenericBadge content="Bug" className={`ms-1 text-uppercase bg-red ${styles.badge} lighterText`} />
+                    <GenericBadge
+                      content="Bug"
+                      className={`ms-1 text-uppercase bg-red ${styles.badge} lighterText`}
+                      onClick={() => searchByText('bug')}
+                    />
                   )}
                 </div>
               )}
@@ -264,6 +288,7 @@ const Card = (props: Props) => {
                         content={label}
                         className={`fw-normal text-secondary lighterText text-uppercase ms-2 bg-purple ${styles.badge}`}
                         key={`label_${props.issue.number}_${label}`}
+                        onClick={() => searchByText(label)}
                       />
                     );
                   })}
