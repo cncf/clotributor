@@ -22,6 +22,8 @@ To achieve this, **CLOTributor** scans periodically hundreds of repositories, in
 - They are `unassigned`
 - Updated within the last year
 
+Issues that no longer match the required criteria are *removed* automatically from **CLOTributor**. This way, if an issue is assigned to someone or it is closed, it won't be displayed anymore.
+
 In addition to some issue's details, like the *title* or *labels*, we also collect and index some metadata from the corresponding repository, like its *topics* or the *programming languages* used. We are also working on trying to normalize some labels we've observed across issues on different repositories to make it easier to categorize and filter them.
 
 At the moment some labels are highlighted in a special way, like `good first issue` or labels that contain the string `bug`. In general, the more context projects can provide in their issues via labels, the better. Labels like `frontend`, or even mentioning specific frameworks like `react` or `vue`, may help users finding issues that suit them best.
@@ -32,6 +34,8 @@ The generated index can be searched from <https://clotributor.dev>. The followin
 - Use `-` to exclude words from the search. **Example:** [*rust -webassembly*](https://clotributor.dev/search?ts_query_web=rust+-webassembly)
 - Put a phrase inside `double quotes` for an exact match. **Example:** [*"machine learning"*](https://clotributor.dev/search?ts_query_web=%22machine+learning%22)
 - Use `or` to combine multiple searches. **Example:** [*networking or security*](https://clotributor.dev/search?ts_query_web=networking+or+security)
+
+It's possible to search by project name, repository name, description, topics or programming languages, as well as issue title and labels. Prefix matching for all of them is also supported (e.g. searching for `backst` should return issues from the `Backstage` project).
 
 ## Projects and repositories
 
