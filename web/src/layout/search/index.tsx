@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { Loading, NoData, Pagination, PaginationLimitOptions, Sidebar, SortOptions } from 'clo-ui';
 import { isEmpty, isUndefined } from 'lodash';
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { FaFilter } from 'react-icons/fa';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 import { useNavigate, useOutletContext, useSearchParams } from 'react-router-dom';
@@ -12,6 +12,7 @@ import { DEFAULT_SORT_BY, SORT_OPTIONS } from '../../data';
 import { Issue, OutletContext, SearchFiltersURL, SortBy } from '../../types';
 import buildSearchParams from '../../utils/buildSearchParams';
 import prepareQueryString from '../../utils/prepareQueryString';
+import scrollToTop from '../../utils/scrollToTop';
 import Card from '../common/Card';
 import Filters from './Filters';
 import FiltersInLine from './FiltersInLine';
@@ -22,12 +23,7 @@ interface FiltersProp {
   [key: string]: string[];
 }
 
-interface Props {
-  scrollPosition?: number;
-  setScrollPosition: Dispatch<SetStateAction<number | undefined>>;
-}
-
-const Search = (props: Props) => {
+const Search = () => {
   const navigate = useNavigate();
   const { ctx, dispatch } = useContext(AppContext);
   const { limit, sort } = ctx.prefs.search;
@@ -42,7 +38,6 @@ const Search = (props: Props) => {
   const [apiError, setApiError] = useState<string | null>(null);
 
   const onResetFilters = (): void => {
-    props.setScrollPosition(0);
     navigate({
       pathname: '/search',
       search: prepareQueryString({
@@ -68,7 +63,6 @@ const Search = (props: Props) => {
   };
 
   const onPaginationLimitChange = (newLimit: number): void => {
-    props.setScrollPosition(0);
     navigate({
       pathname: '/search',
       search: prepareQueryString({
@@ -80,7 +74,6 @@ const Search = (props: Props) => {
   };
 
   const onSortChange = (by: string): void => {
-    props.setScrollPosition(0);
     // Load pageNumber is forced before update Sorting criteria
     navigate(
       {
@@ -102,7 +95,6 @@ const Search = (props: Props) => {
   };
 
   const updateCurrentPage = (searchChanges: any) => {
-    props.setScrollPosition(0);
     navigate({
       pathname: '/search',
       search: prepareQueryString({
@@ -125,10 +117,6 @@ const Search = (props: Props) => {
     return pNumber && limit ? (pNumber - 1) * limit : 0;
   };
 
-  const updateWindowScrollPosition = (newPosition: number) => {
-    window.scrollTo(0, newPosition);
-  };
-
   useEffect(() => {
     const formattedParams = buildSearchParams(searchParams);
     setText(formattedParams.ts_query_web);
@@ -138,8 +126,7 @@ const Search = (props: Props) => {
     async function searchIssues() {
       setIsLoading(true);
       setInvisibleFooter(true);
-      // Update scroll position
-      updateWindowScrollPosition(0);
+      scrollToTop();
 
       try {
         const newSearchResults = await API.searchIssues({
@@ -302,7 +289,6 @@ const Search = (props: Props) => {
                           <button
                             className="btn btn-link text-dark fw-bold py-0 pb-1 px-0"
                             onClick={() => {
-                              props.setScrollPosition(0);
                               navigate({
                                 pathname: '/search',
                                 search: prepareQueryString({

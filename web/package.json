@@ -43,6 +43,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src --color",
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx src --fix",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "format:diff": "prettier --list-different \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
   "proxy": "http://localhost:8000",

@@ -1,30 +1,26 @@
 import classnames from 'classnames';
 import { Loading } from 'clo-ui';
 import { isUndefined } from 'lodash';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
 
 import API from '../../api';
 import { DEFAULT_SORT_BY } from '../../data';
 import { Issue, OutletContext } from '../../types';
+import scrollToTop from '../../utils/scrollToTop';
 import Card from '../common/Card';
 import Searchbar from '../navigation/Searchbar';
 import styles from './Home.module.css';
 import SearchTip from './SearchTip';
 
-interface Props {
-  setScrollPosition: Dispatch<SetStateAction<number | undefined>>;
-}
-
-const Home = (props: Props) => {
+const Home = () => {
   const { setInvisibleFooter } = useOutletContext() as OutletContext;
   const [latestOpportunities, setLatestOpportunities] = useState<Issue[] | undefined>();
   const [loadingLatestOpportunities, setLoadingLatestOpportunities] = useState<boolean>(true);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-
     async function getLatestOpportunities() {
+      scrollToTop();
       setInvisibleFooter(true);
       setLoadingLatestOpportunities(true);
       try {
@@ -63,7 +59,7 @@ const Home = (props: Props) => {
           </div>
 
           <div className="py-4">
-            <Searchbar bigSize setScrollPosition={props.setScrollPosition} inNavbar={false} />
+            <Searchbar bigSize inNavbar={false} />
             <SearchTip />
           </div>
 
