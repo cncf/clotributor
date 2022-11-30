@@ -22,7 +22,7 @@ RUN yarn install
 RUN yarn build
 
 # Final stage
-FROM alpine:3.16.3
+FROM alpine:3.17.0
 RUN apk --no-cache add ca-certificates && addgroup -S clotributor && adduser -S clotributor -G clotributor
 USER clotributor
 WORKDIR /home/clotributor
