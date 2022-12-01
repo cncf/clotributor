@@ -2,14 +2,14 @@ use crate::db::{DynDB, SearchIssuesInput};
 use anyhow::{Error, Result};
 use axum::{
     body::Full,
-    extract::RawQuery,
+    extract::{FromRef, RawQuery, State},
     http::{
         header::{CACHE_CONTROL, CONTENT_TYPE},
         HeaderValue, Response, StatusCode,
     },
     response::IntoResponse,
     routing::{get, get_service},
-    Extension, Router,
+    Router,
 };
 use config::Config;
 use mime::APPLICATION_JSON;
@@ -30,6 +30,12 @@ const DEFAULT_API_MAX_AGE: usize = 300;
 
 /// Header that indicates the number of items available for pagination purposes.
 const PAGINATION_TOTAL_COUNT: &str = "pagination-total-count";
+
+/// API server router's state.
+#[derive(Clone, FromRef)]
+struct RouterState {
+    db: DynDB,
+}
 
 /// Setup HTTP server router.
 pub(crate) fn setup_router(cfg: Arc<Config>, db: DynDB) -> Result<Router> {
@@ -52,7 +58,7 @@ pub(crate) fn setup_router(cfg: Arc<Config>, db: DynDB) -> Result<Router> {
             "/",
             get_service(ServeFile::new(&index_path)).handle_error(error_handler),
         )
-        .nest(
+        .nest_service(
             "/static",
             get_service(SetResponseHeader::overriding(
                 ServeDir::new(static_path),
@@ -61,21 +67,15 @@ pub(crate) fn setup_router(cfg: Arc<Config>, db: DynDB) -> Result<Router> {
             ))
             .handle_error(error_handler),
         )
-        .fallback(get_service(ServeFile::new(&index_path)).handle_error(error_handler))
-        .layer(
-            ServiceBuilder::new()
-                .layer(TraceLayer::new_for_http())
-                .layer(Extension(db)),
-        );
+        .fallback_service(get_service(ServeFile::new(&index_path)).handle_error(error_handler))
+        .layer(ServiceBuilder::new().layer(TraceLayer::new_for_http()))
+        .with_state(RouterState { db });
 
     Ok(router)
 }
 
 /// Handler that allows searching for issues.
-async fn search_issues(
-    Extension(db): Extension<DynDB>,
-    RawQuery(query): RawQuery,
-) -> impl IntoResponse {
+async fn search_issues(State(db): State<DynDB>, RawQuery(query): RawQuery) -> impl IntoResponse {
     // Search issues in database
     let query = query.unwrap_or_default();
     let input: SearchIssuesInput =
