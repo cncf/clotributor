@@ -111,6 +111,10 @@
   margin: 1px 0;
 }
 
+.mentorBadge {
+  font-size: 0.7rem;
+}
+
 @media only screen and (max-width: 575.98px) {
   .title {
     font-size: 1rem;
