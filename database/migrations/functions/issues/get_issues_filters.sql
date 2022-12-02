@@ -35,12 +35,14 @@ returns json as $$
             'key', 'project',
             'options', (
                 select coalesce(json_agg(json_build_object(
-                    'name', display_name,
+                    'name', coalesce(display_name, name),
                     'value', name
                 )), '[]')
                 from (
-                    select display_name, name
-                    from project
+                    select distinct p.display_name, p.name
+                    from project p
+                    join repository r using (project_id)
+                    join issue i using (repository_id)
                     order by name asc
                 ) m
             )
