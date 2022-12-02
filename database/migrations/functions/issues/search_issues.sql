@@ -8,6 +8,7 @@ declare
     v_sort_by text := coalesce(p_input->>'sort_by', 'most_recent');
     v_foundation text[];
     v_maturity text[];
+    v_project text[];
     v_tsquery_web tsquery := websearch_to_tsquery(p_input->>'ts_query_web');
     v_tsquery_web_with_prefix_matching tsquery;
 begin
@@ -19,6 +20,10 @@ begin
     if p_input ? 'maturity' and p_input->'maturity' <> 'null' then
         select array_agg(e::text) into v_maturity
         from jsonb_array_elements_text(p_input->'maturity') e;
+    end if;
+    if p_input ? 'project' and p_input->'project' <> 'null' then
+        select array_agg(e::text) into v_project
+        from jsonb_array_elements_text(p_input->'project') e;
     end if;
 
     -- Prepare v_tsquery_web_with_prefix_matching
@@ -74,6 +79,9 @@ begin
         and
             case when cardinality(v_maturity) > 0 then
             p.maturity::text = any(v_maturity) else true end
+        and
+            case when cardinality(v_project) > 0 then
+            p.name = any(v_project) else true end
     )
     select
         (
