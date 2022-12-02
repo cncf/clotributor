@@ -47,6 +47,7 @@ export interface Repository {
 export enum FilterKind {
   Foundation = 'foundation',
   Maturity = 'maturity',
+  Project = 'project',
 }
 
 export enum SortBy {
@@ -84,4 +85,15 @@ export interface SearchFiltersURL extends BasicQuery {
 export interface SearchTipItem {
   content: JSX.Element | string;
   example: string;
+}
+
+export interface Filter {
+  title: string;
+  key: string;
+  options: FilterOption[];
+}
+
+export interface FilterOption {
+  name: string;
+  value: string;
 }

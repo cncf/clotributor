@@ -9,7 +9,7 @@ import { useNavigate, useOutletContext, useSearchParams } from 'react-router-dom
 import API from '../../api';
 import { AppContext, updateLimit, updateSort } from '../../context/AppContextProvider';
 import { DEFAULT_SORT_BY, SORT_OPTIONS } from '../../data';
-import { Issue, OutletContext, SearchFiltersURL, SortBy } from '../../types';
+import { Filter, Issue, OutletContext, SearchFiltersURL, SortBy } from '../../types';
 import buildSearchParams from '../../utils/buildSearchParams';
 import prepareQueryString from '../../utils/prepareQueryString';
 import scrollToTop from '../../utils/scrollToTop';
@@ -30,6 +30,7 @@ const Search = () => {
   const { setInvisibleFooter } = useOutletContext() as OutletContext;
   const [text, setText] = useState<string | undefined>();
   const [filters, setFilters] = useState<FiltersProp>({});
+  const [projects, setProjects] = useState<Filter | undefined>();
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
   const [issues, setIssues] = useState<Issue[] | null | undefined>();
@@ -49,15 +50,27 @@ const Search = () => {
 
   const onFiltersChange = (name: string, value: string, checked: boolean): void => {
     const currentFilters = filters || {};
+    let additionalChanges = {};
     let newFilters = isUndefined(currentFilters[name]) ? [] : currentFilters[name].slice();
     if (checked) {
       newFilters.push(value);
+      switch (name) {
+        case 'project':
+          additionalChanges = { foundation: [], maturity: [] };
+          break;
+        case 'foundation':
+        case 'maturity':
+          additionalChanges = { project: [] };
+          break;
+        default:
+          break;
+      }
     } else {
       newFilters = newFilters.filter((el) => el !== value);
     }
 
     updateCurrentPage({
-      filters: { ...currentFilters, [name]: newFilters },
+      filters: { ...currentFilters, [name]: newFilters, ...additionalChanges },
     });
   };
 
@@ -117,6 +130,26 @@ const Search = () => {
   };
 
   useEffect(() => {
+    async function getIssuesFilters() {
+      setIsLoading(true);
+      setInvisibleFooter(true);
+      scrollToTop();
+
+      try {
+        const issuesFilters = await API.getIssuesFilters();
+        issuesFilters.forEach((filter: Filter) => {
+          if (filter.key === 'project') {
+            setProjects(filter);
+          }
+        });
+      } catch {
+        // Notthing
+      }
+    }
+    getIssuesFilters();
+  }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
+
+  useEffect(() => {
     const formattedParams = buildSearchParams(searchParams);
     setText(formattedParams.ts_query_web);
     setFilters(formattedParams.filters || {});
@@ -145,7 +178,7 @@ const Search = () => {
       }
     }
 
-    // When a new text is search, sort.by is updated to default before searching
+    // When a new text is searched, sort.by is updated to default before searching
     if (text !== formattedParams.ts_query_web && sort.by !== DEFAULT_SORT_BY) {
       dispatch(updateSort(DEFAULT_SORT_BY));
     } else {
@@ -248,6 +281,7 @@ const Search = () => {
               activeFilters={filters}
               onChange={onFiltersChange}
               onResetFilters={onResetFilters}
+              projects={projects}
               device="desktop"
             />
           </div>

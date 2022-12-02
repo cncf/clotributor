@@ -1,10 +1,10 @@
-import { Dropdown, FiltersSection, Foundation, FOUNDATIONS, Section } from 'clo-ui';
-import { isUndefined } from 'lodash';
+import { Dropdown, Filter as FilterOpt, FiltersSection, Foundation, FOUNDATIONS, Searchbar, Section } from 'clo-ui';
+import { isNull, isUndefined } from 'lodash';
 import { useEffect, useState } from 'react';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 
 import { FILTERS } from '../../data';
-import { FilterKind } from '../../types';
+import { Filter, FilterKind, FilterOption } from '../../types';
 import capitalizeFirstLetter from '../../utils/capitalizeFirstLetter';
 import styles from './FiltersInLine.module.css';
 
@@ -12,6 +12,7 @@ interface Props {
   activeFilters: {
     [key: string]: string[];
   };
+  projects?: Filter;
   onChange: (name: string, value: string, checked: boolean) => void;
   onResetFilters: () => void;
   device: string;
@@ -19,11 +20,15 @@ interface Props {
 
 interface FiltersProps {
   activeFilters: string[];
+  contentClassName?: string;
   section: Section;
   device: string;
+  additionalContent?: JSX.Element;
   onChange: (name: string, value: string, checked: boolean) => void;
   closeDropdown?: () => void;
 }
+
+const SEARCH_DELAY = 3 * 100; // 300ms
 
 const Filters = (props: FiltersProps) => {
   const onChangeFilter = (name: string, value: string, checked: boolean) => {
@@ -35,9 +40,11 @@ const Filters = (props: FiltersProps) => {
 
   return (
     <div className="ms-3 mt-2">
+      {props.additionalContent}
       <FiltersSection
         device={props.device}
         activeFilters={props.activeFilters}
+        contentClassName={`overflow-auto ${styles.projectOptions}`}
         section={props.section}
         onChange={onChangeFilter}
         visibleTitle={false}
@@ -52,8 +59,115 @@ const getFilterName = (type: FilterKind, filter: string): string => {
       return FOUNDATIONS[filter as Foundation].name;
 
     case FilterKind.Maturity:
+    case FilterKind.Project:
       return filter;
   }
+};
+
+const ProjectFilters = (props: Props) => {
+  const [value, setValue] = useState<string>('');
+  const [visibleOptions, setVisibleOptions] = useState<FilterOpt[]>([]);
+  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+  const activeFilters = props.activeFilters.project;
+
+  const formatOptions = (opts: FilterOption[]) => {
+    return opts.map((opt: FilterOption) => {
+      return { name: opt.value, label: opt.name };
+    });
+  };
+
+  useEffect(() => {
+    if (!isUndefined(props.projects)) {
+      setVisibleOptions(formatOptions(props.projects.options));
+    }
+  }, [props.projects]);
+
+  const searchProjects = () => {
+    if (props.projects && props.projects.options) {
+      if (value !== '') {
+        setVisibleOptions(formatOptions(props.projects.options.filter((f: FilterOption) => f.value.includes(value))));
+      } else {
+        setVisibleOptions(formatOptions(props.projects.options));
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (!isNull(searchTimeout)) {
+      clearTimeout(searchTimeout);
+    }
+    setSearchTimeout(
+      setTimeout(() => {
+        searchProjects();
+      }, SEARCH_DELAY)
+    );
+  }, [value]); /* eslint-disable-line react-hooks/exhaustive-deps */
+
+  useEffect(() => {
+    return () => {
+      if (searchTimeout) {
+        clearTimeout(searchTimeout);
+      }
+    };
+  }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
+
+  if (isUndefined(props.projects)) return null;
+
+  return (
+    <div className={`me-2 me-md-4 ${styles.dropdownWrapper}`}>
+      <Dropdown
+        label="Filters"
+        btnContent="Project"
+        btnClassName={`btn btn-md btn-light text-decoration-none text-start w-100 ${styles.btn}`}
+        dropdownClassName={`${styles.dropdown} ${styles.projectDropdown}`}
+        onClose={() => setValue('')}
+      >
+        <Filters
+          section={{ name: 'project', title: 'Project', filters: visibleOptions }}
+          device={props.device}
+          contentClassName={styles.content}
+          activeFilters={activeFilters}
+          onChange={props.onChange}
+          additionalContent={
+            <div className="mb-3">
+              <Searchbar
+                value={value}
+                onValueChange={(newValue: string) => setValue(newValue)}
+                onSearch={searchProjects}
+                cleanSearchValue={() => setValue('')}
+                classNameSearch={styles.search}
+                placeholder="Search projects"
+                bigSize={false}
+              />
+            </div>
+          }
+        />
+      </Dropdown>
+      {activeFilters && (
+        <div className="mt-2">
+          {activeFilters.map((filter: string) => {
+            const filterOpt = props.projects!.options.find((opt: FilterOption) => opt.value === filter);
+            if (isUndefined(filterOpt)) return null;
+
+            const filterName = capitalizeFirstLetter(filterOpt.name);
+
+            return (
+              <button
+                className={`btn btn-sm btn-link text-start w-100 text-decoration-none ${styles.btnActiveFilter}`}
+                onClick={() => props.onChange('project', filter as string, false)}
+                key={`fil_${filterName}`}
+              >
+                <div className="d-flex flex-row align-items-center">
+                  <div className="flex-grow-1 text-truncate me-2">{filterName}</div>
+                  <IoMdCloseCircleOutline className={`ms-auto ${styles.closeBtn}`} />
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
 };
 
 const FiltersInLine = (props: Props) => {
@@ -71,11 +185,11 @@ const FiltersInLine = (props: Props) => {
 
   return (
     <div className="d-none d-lg-block mb-2">
-      <div className="d-flex flex-row align-items-baseline my-2">
+      <div className="d-flex flex-row align-items-baseline mt-2 mb-3">
         <div className={`text-uppercase text-secondary fw-bold ${styles.title}`}>Filters</div>
         {filtersNumber > 1 && (
           <button
-            className={`btn btn-link text-secondary btn-sm me-3 ${styles.btnRemove}`}
+            className={`btn btn-link text-secondary btn-sm py-0 me-3 ${styles.btnRemove}`}
             onClick={props.onResetFilters}
             aria-label="Remove all filters"
           >
@@ -114,10 +228,11 @@ const FiltersInLine = (props: Props) => {
                       <button
                         className={`btn btn-sm btn-link text-start w-100 text-decoration-none ${styles.btnActiveFilter}`}
                         onClick={() => props.onChange(section.name, filter as string, false)}
+                        key={`fil_${section.name}`}
                       >
                         <div className="d-flex flex-row align-items-center">
                           <div className="flex-grow-1 text-truncate me-2">{filterName}</div>
-                          <IoMdCloseCircleOutline className="ms-auto" />
+                          <IoMdCloseCircleOutline className={`ms-auto ${styles.closeBtn}`} />
                         </div>
                       </button>
                     );
@@ -127,6 +242,7 @@ const FiltersInLine = (props: Props) => {
             </div>
           );
         })}
+        <ProjectFilters {...props} />
       </div>
     </div>
   );

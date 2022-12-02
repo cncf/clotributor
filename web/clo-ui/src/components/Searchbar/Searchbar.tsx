@@ -14,6 +14,7 @@ export interface ISearchbarProps {
   cleanSearchValue: () => void;
   bigSize: boolean;
   classNameWrapper?: string;
+  classNameSearch?: string;
 }
 
 export const Searchbar: React.FC<ISearchbarProps> = (props: ISearchbarProps) => {
@@ -46,7 +47,7 @@ export const Searchbar: React.FC<ISearchbarProps> = (props: ISearchbarProps) => 
   return (
     <div className={classNames('position-relative', props.classNameWrapper, { [styles.big]: props.bigSize })}>
       <div
-        className={`d-flex align-items-center overflow-hidden searchBar lh-base bg-white mx-auto ${styles.searchBar} search`}
+        className={`d-flex align-items-center overflow-hidden searchBar lh-base bg-white mx-auto ${styles.searchBar} ${props.classNameSearch} search`}
       >
         <input
           data-testid="search-bar"

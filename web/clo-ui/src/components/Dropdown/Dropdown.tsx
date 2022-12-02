@@ -1,5 +1,6 @@
 import classNames from 'classnames';
-import React, { useRef, useState } from 'react';
+import { isUndefined } from 'lodash';
+import React, { useEffect, useRef, useState } from 'react';
 
 import useOutsideClick from '../../hooks/useOutsideClick';
 import styles from './Dropdown.module.css';
@@ -10,6 +11,7 @@ export interface IDropdownProps {
   children: JSX.Element;
   btnClassName?: string;
   dropdownClassName?: string;
+  onClose?: () => void;
 }
 
 export const Dropdown: React.FC<IDropdownProps> = (props: IDropdownProps) => {
@@ -20,6 +22,12 @@ export const Dropdown: React.FC<IDropdownProps> = (props: IDropdownProps) => {
   const closeDropdown = () => {
     setVisibleDropdown(false);
   };
+
+  useEffect(() => {
+    if (!visibleDropdown && !isUndefined(props.onClose)) {
+      props.onClose();
+    }
+  }, [visibleDropdown]); /* eslint-disable-line react-hooks/exhaustive-deps */
 
   return (
     <div ref={ref} className="position-relative">
