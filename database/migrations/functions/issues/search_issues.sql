@@ -9,6 +9,8 @@ declare
     v_foundation text[];
     v_maturity text[];
     v_project text[];
+    v_kind text[];
+    v_difficulty text[];
     v_tsquery_web tsquery := websearch_to_tsquery(p_input->>'ts_query_web');
     v_tsquery_web_with_prefix_matching tsquery;
 begin
@@ -24,6 +26,14 @@ begin
     if p_input ? 'project' and p_input->'project' <> 'null' then
         select array_agg(e::text) into v_project
         from jsonb_array_elements_text(p_input->'project') e;
+    end if;
+    if p_input ? 'kind' and p_input->'kind' <> 'null' then
+        select array_agg(e::text) into v_kind
+        from jsonb_array_elements_text(p_input->'kind') e;
+    end if;
+    if p_input ? 'difficulty' and p_input->'difficulty' <> 'null' then
+        select array_agg(e::text) into v_difficulty
+        from jsonb_array_elements_text(p_input->'difficulty') e;
     end if;
 
     -- Prepare v_tsquery_web_with_prefix_matching
@@ -82,6 +92,16 @@ begin
         and
             case when cardinality(v_project) > 0 then
             p.name = any(v_project) else true end
+        and
+            case when cardinality(v_kind) > 0 then
+            i.kind::text = any(v_kind) else true end
+        and
+            case when cardinality(v_difficulty) > 0 then
+            i.difficulty::text = any(v_difficulty) else true end
+        and
+            case when p_input ? 'mentor_available' and (p_input->>'mentor_available')::boolean = true then
+                i.mentor_available = true
+            else true end
     )
     select
         (
