@@ -53,6 +53,7 @@ pub(crate) fn setup_router(cfg: Arc<Config>, db: DynDB) -> Result<Router> {
 
     // Setup router
     let router = Router::new()
+        .route("/api/filters/issues", get(issues_filters))
         .route("/api/issues/search", get(search_issues))
         .route(
             "/",
@@ -72,6 +73,19 @@ pub(crate) fn setup_router(cfg: Arc<Config>, db: DynDB) -> Result<Router> {
         .with_state(RouterState { db });
 
     Ok(router)
+}
+
+/// Handler that returns the filters that can be used when searching for issues.
+async fn issues_filters(State(db): State<DynDB>) -> impl IntoResponse {
+    // Get issues filters from database
+    let filters = db.get_issues_filters().await.map_err(internal_error)?;
+
+    // Return issues filters as json
+    Response::builder()
+        .header(CACHE_CONTROL, format!("max-age={}", DEFAULT_API_MAX_AGE))
+        .header(CONTENT_TYPE, APPLICATION_JSON.as_ref())
+        .body(Full::from(filters))
+        .map_err(internal_error)
 }
 
 /// Handler that allows searching for issues.

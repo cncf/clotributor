@@ -17,6 +17,9 @@ type Count = i64;
 /// Trait that defines some operations a DB implementation must support.
 #[async_trait]
 pub(crate) trait DB {
+    /// Get filters that can be used when searching for issues.
+    async fn get_issues_filters(&self) -> Result<JsonString>;
+
     /// Search issues that match the criteria provided.
     async fn search_issues(&self, input: &SearchIssuesInput) -> Result<(Count, JsonString)>;
 }
@@ -35,6 +38,15 @@ impl PgDB {
 
 #[async_trait]
 impl DB for PgDB {
+    async fn get_issues_filters(&self) -> Result<JsonString> {
+        let db = self.pool.get().await?;
+        let row = db
+            .query_one("select get_issues_filters()::text", &[])
+            .await?;
+        let filters: String = row.get(0);
+        Ok(filters)
+    }
+
     async fn search_issues(&self, input: &SearchIssuesInput) -> Result<(Count, JsonString)> {
         let db = self.pool.get().await?;
         let row = db
