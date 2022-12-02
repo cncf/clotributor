@@ -1,3 +1,11 @@
+.title {
+  font-size: 0.9rem;
+}
+
+.dropdownWrapper {
+  width: 150px;
+}
+
 .btn {
   background-color: var(--body-bg);
   line-height: 1.5 !important;
@@ -11,6 +19,15 @@
   border-color: #ced4da !important;
   font-size: 0.875rem;
   text-transform: capitalize;
+}
+
+.btnRemove {
+  font-size: 0.7rem;
+}
+
+.btnActiveFilter {
+  font-size: 0.8rem;
+  padding: 0 0.35rem;
 }
 
 [data-theme='dark'] .btn {

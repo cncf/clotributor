@@ -3,6 +3,11 @@
   padding: 1rem 0;
 }
 
+.filtersNavbar {
+  background-color: var(--clo-secondary-5);
+  padding: 1rem 0;
+}
+
 .searchResults {
   font-size: 0.9rem;
 }
