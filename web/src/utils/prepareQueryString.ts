@@ -14,6 +14,9 @@ const getURLSearchParams = (query: BasicQuery): URLSearchParams => {
   if (!isUndefined(query.ts_query_web) && query.ts_query_web !== '') {
     q.set('ts_query_web', query.ts_query_web);
   }
+  if (!isUndefined(query.mentor_available) && query.mentor_available) {
+    q.set('mentor_available', 'true');
+  }
   return q;
 };
 

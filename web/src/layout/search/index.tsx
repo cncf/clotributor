@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Loading, NoData, Pagination, PaginationLimitOptions, Sidebar, SortOptions } from 'clo-ui';
+import { FiltersSection, Loading, NoData, Pagination, PaginationLimitOptions, Sidebar, SortOptions } from 'clo-ui';
 import { isEmpty, isUndefined } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
 import { FaFilter } from 'react-icons/fa';
@@ -29,6 +29,7 @@ const Search = () => {
   const [searchParams] = useSearchParams();
   const { setInvisibleFooter } = useOutletContext() as OutletContext;
   const [text, setText] = useState<string | undefined>();
+  const [mentorAvailable, setMentorAvailable] = useState<boolean>(false);
   const [filters, setFilters] = useState<FiltersProp>({});
   const [projects, setProjects] = useState<Filter | undefined>();
   const [pageNumber, setPageNumber] = useState<number>(1);
@@ -85,6 +86,17 @@ const Search = () => {
     dispatch(updateLimit(newLimit));
   };
 
+  const onMentorChange = (): void => {
+    navigate({
+      pathname: '/search',
+      search: prepareQueryString({
+        ...getCurrentFilters(),
+        mentor_available: !mentorAvailable,
+        pageNumber: 1,
+      }),
+    });
+  };
+
   const onSortChange = (by: string): void => {
     // Load pageNumber is forced before update Sorting criteria
     navigate(
@@ -120,6 +132,7 @@ const Search = () => {
   const getCurrentFilters = (): SearchFiltersURL => {
     return {
       pageNumber: pageNumber,
+      mentor_available: mentorAvailable,
       ts_query_web: text,
       filters: filters,
     };
@@ -152,6 +165,7 @@ const Search = () => {
   useEffect(() => {
     const formattedParams = buildSearchParams(searchParams);
     setText(formattedParams.ts_query_web);
+    setMentorAvailable(formattedParams.mentor_available || false);
     setFilters(formattedParams.filters || {});
     setPageNumber(formattedParams.pageNumber);
 
@@ -163,6 +177,7 @@ const Search = () => {
       try {
         const newSearchResults = await API.searchIssues({
           ts_query_web: formattedParams.ts_query_web,
+          mentor_available: formattedParams.mentor_available || false,
           sort_by: sort.by,
           filters: formattedParams.filters || {},
           offset: calculateOffset(formattedParams.pageNumber),
@@ -237,6 +252,17 @@ const Search = () => {
                 >
                   <div role="menu">
                     <Filters device="mobile" activeFilters={filters} onChange={onFiltersChange} visibleTitle={false} />
+                    <FiltersSection
+                      device="mobile"
+                      activeFilters={mentorAvailable ? ['mentor_available'] : []}
+                      section={{
+                        name: 'other',
+                        title: 'Other',
+                        filters: [{ name: 'mentor_available', label: 'Mentor available' }],
+                      }}
+                      onChange={onMentorChange}
+                      visibleTitle
+                    />
                   </div>
                 </Sidebar>
                 <div className="text-truncate fw-bold w-100 Search_searchResults__hU0s2" role="status">
@@ -282,6 +308,8 @@ const Search = () => {
               onChange={onFiltersChange}
               onResetFilters={onResetFilters}
               projects={projects}
+              mentorAvailable={mentorAvailable}
+              onMentorChange={onMentorChange}
               device="desktop"
             />
           </div>

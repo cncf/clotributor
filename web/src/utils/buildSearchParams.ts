@@ -10,6 +10,8 @@ const WHITELISTED_FILTER_KEYS = [
   FilterKind.Foundation, // Project foundation
   FilterKind.Maturity, // Project maturity
   FilterKind.Project, // Project name
+  FilterKind.Kind, // Issue kind
+  FilterKind.Difficulty, // Issue difficulty
 ];
 
 const buildSearchParams = (p: URLSearchParams): SearchFiltersURL => {
@@ -25,6 +27,7 @@ const buildSearchParams = (p: URLSearchParams): SearchFiltersURL => {
 
   return {
     ts_query_web: p.has('ts_query_web') ? p.get('ts_query_web')! : undefined,
+    mentor_available: p.has('mentor_available'),
     filters: { ...filters },
     pageNumber: p.has('page') && !isNull(p.get('page')) ? parseInt(p.get('page')!) : 1,
   };

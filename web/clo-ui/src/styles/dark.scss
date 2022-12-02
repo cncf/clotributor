@@ -74,9 +74,15 @@
 
   .bg-green,
   .bg-purple,
-  .bg-red {
+  .bg-red,
+  .bg-blue,
+  .bg-solid-yellow {
     border-color: var(--default-border) !important;
     background-color: transparent !important;
+  }
+
+  .bg-solid-yellow {
+    color: var(--color-lighter-font) !important;
   }
 
   .border,

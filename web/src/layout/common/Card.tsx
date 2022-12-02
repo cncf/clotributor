@@ -1,4 +1,6 @@
+import classNames from 'classnames';
 import { Card as CardWrapper, ExternalLink, FoundationBadge, GenericBadge, Image, MaturityBadge } from 'clo-ui';
+import { isUndefined } from 'lodash';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { BsDot } from 'react-icons/bs';
@@ -7,7 +9,7 @@ import { FiExternalLink, FiStar } from 'react-icons/fi';
 import { GoCalendar } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
 
-import { Issue } from '../../types';
+import { FilterKind, Issue } from '../../types';
 import prepareQueryString from '../../utils/prepareQueryString';
 import prettifyNumber from '../../utils/prettifyNumber';
 import removeEmojis from '../../utils/removeEmojis';
@@ -21,7 +23,6 @@ interface Props {
 const Card = (props: Props) => {
   const navigate = useNavigate();
   const [isGoodFirstIssue, setIsGoodFirstIssue] = useState<boolean>(false);
-  const [isBug, setIsBug] = useState<boolean>(false);
   const [availableTopics, setAvailableTopics] = useState<string[]>([]);
 
   const searchByText = (text: string) => {
@@ -30,6 +31,27 @@ const Card = (props: Props) => {
       search: prepareQueryString({
         pageNumber: 1,
         ts_query_web: text.toLowerCase(),
+        filters: {},
+      }),
+    });
+  };
+
+  const searchByFilter = (filter: FilterKind, value: string) => {
+    navigate({
+      pathname: '/search',
+      search: prepareQueryString({
+        pageNumber: 1,
+        filters: { [filter]: [value] },
+      }),
+    });
+  };
+
+  const searchByMentor = () => {
+    navigate({
+      pathname: '/search',
+      search: prepareQueryString({
+        pageNumber: 1,
+        mentor_available: true,
         filters: {},
       }),
     });
@@ -58,11 +80,6 @@ const Card = (props: Props) => {
         });
         if (lowerLabels.includes('good first issue')) {
           setIsGoodFirstIssue(true);
-        }
-        for (let index = 0; index < lowerLabels.length; index++) {
-          if (lowerLabels[index].includes('bug')) {
-            setIsBug(true);
-          }
         }
       }
     }
@@ -228,19 +245,30 @@ const Card = (props: Props) => {
               </div>
             </div>
 
-            <div>
-              <ExternalLink
-                label="Issue url"
-                href={props.issue.url}
-                className="position-relative d-inline-block mw-100"
-              >
-                <div className="d-flex flex-row align-items-center my-3 w-100">
-                  <div className={`fw-bold text-start text-truncate ${styles.issueDesc}`}>
-                    {removeLastDot(removeEmojis(props.issue.title))}
+            <div className="d-flex flex-row align-items-center">
+              <div className="d-flex truncateWrapper">
+                <ExternalLink
+                  label="Issue url"
+                  href={props.issue.url}
+                  className="position-relative d-inline-block mw-100"
+                >
+                  <div className="d-flex flex-row align-items-center my-3 w-100">
+                    <div className={`fw-bold text-start text-truncate ${styles.issueDesc}`}>
+                      {removeLastDot(removeEmojis(props.issue.title))}
+                    </div>
+                    <FiExternalLink className={`d-none d-md-block ms-2 ${styles.issueIcon}`} />
                   </div>
-                  <FiExternalLink className={`d-none d-md-block ms-2 ${styles.issueIcon}`} />
+                </ExternalLink>
+              </div>
+              {props.issue.mentor_available && (
+                <div className="d-none d-xl-flex">
+                  <GenericBadge
+                    content="Mentor available"
+                    className={classNames('ms-3 text-uppercase bg-solid-yellow', styles.badge, styles.mentorBadge)}
+                    onClick={searchByMentor}
+                  />
                 </div>
-              </ExternalLink>
+              )}
             </div>
 
             <div className={`d-flex flex-row align-items-center flex-nowrap ${styles.moreInfo}`}>
@@ -256,7 +284,7 @@ const Card = (props: Props) => {
                 </ExternalLink>
               </div>
 
-              {(isGoodFirstIssue || isBug) && (
+              {(isGoodFirstIssue || props.issue.kind || props.issue.difficulty) && (
                 <div className="d-flex flex-row align-items-center ms-auto ms-sm-0">
                   <BsDot className="d-none d-sm-flex mx-1" />
 
@@ -268,11 +296,25 @@ const Card = (props: Props) => {
                     />
                   )}
 
-                  {isBug && (
+                  {!isUndefined(props.issue.kind) && (
                     <GenericBadge
-                      content="Bug"
-                      className={`ms-1 text-uppercase bg-red ${styles.badge} lighterText`}
-                      onClick={() => searchByText('bug')}
+                      content={props.issue.kind}
+                      className={classNames(
+                        'ms-1 text-uppercase',
+                        { 'bg-red': props.issue.kind === 'bug' },
+                        { 'bg-blue': props.issue.kind !== 'bug' },
+                        styles.badge,
+                        'lighterText'
+                      )}
+                      onClick={() => searchByFilter(FilterKind.Kind, props.issue.kind!)}
+                    />
+                  )}
+
+                  {!isUndefined(props.issue.difficulty) && (
+                    <GenericBadge
+                      content={props.issue.difficulty}
+                      className={classNames('ms-1 text-uppercase bg-blue', styles.badge, 'lighterText')}
+                      onClick={() => searchByFilter(FilterKind.Difficulty, props.issue.difficulty!)}
                     />
                   )}
                 </div>
@@ -282,7 +324,7 @@ const Card = (props: Props) => {
                 <div
                   className={`ms-auto d-none d-sm-flex flex-row flex-wrap overflow-hidden justify-content-end ${styles.languagesWrapper}`}
                 >
-                  {props.issue.repository.languages.map((label: string) => {
+                  {props.issue.repository.languages.slice(0, 4).map((label: string) => {
                     return (
                       <GenericBadge
                         content={label}

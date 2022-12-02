@@ -20,6 +20,9 @@ export interface Issue {
   url: string;
   labels?: string[];
   published_at: number;
+  kind?: string;
+  difficulty?: string;
+  mentor_available?: string;
   project: Project;
   repository: Repository;
 }
@@ -48,6 +51,8 @@ export enum FilterKind {
   Foundation = 'foundation',
   Maturity = 'maturity',
   Project = 'project',
+  Kind = 'kind',
+  Difficulty = 'difficulty',
 }
 
 export enum SortBy {
@@ -70,6 +75,7 @@ export interface BasicQuery {
   filters?: {
     [key: string]: string[];
   };
+  mentor_available?: boolean;
 }
 
 export interface SearchQuery extends BasicQuery {

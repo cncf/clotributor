@@ -120,6 +120,10 @@ class API_CLASS {
       q += `&ts_query_web=${query.ts_query_web}`;
     }
 
+    if (query.mentor_available) {
+      q += '&mentor_available=true';
+    }
+
     if (!isUndefined(query.filters) && !isEmpty(query.filters)) {
       Object.keys(query.filters!).forEach((k: string) => {
         query.filters![k].forEach((f: string, index: number) => {

@@ -1,6 +1,6 @@
 import { Dropdown, Filter as FilterOpt, FiltersSection, Foundation, FOUNDATIONS, Searchbar, Section } from 'clo-ui';
-import { isNull, isUndefined } from 'lodash';
-import { useEffect, useState } from 'react';
+import { isEmpty, isNull, isUndefined } from 'lodash';
+import React, { useEffect, useState } from 'react';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 
 import { FILTERS } from '../../data';
@@ -13,6 +13,8 @@ interface Props {
     [key: string]: string[];
   };
   projects?: Filter;
+  mentorAvailable: boolean;
+  onMentorChange: () => void;
   onChange: (name: string, value: string, checked: boolean) => void;
   onResetFilters: () => void;
   device: string;
@@ -58,8 +60,7 @@ const getFilterName = (type: FilterKind, filter: string): string => {
     case FilterKind.Foundation:
       return FOUNDATIONS[filter as Foundation].name;
 
-    case FilterKind.Maturity:
-    case FilterKind.Project:
+    default:
       return filter;
   }
 };
@@ -171,23 +172,11 @@ const ProjectFilters = (props: Props) => {
 };
 
 const FiltersInLine = (props: Props) => {
-  const [filtersNumber, setFiltersNumber] = useState<number>(0);
-
-  useEffect(() => {
-    let filters: number = 0;
-
-    Object.keys(props.activeFilters).forEach((cat: string) => {
-      filters = filters + props.activeFilters[cat].length;
-    });
-
-    setFiltersNumber(filters);
-  }, [props.activeFilters]);
-
   return (
     <div className="d-none d-lg-block mb-2">
       <div className="d-flex flex-row align-items-baseline mt-2 mb-3">
         <div className={`text-uppercase text-secondary fw-bold ${styles.title}`}>Filters</div>
-        {filtersNumber > 1 && (
+        {!isEmpty(props.activeFilters) && (
           <button
             className={`btn btn-link text-secondary btn-sm py-0 me-3 ${styles.btnRemove}`}
             onClick={props.onResetFilters}
@@ -205,44 +194,78 @@ const FiltersInLine = (props: Props) => {
           const activeFilters = props.activeFilters[section.name];
 
           return (
-            <div key={`sec_${section.name}`} className={`me-2 me-md-4 ${styles.dropdownWrapper}`}>
-              <Dropdown
-                label="Filters"
-                btnContent={section.name}
-                btnClassName={`btn btn-md btn-light text-decoration-none text-start w-100 ${styles.btn}`}
-                dropdownClassName={styles.dropdown}
-              >
-                <Filters
-                  section={section}
-                  device={props.device}
-                  activeFilters={activeFilters}
-                  onChange={props.onChange}
-                />
-              </Dropdown>
-              {activeFilters && (
-                <div className="mt-2">
-                  {activeFilters.map((filter: string) => {
-                    const filterName = capitalizeFirstLetter(getFilterName(section.name as FilterKind, filter));
+            <React.Fragment key={`sec_${section.name}`}>
+              <div className={`me-2 me-md-4 ${styles.dropdownWrapper}`}>
+                <Dropdown
+                  label="Filters"
+                  btnContent={section.name}
+                  btnClassName={`btn btn-md btn-light text-decoration-none text-start w-100 ${styles.btn}`}
+                  dropdownClassName={styles.dropdown}
+                >
+                  <Filters
+                    section={section}
+                    device={props.device}
+                    activeFilters={activeFilters}
+                    onChange={props.onChange}
+                  />
+                </Dropdown>
+                {activeFilters && (
+                  <div className="mt-2">
+                    {activeFilters.map((filter: string) => {
+                      const filterName = capitalizeFirstLetter(getFilterName(section.name as FilterKind, filter));
 
-                    return (
-                      <button
-                        className={`btn btn-sm btn-link text-start w-100 text-decoration-none ${styles.btnActiveFilter}`}
-                        onClick={() => props.onChange(section.name, filter as string, false)}
-                        key={`fil_${section.name}`}
-                      >
-                        <div className="d-flex flex-row align-items-center">
-                          <div className="flex-grow-1 text-truncate me-2">{filterName}</div>
-                          <IoMdCloseCircleOutline className={`ms-auto ${styles.closeBtn}`} />
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
+                      return (
+                        <button
+                          className={`btn btn-sm btn-link text-start w-100 text-decoration-none ${styles.btnActiveFilter}`}
+                          onClick={() => props.onChange(section.name, filter as string, false)}
+                          key={`fil_${filterName}`}
+                        >
+                          <div className="d-flex flex-row align-items-center">
+                            <div className="flex-grow-1 text-truncate me-2">{filterName}</div>
+                            <IoMdCloseCircleOutline className={`ms-auto ${styles.closeBtn}`} />
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+              {section.name === FilterKind.Maturity && <ProjectFilters {...props} />}
+            </React.Fragment>
           );
         })}
-        <ProjectFilters {...props} />
+        <div className={`me-2 me-md-4 ${styles.dropdownWrapper}`}>
+          <Dropdown
+            label="Filters"
+            btnContent="Other"
+            btnClassName={`btn btn-md btn-light text-decoration-none text-start w-100 ${styles.btn}`}
+            dropdownClassName={styles.dropdown}
+          >
+            <Filters
+              section={{
+                name: 'other',
+                title: 'Other',
+                filters: [{ name: 'mentor_available', label: 'Mentor available' }],
+              }}
+              device={props.device}
+              activeFilters={props.mentorAvailable ? ['mentor_available'] : []}
+              onChange={props.onMentorChange}
+            />
+          </Dropdown>
+          {props.mentorAvailable && (
+            <div className="mt-2">
+              <button
+                className={`btn btn-sm btn-link text-start w-100 text-decoration-none ${styles.btnActiveFilter}`}
+                onClick={props.onMentorChange}
+              >
+                <div className="d-flex flex-row align-items-center">
+                  <div className="flex-grow-1 text-truncate me-2">Mentor available</div>
+                  <IoMdCloseCircleOutline className={`ms-auto ${styles.closeBtn}`} />
+                </div>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -23,6 +23,24 @@ export const FILTERS: Section[] = [
       { name: Maturity.sandbox, label: 'Sandbox' },
     ],
   },
+  {
+    name: FilterKind.Kind,
+    title: 'Kind',
+    filters: [
+      { name: 'bug', label: 'Bug' },
+      { name: 'feature', label: 'Feature' },
+      { name: 'enhancement', label: 'Enhancement' },
+    ],
+  },
+  {
+    name: FilterKind.Difficulty,
+    title: 'Difficulty',
+    filters: [
+      { name: 'easy', label: 'Easy' },
+      { name: 'medium', label: 'Medium' },
+      { name: 'hard', label: 'Hard' },
+    ],
+  },
 ];
 
 export const SORT_OPTIONS = [
