@@ -20,13 +20,13 @@
     "bootstrap": "^5.2.2",
     "classnames": "^2.3.2",
     "lodash": "^4.17.21",
-    "react-icons": "^4.6.0"
+    "react-icons": "^4.7.1"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^23.0.2",
     "@rollup/plugin-node-resolve": "^15.0.1",
-    "@types/lodash": "^4.14.189",
-    "@types/node": "^18.11.9",
+    "@types/lodash": "^4.14.191",
+    "@types/node": "^18.11.10",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.9",
     "autoprefixer": "^10.4.13",
