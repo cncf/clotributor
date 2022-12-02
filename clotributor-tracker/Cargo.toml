@@ -20,6 +20,7 @@ hex = { workspace = true }
 lazy_static = { workspace = true }
 openssl = { workspace = true }
 postgres-openssl = { workspace = true }
+postgres-types = { workspace = true }
 regex = { workspace = true }
 reqwest = { workspace = true }
 serde = { workspace = true }

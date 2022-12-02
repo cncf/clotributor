@@ -49,6 +49,9 @@ create table if not exists repository (
 
 create index repository_project_id_idx on repository (project_id);
 
+create type kind as enum ('bug', 'feature', 'enhancement');
+create type difficulty as enum ('easy', 'medium', 'hard');
+
 create table if not exists issue (
     issue_id bigint primary key,
     title text not null check (title <> ''),
@@ -56,6 +59,10 @@ create table if not exists issue (
     number integer not null,
     labels text[] not null,
     digest text,
+    kind kind,
+    difficulty difficulty,
+    mentor_available boolean,
+    mentor text,
     tsdoc tsvector not null,
     published_at timestamptz not null default current_timestamp,
     created_at timestamptz not null default current_timestamp,

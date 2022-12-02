@@ -103,7 +103,11 @@ impl DB for PgDB {
                     number,
                     labels,
                     published_at,
-                    digest
+                    digest,
+                    kind,
+                    difficulty,
+                    mentor_available,
+                    mentor
                 from issue
                 where repository_id = $1;
                 ",
@@ -119,6 +123,10 @@ impl DB for PgDB {
                 labels: row.get("labels"),
                 published_at: row.get("published_at"),
                 digest: row.get("digest"),
+                kind: row.get("kind"),
+                difficulty: row.get("difficulty"),
+                mentor_available: row.get("mentor_available"),
+                mentor: row.get("mentor"),
             })
             .collect();
         Ok(issues_ids)
@@ -140,19 +148,27 @@ impl DB for PgDB {
                 number,
                 labels,
                 digest,
+                kind,
+                difficulty,
+                mentor_available,
+                mentor,
                 published_at,
                 repository_id,
                 tsdoc
             ) values (
-                $1, $2, $3, $4, $5, $6, $7, $8,
-                setweight(to_tsvector($9), 'A') ||
-                setweight(to_tsvector($10), 'B') ||
-                setweight(to_tsvector($11), 'C')
+                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12,
+                setweight(to_tsvector($13), 'A') ||
+                setweight(to_tsvector($14), 'B') ||
+                setweight(to_tsvector($15), 'C')
             ) on conflict (issue_id) do update
             set
                 title = excluded.title,
                 labels = excluded.labels,
-                digest = excluded.digest;
+                digest = excluded.digest,
+                kind = excluded.kind,
+                difficulty = excluded.difficulty,
+                mentor_available = excluded.mentor_available,
+                mentor = excluded.mentor;
             ",
             &[
                 &issue.issue_id,
@@ -161,6 +177,10 @@ impl DB for PgDB {
                 &issue.number,
                 &issue.labels,
                 &issue.digest,
+                &issue.kind,
+                &issue.difficulty,
+                &issue.mentor_available,
+                &issue.mentor,
                 &issue.published_at,
                 &repository_id,
                 &ts_texts.weight_a,
