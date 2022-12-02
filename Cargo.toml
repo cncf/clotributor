@@ -28,6 +28,7 @@ lazy_static = "1.4.0"
 mime = "0.3.16"
 openssl = { version = "0.10.43", features = ["vendored"] }
 postgres-openssl = "0.5.0"
+postgres-types = { version = "0.2.4", features = ["derive"] }
 regex = "1.7.0"
 reqwest = { version = "0.11.13", features = ["json"] }
 serde = { version = "1.0.148", features = ["derive"] }

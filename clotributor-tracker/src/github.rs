@@ -87,6 +87,10 @@ impl repo_view::RepoViewRepository {
                             labels,
                             published_at,
                             digest: None,
+                            kind: None,
+                            difficulty: None,
+                            mentor_available: None,
+                            mentor: None,
                         };
                         issue.update_digest();
 

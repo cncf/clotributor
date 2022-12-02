@@ -6,6 +6,8 @@ use anyhow::{format_err, Context, Error, Result};
 use config::Config;
 use deadpool::unmanaged::{Object, Pool};
 use futures::stream::{self, StreamExt};
+use postgres_types::{FromSql, ToSql};
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use sha2::{Digest, Sha256};
 use std::time::{Duration, Instant};
@@ -85,6 +87,32 @@ impl Repository {
     }
 }
 
+/// Issue kind.
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, ToSql, FromSql)]
+#[serde(rename_all = "kebab-case")]
+#[postgres(name = "kind")]
+pub enum IssueKind {
+    #[postgres(name = "bug")]
+    Bug,
+    #[postgres(name = "feature")]
+    Feature,
+    #[postgres(name = "enhancement")]
+    Enhancement,
+}
+
+/// Issue difficulty.
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, ToSql, FromSql)]
+#[serde(rename_all = "kebab-case")]
+#[postgres(name = "difficulty")]
+pub enum IssueDifficulty {
+    #[postgres(name = "easy")]
+    Easy,
+    #[postgres(name = "medium")]
+    Medium,
+    #[postgres(name = "hard")]
+    Hard,
+}
+
 /// Issue information.
 #[derive(Debug, Clone)]
 pub(crate) struct Issue {
@@ -95,10 +123,14 @@ pub(crate) struct Issue {
     pub labels: Vec<String>,
     pub published_at: OffsetDateTime,
     pub digest: Option<String>,
+    pub kind: Option<IssueKind>,
+    pub difficulty: Option<IssueDifficulty>,
+    pub mentor_available: Option<bool>,
+    pub mentor: Option<String>,
 }
 
 impl Issue {
-    /// Update repository's digest.
+    /// Update issue's digest.
     pub(crate) fn update_digest(&mut self) {
         let Ok(data) = bincode::serialize(&(&self.title, &self.labels)) else {
             return;
@@ -136,6 +168,53 @@ impl Issue {
             weight_a,
             weight_b,
             weight_c,
+        }
+    }
+
+    /// Populate the issue with information extracted from the labels, like the
+    /// issue kind, its difficulty, etc.
+    fn populate_from_labels(&mut self) {
+        for label in self.labels.iter() {
+            // Kind
+            if let Some(kind) = {
+                if label.contains("enhancement") || label.contains("improvement") {
+                    Some(IssueKind::Enhancement)
+                } else if label.contains("feature") {
+                    Some(IssueKind::Feature)
+                } else if label.contains("bug") {
+                    Some(IssueKind::Bug)
+                } else {
+                    None
+                }
+            } {
+                self.kind = Some(kind);
+                continue;
+            }
+
+            // Difficulty
+            let labels_easy = ["difficulty/easy", "level/easy"];
+            let labels_medium = ["difficulty/medium", "level/medium"];
+            let labels_hard = ["difficulty/hard", "level/hard"];
+            if let Some(difficulty) = {
+                if labels_easy.contains(&label.as_str()) {
+                    Some(IssueDifficulty::Easy)
+                } else if labels_medium.contains(&label.as_str()) {
+                    Some(IssueDifficulty::Medium)
+                } else if labels_hard.contains(&label.as_str()) {
+                    Some(IssueDifficulty::Hard)
+                } else {
+                    None
+                }
+            } {
+                self.difficulty = Some(difficulty);
+                continue;
+            }
+
+            // Mentor available
+            if label == "mentor available" {
+                self.mentor_available = Some(true);
+                continue;
+            }
         }
     }
 }
@@ -243,13 +322,14 @@ async fn track_repository(
     }
 
     // Sync issues in GitHub with database
-    let issues_in_gh = gh_repo.issues();
+    let mut issues_in_gh = gh_repo.issues();
     let issues_in_db = db.get_repository_issues(repo.repository_id).await?;
 
     // Register/update new or outdated issues
-    for issue in &issues_in_gh {
+    for issue in issues_in_gh.iter_mut() {
         let digest_in_db = find_issue(issue.issue_id, &issues_in_db);
         if issue.digest != digest_in_db {
+            issue.populate_from_labels();
             let issue_ts_texts = issue.prepare_ts_texts(&repo);
             db.register_issue(repo.repository_id, issue, &issue_ts_texts)
                 .await?;
