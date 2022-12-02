@@ -37,7 +37,7 @@
   "scripts": {
     "copy:static": "shx rm -rf src/static && shx mkdir src/static && shx cp -r public/static/* src",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "start": "yarn copy:static && react-scripts start",
+    "start": "yarn copy:static && DANGEROUSLY_DISABLE_HOST_CHECK=true react-scripts start",
     "build": "yarn copy:static && INLINE_RUNTIME_CHUNK=false IMAGE_INLINE_SIZE_LIMIT=0 react-scripts build && shx cp -r build/static/* build && shx rm -rf build/static",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

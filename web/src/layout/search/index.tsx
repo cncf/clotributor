@@ -17,7 +17,6 @@ import Card from '../common/Card';
 import Filters from './Filters';
 import FiltersInLine from './FiltersInLine';
 import styles from './Search.module.css';
-import SelectedFilters from './SelectedFilters';
 
 interface FiltersProp {
   [key: string]: string[];
@@ -225,7 +224,6 @@ const Search = () => {
               </div>
 
               <div className="d-flex flex-nowrap flex-row justify-content-sm-end ms-0 ms-md-3 w-100">
-                <FiltersInLine activeFilters={filters} onChange={onFiltersChange} device="desktop" />
                 {/* Only display sort options when ts_query_web is defined */}
                 {text && text !== '' && (
                   <SortOptions
@@ -239,8 +237,19 @@ const Search = () => {
                 <PaginationLimitOptions limit={limit} onPaginationLimitChange={onPaginationLimitChange} />
               </div>
             </div>
-
-            <SelectedFilters filters={filters} onChange={onFiltersChange} onResetFilters={onResetFilters} />
+          </div>
+        </div>
+      </nav>
+      {/* Filters */}
+      <nav className={`navbar navbar-expand-sm ${styles.filtersNavbar}`} role="navigation">
+        <div className="container-lg">
+          <div className="d-flex flex-column w-100">
+            <FiltersInLine
+              activeFilters={filters}
+              onChange={onFiltersChange}
+              onResetFilters={onResetFilters}
+              device="desktop"
+            />
           </div>
         </div>
       </nav>
