@@ -21,6 +21,7 @@ export interface Filter {
 export interface IFiltersSectionProps {
   section: Section;
   visibleTitle: boolean;
+  contentClassName?: string;
   device: string;
   activeFilters?: string[];
   onChange: (name: string, value: string, checked: boolean) => void;
@@ -35,7 +36,7 @@ export const FiltersSection: React.FC<IFiltersSectionProps> = (props: IFiltersSe
         </div>
       )}
 
-      <div className={classnames({ 'mt-2': props.visibleTitle })}>
+      <div className={classnames(props.contentClassName, { 'mt-2': props.visibleTitle })}>
         {props.section.filters.map((filter: Filter) => {
           return (
             <CheckBox

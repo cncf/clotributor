@@ -2,7 +2,7 @@ import { isEmpty, isNull, isUndefined } from 'lodash';
 import isArray from 'lodash/isArray';
 
 import { DEFAULT_SORT_BY } from '../data';
-import { Error, ErrorKind, Issue, SearchQuery } from '../types';
+import { Error, ErrorKind, Filter, Issue, SearchQuery } from '../types';
 
 interface FetchOptions {
   method: 'POST' | 'GET' | 'PUT' | 'DELETE' | 'HEAD';
@@ -104,6 +104,12 @@ class API_CLASS {
       .catch((error) => Promise.reject(error));
   }
 
+  public getIssuesFilters(): Promise<Filter[]> {
+    return this.apiFetch({
+      url: `${this.API_BASE_URL}/filters/issues`,
+    });
+  }
+
   public searchIssues(query: SearchQuery): Promise<{ items: Issue[]; 'Pagination-Total-Count': string }> {
     // Only is used sort by selection when ts_query_web is defined
     let q: string = `limit=${query.limit}&offset=${query.offset}&sort_by=${
@@ -113,6 +119,7 @@ class API_CLASS {
     if (query.ts_query_web) {
       q += `&ts_query_web=${query.ts_query_web}`;
     }
+
     if (!isUndefined(query.filters) && !isEmpty(query.filters)) {
       Object.keys(query.filters!).forEach((k: string) => {
         query.filters![k].forEach((f: string, index: number) => {

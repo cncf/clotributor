@@ -9,6 +9,7 @@ interface F {
 const WHITELISTED_FILTER_KEYS = [
   FilterKind.Foundation, // Project foundation
   FilterKind.Maturity, // Project maturity
+  FilterKind.Project, // Project name
 ];
 
 const buildSearchParams = (p: URLSearchParams): SearchFiltersURL => {

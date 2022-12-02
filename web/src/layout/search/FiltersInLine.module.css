@@ -3,7 +3,16 @@
 }
 
 .dropdownWrapper {
-  width: 150px;
+  width: 180px;
+}
+
+.dropdown {
+  left: 0;
+  min-width: 180px !important;
+}
+
+.projectDropdown {
+  min-width: 280px !important;
 }
 
 .btn {
@@ -27,7 +36,11 @@
 
 .btnActiveFilter {
   font-size: 0.8rem;
-  padding: 0 0.35rem;
+  padding: 0 0.55rem;
+}
+
+.closeBtn {
+  min-width: 15px;
 }
 
 [data-theme='dark'] .btn {
@@ -36,8 +49,22 @@
   color: var(--color-font) !important;
 }
 
+[data-theme='dark'] .dropdown {
+  background-color: var(--bg-color);
+}
+
 [data-theme='dark'] .dropdown label {
   color: var(--color-light-font) !important;
+}
+
+.projectOptions {
+  max-height: 300px;
+}
+
+.search {
+  width: 94% !important;
+  box-shadow: 0 0 0 0.3rem var(--clo-secondary-15) !important;
+  margin: 0rem !important;
 }
 
 @media (hover: hover) {
