@@ -11,10 +11,6 @@
   min-width: 180px !important;
 }
 
-.projectDropdown {
-  min-width: 280px !important;
-}
-
 .btn {
   background-color: var(--body-bg);
   line-height: 1.5 !important;
@@ -61,10 +57,18 @@
   max-height: 300px;
 }
 
-.search {
-  width: 94% !important;
-  box-shadow: 0 0 0 0.3rem var(--clo-secondary-15) !important;
-  margin: 0rem !important;
+@media only screen and (max-width: 1199.98px) {
+  .dropdownWrapper {
+    width: 138px;
+  }
+
+  .dropdown {
+    min-width: 138px !important;
+  }
+}
+
+.projectDropdown {
+  min-width: 280px !important;
 }
 
 @media (hover: hover) {

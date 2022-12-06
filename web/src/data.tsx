@@ -1,47 +1,45 @@
-import { Foundation, Maturity, Section } from 'clo-ui';
-
 import { FilterKind, SearchTipItem, SortBy } from './types';
 
 export const DEFAULT_SORT_BY = SortBy.MostRecent;
 export const DEFAULT_SEARCH_LIMIT = 20;
 
-export const FILTERS: Section[] = [
-  {
-    name: FilterKind.Foundation,
-    title: 'Foundation',
-    filters: [
-      { name: Foundation.cncf, label: 'CNCF' },
-      { name: Foundation.lfaidata, label: 'LF AI & Data' },
-    ],
-  },
-  {
-    name: FilterKind.Maturity,
-    title: 'Maturity level',
-    filters: [
-      { name: Maturity.graduated, label: 'Graduated' },
-      { name: Maturity.incubating, label: 'Incubating' },
-      { name: Maturity.sandbox, label: 'Sandbox' },
-    ],
-  },
-  {
-    name: FilterKind.Kind,
-    title: 'Kind',
-    filters: [
-      { name: 'bug', label: 'Bug' },
-      { name: 'feature', label: 'Feature' },
-      { name: 'enhancement', label: 'Enhancement' },
-    ],
-  },
-  {
-    name: FilterKind.Difficulty,
-    title: 'Difficulty',
-    filters: [
-      { name: 'easy', label: 'Easy' },
-      { name: 'medium', label: 'Medium' },
-      { name: 'hard', label: 'Hard' },
-    ],
-  },
-];
+// export const FILTERS: FilterSection[] = [
+//   {
+//     key: FilterKind.Foundation,
+//     title: 'Foundation',
+//     filters: [
+//       { name: Foundation.cncf, label: 'CNCF' },
+//       { name: Foundation.lfaidata, label: 'LF AI & Data' },
+//     ],
+//   },
+//   {
+//     name: FilterKind.Maturity,
+//     title: 'Maturity level',
+//     filters: [
+//       { name: Maturity.graduated, label: 'Graduated' },
+//       { name: Maturity.incubating, label: 'Incubating' },
+//       { name: Maturity.sandbox, label: 'Sandbox' },
+//     ],
+//   },
+//   {
+//     name: FilterKind.Kind,
+//     title: 'Kind',
+//     filters: [
+//       { name: 'bug', label: 'Bug' },
+//       { name: 'feature', label: 'Feature' },
+//       { name: 'enhancement', label: 'Enhancement' },
+//     ],
+//   },
+//   {
+//     name: FilterKind.Difficulty,
+//     title: 'Difficulty',
+//     filters: [
+//       { name: 'easy', label: 'Easy' },
+//       { name: 'medium', label: 'Medium' },
+//       { name: 'hard', label: 'Hard' },
+//     ],
+//   },
+// ];
 
 export const SORT_OPTIONS = [
   {

@@ -79,6 +79,13 @@
   .bg-solid-yellow {
     border-color: var(--default-border) !important;
     background-color: transparent !important;
+
+    &.clickable:hover,
+    &.clickable:active {
+      background-color: transparent !important;
+      box-shadow: inset 0px 0px 25px 10px var(--color-black-5);
+      border-color: var(--default-border) !important;
+    }
   }
 
   .bg-solid-yellow {
