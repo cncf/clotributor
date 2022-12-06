@@ -1,21 +1,25 @@
-import { FiltersSection, Section } from 'clo-ui';
+import { FilterSection, FiltersSection } from 'clo-ui';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 
-import { FILTERS } from '../../data';
-
 interface Props {
   visibleTitle: boolean;
+  filters: FilterSection[];
   activeFilters: {
     [key: string]: string[];
   };
-  onChange: (name: string, value: string, checked: boolean) => void;
+  mentorAvailable: boolean;
+  onChange: (name: string, value: string, checked: boolean, type?: string) => void;
   onResetFilters?: () => void;
   device: string;
 }
 
 const Filters = (props: Props) => {
+  const getActiveFiltersForOther = (): string[] => {
+    return props.mentorAvailable ? ['mentor_available'] : [];
+  };
+
   return (
     <>
       {props.visibleTitle && (
@@ -33,17 +37,21 @@ const Filters = (props: Props) => {
         </div>
       )}
 
-      {FILTERS.map((section: Section) => (
-        <React.Fragment key={`sec_${section.name}`}>
-          <FiltersSection
-            device={props.device}
-            activeFilters={props.activeFilters[section.name]}
-            section={section}
-            onChange={props.onChange}
-            visibleTitle
-          />
-        </React.Fragment>
-      ))}
+      {props.filters.map((section: FilterSection) => {
+        const activeFilters = section.key ? props.activeFilters[section.key] : getActiveFiltersForOther();
+        if (section.key === 'project') return null;
+        return (
+          <React.Fragment key={`sec_${section.key}`}>
+            <FiltersSection
+              device={props.device}
+              activeFilters={activeFilters}
+              section={section}
+              onChange={props.onChange}
+              visibleTitle
+            />
+          </React.Fragment>
+        );
+      })}
     </>
   );
 };

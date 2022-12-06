@@ -102,4 +102,5 @@ export interface Filter {
 export interface FilterOption {
   name: string;
   value: string;
+  key?: string;
 }

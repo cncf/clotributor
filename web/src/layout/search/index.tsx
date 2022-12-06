@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { FiltersSection, Loading, NoData, Pagination, PaginationLimitOptions, Sidebar, SortOptions } from 'clo-ui';
+import { FilterSection, Loading, NoData, Pagination, PaginationLimitOptions, Sidebar, SortOptions } from 'clo-ui';
 import { isEmpty, isUndefined } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
 import { FaFilter } from 'react-icons/fa';
@@ -9,7 +9,7 @@ import { useNavigate, useOutletContext, useSearchParams } from 'react-router-dom
 import API from '../../api';
 import { AppContext, updateLimit, updateSort } from '../../context/AppContextProvider';
 import { DEFAULT_SORT_BY, SORT_OPTIONS } from '../../data';
-import { Filter, Issue, OutletContext, SearchFiltersURL, SortBy } from '../../types';
+import { Issue, OutletContext, SearchFiltersURL, SortBy } from '../../types';
 import buildSearchParams from '../../utils/buildSearchParams';
 import prepareQueryString from '../../utils/prepareQueryString';
 import scrollToTop from '../../utils/scrollToTop';
@@ -30,8 +30,8 @@ const Search = () => {
   const { setInvisibleFooter } = useOutletContext() as OutletContext;
   const [text, setText] = useState<string | undefined>();
   const [mentorAvailable, setMentorAvailable] = useState<boolean>(false);
-  const [filters, setFilters] = useState<FiltersProp>({});
-  const [projects, setProjects] = useState<Filter | undefined>();
+  const [filters, setFilters] = useState<FilterSection[] | undefined>(undefined);
+  const [activeFilters, setActiveFilters] = useState<FiltersProp>({});
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
   const [issues, setIssues] = useState<Issue[] | null | undefined>();
@@ -49,30 +49,34 @@ const Search = () => {
     });
   };
 
-  const onFiltersChange = (name: string, value: string, checked: boolean): void => {
-    const currentFilters = filters || {};
-    let additionalChanges = {};
-    let newFilters = isUndefined(currentFilters[name]) ? [] : currentFilters[name].slice();
-    if (checked) {
-      newFilters.push(value);
-      switch (name) {
-        case 'project':
-          additionalChanges = { foundation: [], maturity: [] };
-          break;
-        case 'foundation':
-        case 'maturity':
-          additionalChanges = { project: [] };
-          break;
-        default:
-          break;
-      }
+  const onFiltersChange = (name: string, value: string, checked: boolean, type?: string): void => {
+    if (!isUndefined(type)) {
+      onFilterTypeChange(name, value, checked, type);
     } else {
-      newFilters = newFilters.filter((el) => el !== value);
-    }
+      const currentFilters = activeFilters || {};
+      let additionalChanges = {};
+      let newFilters = isUndefined(currentFilters[name]) ? [] : currentFilters[name].slice();
+      if (checked) {
+        newFilters.push(value);
+        switch (name) {
+          case 'project':
+            additionalChanges = { foundation: [], maturity: [] };
+            break;
+          case 'foundation':
+          case 'maturity':
+            additionalChanges = { project: [] };
+            break;
+          default:
+            break;
+        }
+      } else {
+        newFilters = newFilters.filter((el) => el !== value);
+      }
 
-    updateCurrentPage({
-      filters: { ...currentFilters, [name]: newFilters, ...additionalChanges },
-    });
+      updateCurrentPage({
+        filters: { ...currentFilters, [name]: newFilters, ...additionalChanges },
+      });
+    }
   };
 
   const onPaginationLimitChange = (newLimit: number): void => {
@@ -86,12 +90,12 @@ const Search = () => {
     dispatch(updateLimit(newLimit));
   };
 
-  const onMentorChange = (): void => {
+  const onFilterTypeChange = (name: string, value: string, checked: boolean, type: string): void => {
     navigate({
       pathname: '/search',
       search: prepareQueryString({
         ...getCurrentFilters(),
-        mentor_available: !mentorAvailable,
+        [name]: type === 'boolean' ? checked : value,
         pageNumber: 1,
       }),
     });
@@ -134,7 +138,7 @@ const Search = () => {
       pageNumber: pageNumber,
       mentor_available: mentorAvailable,
       ts_query_web: text,
-      filters: filters,
+      filters: activeFilters,
     };
   };
 
@@ -149,14 +153,9 @@ const Search = () => {
       scrollToTop();
 
       try {
-        const issuesFilters = await API.getIssuesFilters();
-        issuesFilters.forEach((filter: Filter) => {
-          if (filter.key === 'project') {
-            setProjects(filter);
-          }
-        });
+        setFilters(await API.getIssuesFilters());
       } catch {
-        // Notthing
+        setFilters([]);
       }
     }
     getIssuesFilters();
@@ -166,7 +165,7 @@ const Search = () => {
     const formattedParams = buildSearchParams(searchParams);
     setText(formattedParams.ts_query_web);
     setMentorAvailable(formattedParams.mentor_available || false);
-    setFilters(formattedParams.filters || {});
+    setActiveFilters(formattedParams.filters || {});
     setPageNumber(formattedParams.pageNumber);
 
     async function searchIssues() {
@@ -213,58 +212,57 @@ const Search = () => {
           <div className="d-flex flex-column w-100">
             <div className="d-flex flex-column flex-sm-row align-items-center justify-content-between flex-nowrap">
               <div className="d-flex flex-row flex-lg-column align-items-center align-items-lg-start w-100 text-truncate">
-                <Sidebar
-                  label="Filters"
-                  className="d-inline-block d-lg-none me-2"
-                  wrapperClassName="d-inline-block px-4"
-                  buttonType={`btn-primary btn-sm rounded-circle position-relative ${styles.btnMobileFilters}`}
-                  buttonIcon={<FaFilter />}
-                  closeButtonClassName={styles.closeSidebar}
-                  closeButton={
-                    <>
-                      {isLoading ? (
-                        <>
-                          <Loading spinnerClassName={styles.spinner} noWrapper smallSize />
-                          <span className="ms-2">Searching...</span>
-                        </>
-                      ) : (
-                        <>See {total} results</>
-                      )}
-                    </>
-                  }
-                  leftButton={
-                    <>
-                      {!isEmpty(filters) && (
-                        <div className="d-flex align-items-center">
-                          <IoMdCloseCircleOutline className={`text-dark ${styles.resetBtnDecorator}`} />
-                          <button
-                            className="btn btn-link btn-sm p-0 ps-1 text-dark"
-                            onClick={onResetFilters}
-                            aria-label="Reset filters"
-                          >
-                            Reset
-                          </button>
-                        </div>
-                      )}
-                    </>
-                  }
-                  header={<div className="h6 text-uppercase mb-0 flex-grow-1">Filters</div>}
-                >
-                  <div role="menu">
-                    <Filters device="mobile" activeFilters={filters} onChange={onFiltersChange} visibleTitle={false} />
-                    <FiltersSection
-                      device="mobile"
-                      activeFilters={mentorAvailable ? ['mentor_available'] : []}
-                      section={{
-                        name: 'other',
-                        title: 'Other',
-                        filters: [{ name: 'mentor_available', label: 'Mentor available' }],
-                      }}
-                      onChange={onMentorChange}
-                      visibleTitle
-                    />
-                  </div>
-                </Sidebar>
+                {!isUndefined(filters) && filters.length > 0 && (
+                  <Sidebar
+                    label="Filters"
+                    className="d-inline-block d-lg-none me-2"
+                    wrapperClassName="d-inline-block px-4"
+                    buttonType={`btn-primary btn-sm rounded-circle position-relative ${styles.btnMobileFilters}`}
+                    buttonIcon={<FaFilter />}
+                    closeButtonClassName={styles.closeSidebar}
+                    closeButton={
+                      <>
+                        {isLoading ? (
+                          <>
+                            <Loading spinnerClassName={styles.spinner} noWrapper smallSize />
+                            <span className="ms-2">Searching...</span>
+                          </>
+                        ) : (
+                          <>See {total} results</>
+                        )}
+                      </>
+                    }
+                    leftButton={
+                      <>
+                        {!isEmpty(activeFilters) && (
+                          <div className="d-flex align-items-center">
+                            <IoMdCloseCircleOutline className={`text-dark ${styles.resetBtnDecorator}`} />
+                            <button
+                              className="btn btn-link btn-sm p-0 ps-1 text-dark"
+                              onClick={onResetFilters}
+                              aria-label="Reset filters"
+                            >
+                              Reset
+                            </button>
+                          </div>
+                        )}
+                      </>
+                    }
+                    header={<div className="h6 text-uppercase mb-0 flex-grow-1">Filters</div>}
+                  >
+                    <div role="menu">
+                      <Filters
+                        device="mobile"
+                        filters={filters}
+                        activeFilters={activeFilters}
+                        mentorAvailable={mentorAvailable}
+                        onChange={onFiltersChange}
+                        visibleTitle={false}
+                      />
+                    </div>
+                  </Sidebar>
+                )}
+
                 <div className="text-truncate fw-bold w-100 Search_searchResults__hU0s2" role="status">
                   {total > 0 && (
                     <span className="pe-1">
@@ -300,16 +298,21 @@ const Search = () => {
         </div>
       </nav>
       {/* Filters */}
-      <nav className={`navbar navbar-expand-sm ${styles.filtersNavbar}`} role="navigation">
-        <div className="container-lg">
+      <nav
+        className={classNames('d-none d-lg-block navbar navbar-expand-sm', styles.filtersNavbar, {
+          'd-none': !isUndefined(filters) && filters.length === 0,
+        })}
+        role="navigation"
+      >
+        <div className="container-lg h-100">
           <div className="d-flex flex-column w-100">
             <FiltersInLine
-              activeFilters={filters}
+              filters={filters || []}
+              activeFilters={activeFilters}
               onChange={onFiltersChange}
               onResetFilters={onResetFilters}
-              projects={projects}
               mentorAvailable={mentorAvailable}
-              onMentorChange={onMentorChange}
+              isLoadingFilters={isUndefined(filters)}
               device="desktop"
             />
           </div>
@@ -344,11 +347,11 @@ const Search = () => {
                             for "<span className="fw-bold">{text}</span>"
                           </span>
                         )}
-                        {!isEmpty(filters) ? <span className="ps-1">with the selected filters</span> : <>.</>}
+                        {!isEmpty(activeFilters) ? <span className="ps-1">with the selected filters</span> : <>.</>}
                       </p>
                       <p className="h6 mb-0 mt-5 lh-base">
                         You can{' '}
-                        {!isEmpty(filters) ? (
+                        {!isEmpty(activeFilters) ? (
                           <button
                             className="btn btn-link text-dark fw-bold py-0 pb-1 px-0"
                             onClick={onResetFilters}

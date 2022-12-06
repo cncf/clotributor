@@ -1,40 +1,38 @@
-import { Dropdown, Filter as FilterOpt, FiltersSection, Foundation, FOUNDATIONS, Searchbar, Section } from 'clo-ui';
-import { isEmpty, isNull, isUndefined } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import classNames from 'classnames';
+import { DotsLoading, Dropdown, FilterOption, FilterSection, FiltersSection } from 'clo-ui';
+import { isEmpty, isUndefined } from 'lodash';
+import React from 'react';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 
-import { FILTERS } from '../../data';
-import { Filter, FilterKind, FilterOption } from '../../types';
-import capitalizeFirstLetter from '../../utils/capitalizeFirstLetter';
+import { Filter } from '../../types';
 import styles from './FiltersInLine.module.css';
 
 interface Props {
+  filters: FilterSection[];
   activeFilters: {
     [key: string]: string[];
   };
   projects?: Filter;
   mentorAvailable: boolean;
-  onMentorChange: () => void;
-  onChange: (name: string, value: string, checked: boolean) => void;
+  onChange: (name: string, value: string, checked: boolean, type?: string) => void;
   onResetFilters: () => void;
+  isLoadingFilters?: boolean;
   device: string;
 }
 
 interface FiltersProps {
   activeFilters: string[];
   contentClassName?: string;
-  section: Section;
+  section: FilterSection;
   device: string;
-  additionalContent?: JSX.Element;
-  onChange: (name: string, value: string, checked: boolean) => void;
+  withSearchBar?: boolean;
+  onChange: (name: string, value: string, checked: boolean, type?: string) => void;
   closeDropdown?: () => void;
 }
 
-const SEARCH_DELAY = 3 * 100; // 300ms
-
 const Filters = (props: FiltersProps) => {
-  const onChangeFilter = (name: string, value: string, checked: boolean) => {
-    props.onChange(name, value, checked);
+  const onChangeFilter = (name: string, value: string, checked: boolean, type?: string) => {
+    props.onChange(name, value, checked, type);
     if (!isUndefined(props.closeDropdown)) {
       props.closeDropdown();
     }
@@ -42,12 +40,12 @@ const Filters = (props: FiltersProps) => {
 
   return (
     <div className="ms-3 mt-2">
-      {props.additionalContent}
       <FiltersSection
         device={props.device}
         activeFilters={props.activeFilters}
         contentClassName={`overflow-auto ${styles.projectOptions}`}
         section={props.section}
+        withSearchBar={props.withSearchBar}
         onChange={onChangeFilter}
         visibleTitle={false}
       />
@@ -55,123 +53,11 @@ const Filters = (props: FiltersProps) => {
   );
 };
 
-const getFilterName = (type: FilterKind, filter: string): string => {
-  switch (type) {
-    case FilterKind.Foundation:
-      return FOUNDATIONS[filter as Foundation].name;
-
-    default:
-      return filter;
-  }
-};
-
-const ProjectFilters = (props: Props) => {
-  const [value, setValue] = useState<string>('');
-  const [visibleOptions, setVisibleOptions] = useState<FilterOpt[]>([]);
-  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
-  const activeFilters = props.activeFilters.project;
-
-  const formatOptions = (opts: FilterOption[]) => {
-    return opts.map((opt: FilterOption) => {
-      return { name: opt.value, label: opt.name };
-    });
-  };
-
-  useEffect(() => {
-    if (!isUndefined(props.projects)) {
-      setVisibleOptions(formatOptions(props.projects.options));
-    }
-  }, [props.projects]);
-
-  const searchProjects = () => {
-    if (props.projects && props.projects.options) {
-      if (value !== '') {
-        setVisibleOptions(formatOptions(props.projects.options.filter((f: FilterOption) => f.value.includes(value))));
-      } else {
-        setVisibleOptions(formatOptions(props.projects.options));
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (!isNull(searchTimeout)) {
-      clearTimeout(searchTimeout);
-    }
-    setSearchTimeout(
-      setTimeout(() => {
-        searchProjects();
-      }, SEARCH_DELAY)
-    );
-  }, [value]); /* eslint-disable-line react-hooks/exhaustive-deps */
-
-  useEffect(() => {
-    return () => {
-      if (searchTimeout) {
-        clearTimeout(searchTimeout);
-      }
-    };
-  }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
-
-  if (isUndefined(props.projects)) return null;
-
-  return (
-    <div className={`me-2 me-md-4 ${styles.dropdownWrapper}`}>
-      <Dropdown
-        label="Filters"
-        btnContent="Project"
-        btnClassName={`btn btn-md btn-light text-decoration-none text-start w-100 ${styles.btn}`}
-        dropdownClassName={`${styles.dropdown} ${styles.projectDropdown}`}
-        onClose={() => setValue('')}
-      >
-        <Filters
-          section={{ name: 'project', title: 'Project', filters: visibleOptions }}
-          device={props.device}
-          contentClassName={styles.content}
-          activeFilters={activeFilters}
-          onChange={props.onChange}
-          additionalContent={
-            <div className="mb-3">
-              <Searchbar
-                value={value}
-                onValueChange={(newValue: string) => setValue(newValue)}
-                onSearch={searchProjects}
-                cleanSearchValue={() => setValue('')}
-                classNameSearch={styles.search}
-                placeholder="Search projects"
-                bigSize={false}
-              />
-            </div>
-          }
-        />
-      </Dropdown>
-      {activeFilters && (
-        <div className="mt-2">
-          {activeFilters.map((filter: string) => {
-            const filterOpt = props.projects!.options.find((opt: FilterOption) => opt.value === filter);
-            if (isUndefined(filterOpt)) return null;
-
-            const filterName = capitalizeFirstLetter(filterOpt.name);
-
-            return (
-              <button
-                className={`btn btn-sm btn-link text-start w-100 text-decoration-none ${styles.btnActiveFilter}`}
-                onClick={() => props.onChange('project', filter as string, false)}
-                key={`fil_${filterName}`}
-              >
-                <div className="d-flex flex-row align-items-center">
-                  <div className="flex-grow-1 text-truncate me-2">{filterName}</div>
-                  <IoMdCloseCircleOutline className={`ms-auto ${styles.closeBtn}`} />
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
-};
-
 const FiltersInLine = (props: Props) => {
+  const getActiveFiltersForOther = (): string[] => {
+    return props.mentorAvailable ? ['mentor_available'] : [];
+  };
+
   return (
     <div className="d-none d-lg-block mb-2">
       <div className="d-flex flex-row align-items-baseline mt-2 mb-3">
@@ -189,84 +75,72 @@ const FiltersInLine = (props: Props) => {
           </button>
         )}
       </div>
-      <div className="d-flex flex-row align-items-top">
-        {FILTERS.map((section: Section) => {
-          const activeFilters = props.activeFilters[section.name];
+      {props.isLoadingFilters ? (
+        <DotsLoading className="my-auto" />
+      ) : (
+        <div className="d-flex flex-row align-items-top">
+          {props.filters.map((section: FilterSection, index: number) => {
+            const isProjectSection = section.key && section.key === 'project';
+            const activeFilters = section.key ? props.activeFilters[section.key] : getActiveFiltersForOther();
 
-          return (
-            <React.Fragment key={`sec_${section.name}`}>
-              <div className={`me-2 me-md-4 ${styles.dropdownWrapper}`}>
-                <Dropdown
-                  label="Filters"
-                  btnContent={section.name}
-                  btnClassName={`btn btn-md btn-light text-decoration-none text-start w-100 ${styles.btn}`}
-                  dropdownClassName={styles.dropdown}
+            return (
+              <React.Fragment key={`sec_${section.key}`}>
+                <div
+                  className={classNames(styles.dropdownWrapper, {
+                    'me-2 me-lg-3 me-xl-4': index !== props.filters.length - 1,
+                  })}
                 >
-                  <Filters
-                    section={section}
-                    device={props.device}
-                    activeFilters={activeFilters}
-                    onChange={props.onChange}
-                  />
-                </Dropdown>
-                {activeFilters && (
-                  <div className="mt-2">
-                    {activeFilters.map((filter: string) => {
-                      const filterName = capitalizeFirstLetter(getFilterName(section.name as FilterKind, filter));
+                  <Dropdown
+                    label="Filters"
+                    btnContent={section.title}
+                    btnClassName={`btn btn-md btn-light text-decoration-none text-start w-100 ${styles.btn}`}
+                    dropdownClassName={classNames(styles.dropdown, { [styles.projectDropdown]: isProjectSection })}
+                  >
+                    <Filters
+                      section={section}
+                      device={props.device}
+                      activeFilters={activeFilters}
+                      withSearchBar={section.key && section.key === 'project' ? true : undefined}
+                      onChange={props.onChange}
+                    />
+                  </Dropdown>
+                  {activeFilters && (
+                    <div className="mt-2">
+                      {activeFilters.map((filter: string) => {
+                        const selectedFilter = section.options.find(
+                          (f: FilterOption) => f.key === filter || f.value === filter
+                        );
 
-                      return (
-                        <button
-                          className={`btn btn-sm btn-link text-start w-100 text-decoration-none ${styles.btnActiveFilter}`}
-                          onClick={() => props.onChange(section.name, filter as string, false)}
-                          key={`fil_${filterName}`}
-                        >
-                          <div className="d-flex flex-row align-items-center">
-                            <div className="flex-grow-1 text-truncate me-2">{filterName}</div>
-                            <IoMdCloseCircleOutline className={`ms-auto ${styles.closeBtn}`} />
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-              {section.name === FilterKind.Maturity && <ProjectFilters {...props} />}
-            </React.Fragment>
-          );
-        })}
-        <div className={`me-2 me-md-4 ${styles.dropdownWrapper}`}>
-          <Dropdown
-            label="Filters"
-            btnContent="Other"
-            btnClassName={`btn btn-md btn-light text-decoration-none text-start w-100 ${styles.btn}`}
-            dropdownClassName={styles.dropdown}
-          >
-            <Filters
-              section={{
-                name: 'other',
-                title: 'Other',
-                filters: [{ name: 'mentor_available', label: 'Mentor available' }],
-              }}
-              device={props.device}
-              activeFilters={props.mentorAvailable ? ['mentor_available'] : []}
-              onChange={props.onMentorChange}
-            />
-          </Dropdown>
-          {props.mentorAvailable && (
-            <div className="mt-2">
-              <button
-                className={`btn btn-sm btn-link text-start w-100 text-decoration-none ${styles.btnActiveFilter}`}
-                onClick={props.onMentorChange}
-              >
-                <div className="d-flex flex-row align-items-center">
-                  <div className="flex-grow-1 text-truncate me-2">Mentor available</div>
-                  <IoMdCloseCircleOutline className={`ms-auto ${styles.closeBtn}`} />
+                        if (isUndefined(selectedFilter)) return null;
+
+                        return (
+                          <button
+                            className={`btn btn-sm btn-link text-start w-100 text-decoration-none ${styles.btnActiveFilter}`}
+                            onClick={() =>
+                              props.onChange(
+                                (selectedFilter.key || section.key)!,
+                                filter as string,
+                                false,
+                                selectedFilter.type
+                              )
+                            }
+                            key={`fil_${selectedFilter.value}`}
+                          >
+                            <div className="d-flex flex-row align-items-center">
+                              <div className="flex-grow-1 text-truncate me-2">{selectedFilter.name}</div>
+                              <IoMdCloseCircleOutline className={`ms-auto ${styles.closeBtn}`} />
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
-              </button>
-            </div>
-          )}
+              </React.Fragment>
+            );
+          })}
         </div>
-      </div>
+      )}
     </div>
   );
 };

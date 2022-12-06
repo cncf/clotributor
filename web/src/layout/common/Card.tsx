@@ -264,7 +264,12 @@ const Card = (props: Props) => {
                 <div className="d-none d-xl-flex">
                   <GenericBadge
                     content="Mentor available"
-                    className={classNames('ms-3 text-uppercase bg-solid-yellow', styles.badge, styles.mentorBadge)}
+                    className={classNames(
+                      'ms-3 text-uppercase bg-solid-yellow',
+                      styles.badge,
+                      styles.mentorBadge,
+                      'lighterText'
+                    )}
                     onClick={searchByMentor}
                   />
                 </div>
