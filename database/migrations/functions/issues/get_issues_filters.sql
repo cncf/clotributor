@@ -46,6 +46,42 @@ returns json as $$
                     order by name asc
                 ) m
             )
-        )
+        ),
+        json_build_object(
+            'title', 'Kind',
+            'key', 'kind',
+            'options', (
+                select coalesce(json_agg(json_build_object(
+                    'name', initcap(kind::text),
+                    'value', kind::text
+                )), '[]')
+                from (
+                    select unnest(enum_range(null::kind)) as kind
+                ) k
+            )
+        ),
+        json_build_object(
+            'title', 'Difficulty',
+            'key', 'difficulty',
+            'options', (
+                select coalesce(json_agg(json_build_object(
+                    'name', initcap(difficulty::text),
+                    'value', difficulty::text
+                )), '[]')
+                from (
+                    select unnest(enum_range(null::difficulty)) as difficulty
+                ) d
+            )
+        ),
+        '{
+            "title": "Other",
+            "options": [
+                {
+                    "name": "Mentor available",
+                    "key": "mentor_available",
+                    "type": "boolean"
+                }
+            ]
+        }'::jsonb
     );
 $$ language sql;
