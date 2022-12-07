@@ -10,7 +10,7 @@ WORKDIR /clotributor/clotributor-apiserver
 RUN cargo build --release
 
 # Build frontend
-FROM node:16-alpine3.16 AS frontend-builder
+FROM node:19-alpine3.16 AS frontend-builder
 WORKDIR /web
 COPY web .
 ENV NODE_OPTIONS=--max_old_space_size=4096
