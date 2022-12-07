@@ -40,10 +40,10 @@ impl PgDB {
 impl DB for PgDB {
     async fn get_issues_filters(&self) -> Result<JsonString> {
         let db = self.pool.get().await?;
-        let row = db
+        let filters = db
             .query_one("select get_issues_filters()::text", &[])
-            .await?;
-        let filters: String = row.get(0);
+            .await?
+            .get(0);
         Ok(filters)
     }
 
