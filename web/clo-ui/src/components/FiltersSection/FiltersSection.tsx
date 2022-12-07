@@ -1,9 +1,9 @@
 import classnames from 'classnames';
-import { Searchbar } from 'clo-ui';
 import { isNull, isUndefined } from 'lodash';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 
 import { CheckBox } from '../Checkbox/Checkbox';
+import { Searchbar } from '../Searchbar/Searchbar';
 import styles from './FiltersSection.module.css';
 
 export interface FilterSection {
