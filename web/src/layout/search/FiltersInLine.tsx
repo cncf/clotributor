@@ -62,7 +62,7 @@ const FiltersInLine = (props: Props) => {
     <div className="d-none d-lg-block mb-2">
       <div className="d-flex flex-row align-items-baseline mt-2 mb-3">
         <div className={`text-uppercase text-secondary fw-bold ${styles.title}`}>Filters</div>
-        {!isEmpty(props.activeFilters) && (
+        {(!isEmpty(props.activeFilters) || props.mentorAvailable) && (
           <button
             className={`btn btn-link text-secondary btn-sm py-0 me-3 ${styles.btnRemove}`}
             onClick={props.onResetFilters}
