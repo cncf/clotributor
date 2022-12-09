@@ -234,7 +234,7 @@ const Search = () => {
                     }
                     leftButton={
                       <>
-                        {!isEmpty(activeFilters) && (
+                        {(!isEmpty(activeFilters) || mentorAvailable) && (
                           <div className="d-flex align-items-center">
                             <IoMdCloseCircleOutline className={`text-dark ${styles.resetBtnDecorator}`} />
                             <button
