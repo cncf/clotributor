@@ -1,7 +1,7 @@
 import classNames from 'classnames';
-import { DotsLoading, Dropdown, FilterOption, FilterSection, FiltersSection } from 'clo-ui';
+import { DotsLoading, Dropdown, FilterOption, FilterSection, FiltersSection, RefFiltersSection } from 'clo-ui';
 import { isEmpty, isUndefined } from 'lodash';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 
 import { Filter } from '../../types';
@@ -28,9 +28,12 @@ interface FiltersProps {
   withSearchBar?: boolean;
   onChange: (name: string, value: string, checked: boolean, type?: string) => void;
   closeDropdown?: () => void;
+  isVisibleDropdown?: boolean;
 }
 
 const Filters = (props: FiltersProps) => {
+  const filtersSection = useRef<RefFiltersSection>(null);
+
   const onChangeFilter = (name: string, value: string, checked: boolean, type?: string) => {
     props.onChange(name, value, checked, type);
     if (!isUndefined(props.closeDropdown)) {
@@ -38,9 +41,16 @@ const Filters = (props: FiltersProps) => {
     }
   };
 
+  useEffect(() => {
+    if (!isUndefined(props.isVisibleDropdown) && !props.isVisibleDropdown && filtersSection && filtersSection.current) {
+      filtersSection.current.cleanValue();
+    }
+  }, [props.isVisibleDropdown]);
+
   return (
     <div className="ms-3 mt-2">
       <FiltersSection
+        ref={filtersSection}
         device={props.device}
         activeFilters={props.activeFilters}
         contentClassName={`overflow-auto ${styles.projectOptions}`}
@@ -100,7 +110,7 @@ const FiltersInLine = (props: Props) => {
                       section={section}
                       device={props.device}
                       activeFilters={activeFilters}
-                      withSearchBar={section.key && section.key === 'project' ? true : undefined}
+                      withSearchBar={isProjectSection ? true : undefined}
                       onChange={props.onChange}
                     />
                   </Dropdown>
