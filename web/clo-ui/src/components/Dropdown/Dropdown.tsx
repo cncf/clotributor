@@ -48,7 +48,7 @@ export const Dropdown: React.FC<IDropdownProps> = (props: IDropdownProps) => {
         })}
       >
         <div className={`dropdown-arrow ${styles.arrow}`} />
-        {React.cloneElement(props.children, { closeDropdown: closeDropdown })}
+        {React.cloneElement(props.children, { closeDropdown: closeDropdown, isVisibleDropdown: visibleDropdown })}
       </div>
     </div>
   );
