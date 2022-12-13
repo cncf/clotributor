@@ -245,21 +245,30 @@ const Card = (props: Props) => {
               </div>
             </div>
 
-            <div className="d-flex flex-row align-items-center">
+            <ExternalLink
+              label="Issue url"
+              href={props.issue.url}
+              className={`position-relative d-block d-md-none mw-100 my-3 text-decoration-none ${styles.linkMobile}`}
+            >
+              <div className={`fw-bold text-start text-truncate ${styles.issueDesc}`}>
+                {removeLastDot(removeEmojis(props.issue.title))}
+              </div>
+            </ExternalLink>
+
+            <div className="d-none d-md-flex flex-row align-items-center">
               <div className="d-flex truncateWrapper">
                 <ExternalLink
                   label="Issue url"
                   href={props.issue.url}
-                  className="position-relative d-inline-block mw-100"
+                  className="position-relative d-inline-block mw-100 my-3"
+                  visibleExternalIcon
                 >
-                  <div className="d-flex flex-row align-items-center my-3 w-100">
-                    <div className={`fw-bold text-start text-truncate ${styles.issueDesc}`}>
-                      {removeLastDot(removeEmojis(props.issue.title))}
-                    </div>
-                    <FiExternalLink className={`d-none d-md-block ms-2 ${styles.issueIcon}`} />
+                  <div className={`fw-bold text-start text-truncate ${styles.issueDesc}`}>
+                    {removeLastDot(removeEmojis(props.issue.title))}
                   </div>
                 </ExternalLink>
               </div>
+
               {props.issue.mentor_available && (
                 <div className="d-none d-xl-flex">
                   <GenericBadge

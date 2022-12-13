@@ -115,6 +115,11 @@
   font-size: 0.7rem;
 }
 
+.linkMobile {
+  /* Avoid link preview for Safari mobile */
+  -webkit-touch-callout: none;
+}
+
 @media only screen and (max-width: 575.98px) {
   .title {
     font-size: 1rem;

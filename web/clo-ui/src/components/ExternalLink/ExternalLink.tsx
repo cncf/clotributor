@@ -18,14 +18,20 @@ export interface IExternalLinkProps {
 }
 
 export const ExternalLink: React.FC<IExternalLinkProps> = (props) => {
-  const getData = () => (
-    <div className="d-flex flex-row align-items-baseline">
-      {props.children}
-      {!isUndefined(props.visibleExternalIcon) && props.visibleExternalIcon && (
-        <FiExternalLink className={`ms-2 icon`} />
-      )}
-    </div>
-  );
+  const getData = () => {
+    return (
+      <>
+        {!isUndefined(props.visibleExternalIcon) && props.visibleExternalIcon ? (
+          <div className="d-flex flex-row align-items-baseline">
+            {props.children}
+            <FiExternalLink className={`ms-2 icon`} />
+          </div>
+        ) : (
+          <>{props.children}</>
+        )}
+      </>
+    );
+  };
 
   return (
     <>
