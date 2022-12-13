@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import { isString } from 'lodash';
 import isNumber from 'lodash/isNumber';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FaCaretLeft, FaCaretRight } from 'react-icons/fa';
 
 import styles from './Pagination.module.css';
@@ -40,23 +40,31 @@ const getPaginationOptions = (currentPage: number, pageCount: number): (string |
   return range;
 };
 
-const PaginationBtn: React.FC<ButtonProps> = (btnProps: ButtonProps) => (
-  <button
-    className={classnames('page-link rounded-0', {
-      'text-primary': !btnProps.disabled && btnProps.active !== btnProps.pageNumber,
-    })}
-    onClick={() => {
-      if (btnProps.active !== btnProps.pageNumber) {
-        btnProps.onChange(btnProps.pageNumber);
-      }
-    }}
-    aria-label={`Open ${isString(btnProps.content) ? btnProps.content : `page ${btnProps.pageNumber}`}`}
-    disabled={btnProps.disabled}
-    tabIndex={btnProps.disabled ? -1 : 0}
-  >
-    {btnProps.content || btnProps.pageNumber}
-  </button>
-);
+const PaginationBtn: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  return (
+    <button
+      ref={buttonRef}
+      className={classnames('page-link rounded-0', {
+        'text-primary': !btnProps.disabled && btnProps.active !== btnProps.pageNumber,
+      })}
+      onClick={() => {
+        if (btnProps.active !== btnProps.pageNumber) {
+          if (buttonRef && buttonRef.current) {
+            buttonRef.current.blur();
+          }
+          btnProps.onChange(btnProps.pageNumber);
+        }
+      }}
+      aria-label={`Open ${isString(btnProps.content) ? btnProps.content : `page ${btnProps.pageNumber}`}`}
+      disabled={btnProps.disabled}
+      // tabIndex={btnProps.disabled ? -1 : 0}
+    >
+      {btnProps.content || btnProps.pageNumber}
+    </button>
+  );
+};
 
 export const Pagination: React.FC<IPaginationProps> = (props: IPaginationProps) => {
   const [totalPages, setTotalPages] = useState(Math.ceil(props.total / props.limit));

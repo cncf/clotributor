@@ -13,7 +13,8 @@
     "react-icons": "^4.7.1",
     "react-router-dom": "^6.4.5",
     "source-map-explorer": "^2.5.3",
-    "tinycolor2": "^1.4.2"
+    "tinycolor2": "^1.4.2",
+    "ua-parser-js": "^1.0.32"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.14.1",
