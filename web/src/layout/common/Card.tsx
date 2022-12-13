@@ -135,8 +135,8 @@ const Card = (props: Props) => {
               url={props.issue.project.logo_url}
             />
           </div>
-          <div className="ms-0 ms-lg-3 flex-grow-1 w-100 truncateWrapper">
-            <div className="p-0 p-lg-2 pe-lg-0">
+          <div className="ms-0 ms-xl-3 flex-grow-1 w-100 truncateWrapper">
+            <div className="p-0 p-xl-2 pe-xl-0">
               <div className="d-flex flex-row align-items-center">
                 <div className="d-flex flex-column w-100 truncateWrapper">
                   <div className="d-flex flex-row w-100 truncateWrapper">
