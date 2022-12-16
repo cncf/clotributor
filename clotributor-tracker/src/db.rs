@@ -1,4 +1,4 @@
-use crate::tracker::{Issue, IssueTsTexts, Repository};
+use crate::tracker::{Issue, Repository};
 use anyhow::Result;
 use async_trait::async_trait;
 use deadpool_postgres::Pool;
@@ -18,12 +18,7 @@ pub(crate) trait DB {
     async fn get_repository_issues(&self, repository_id: Uuid) -> Result<Vec<Issue>>;
 
     /// Register issue provided in the database.
-    async fn register_issue(
-        &self,
-        repository_id: Uuid,
-        issue: &Issue,
-        ts: &IssueTsTexts,
-    ) -> Result<()>;
+    async fn register_issue(&self, repository: &Repository, issue: &Issue) -> Result<()>;
 
     /// Unregister issue provided from the database.
     async fn unregister_issue(&self, issue_id: i64) -> Result<()>;
@@ -107,7 +102,8 @@ impl DB for PgDB {
                     kind,
                     difficulty,
                     mentor_available,
-                    mentor
+                    mentor,
+                    good_first_issue
                 from issue
                 where repository_id = $1;
                 ",
@@ -127,18 +123,15 @@ impl DB for PgDB {
                 difficulty: row.get("difficulty"),
                 mentor_available: row.get("mentor_available"),
                 mentor: row.get("mentor"),
+                good_first_issue: row.get("good_first_issue"),
             })
             .collect();
         Ok(issues_ids)
     }
 
-    async fn register_issue(
-        &self,
-        repository_id: Uuid,
-        issue: &Issue,
-        ts_texts: &IssueTsTexts,
-    ) -> Result<()> {
+    async fn register_issue(&self, repository: &Repository, issue: &Issue) -> Result<()> {
         let db = self.pool.get().await?;
+        let ts_texts = issue.prepare_ts_texts(repository);
         db.execute(
             "
             insert into issue (
@@ -152,14 +145,15 @@ impl DB for PgDB {
                 difficulty,
                 mentor_available,
                 mentor,
+                good_first_issue,
                 published_at,
                 repository_id,
                 tsdoc
             ) values (
-                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12,
-                setweight(to_tsvector($13), 'A') ||
-                setweight(to_tsvector($14), 'B') ||
-                setweight(to_tsvector($15), 'C')
+                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13,
+                setweight(to_tsvector($14), 'A') ||
+                setweight(to_tsvector($15), 'B') ||
+                setweight(to_tsvector($16), 'C')
             ) on conflict (issue_id) do update
             set
                 title = excluded.title,
@@ -168,7 +162,8 @@ impl DB for PgDB {
                 kind = excluded.kind,
                 difficulty = excluded.difficulty,
                 mentor_available = excluded.mentor_available,
-                mentor = excluded.mentor;
+                mentor = excluded.mentor,
+                good_first_issue = excluded.good_first_issue;
             ",
             &[
                 &issue.issue_id,
@@ -181,8 +176,9 @@ impl DB for PgDB {
                 &issue.difficulty,
                 &issue.mentor_available,
                 &issue.mentor,
+                &issue.good_first_issue,
                 &issue.published_at,
-                &repository_id,
+                &repository.repository_id,
                 &ts_texts.weight_a,
                 &ts_texts.weight_b,
                 &ts_texts.weight_c,

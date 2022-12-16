@@ -23,6 +23,7 @@ export interface Issue {
   kind?: string;
   difficulty?: string;
   mentor_available?: string;
+  good_first_issue?: string;
   project: Project;
   repository: Repository;
 }
@@ -76,6 +77,7 @@ export interface BasicQuery {
     [key: string]: string[];
   };
   mentor_available?: boolean;
+  good_first_issue?: boolean;
 }
 
 export interface SearchQuery extends BasicQuery {

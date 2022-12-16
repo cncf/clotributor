@@ -22,7 +22,6 @@ interface Props {
 
 const Card = (props: Props) => {
   const navigate = useNavigate();
-  const [isGoodFirstIssue, setIsGoodFirstIssue] = useState<boolean>(false);
   const [availableTopics, setAvailableTopics] = useState<string[]>([]);
 
   const searchByText = (text: string) => {
@@ -57,6 +56,17 @@ const Card = (props: Props) => {
     });
   };
 
+  const searchByGoodFirstIssue = () => {
+    navigate({
+      pathname: '/search',
+      search: prepareQueryString({
+        pageNumber: 1,
+        good_first_issue: true,
+        filters: {},
+      }),
+    });
+  };
+
   useEffect(() => {
     function cleanTopics() {
       const lowerLanguages = props.issue.repository.languages.map((lg: string) => {
@@ -73,19 +83,7 @@ const Card = (props: Props) => {
       setAvailableTopics(topics);
     }
 
-    function checkIfSpecialIssue() {
-      if (props.issue.labels) {
-        const lowerLabels = props.issue.labels.map((lg: string) => {
-          return lg.toLowerCase();
-        });
-        if (lowerLabels.includes('good first issue')) {
-          setIsGoodFirstIssue(true);
-        }
-      }
-    }
-
     cleanTopics();
-    checkIfSpecialIssue();
   }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
 
   return (
@@ -298,15 +296,15 @@ const Card = (props: Props) => {
                 </ExternalLink>
               </div>
 
-              {(isGoodFirstIssue || props.issue.kind || props.issue.difficulty) && (
+              {(props.issue.good_first_issue || props.issue.kind || props.issue.difficulty) && (
                 <div className="d-flex flex-row align-items-center ms-auto ms-sm-0">
                   <BsDot className="d-none d-sm-flex mx-1" />
 
-                  {isGoodFirstIssue && (
+                  {props.issue.good_first_issue && (
                     <GenericBadge
                       content="Good first issue"
                       className={`mx-1 text-uppercase bg-green ${styles.badge} lighterText`}
-                      onClick={() => searchByText('good first issue')}
+                      onClick={searchByGoodFirstIssue}
                     />
                   )}
 

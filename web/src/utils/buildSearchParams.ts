@@ -28,6 +28,7 @@ const buildSearchParams = (p: URLSearchParams): SearchFiltersURL => {
   return {
     ts_query_web: p.has('ts_query_web') ? p.get('ts_query_web')! : undefined,
     mentor_available: p.has('mentor_available'),
+    good_first_issue: p.has('good_first_issue'),
     filters: { ...filters },
     pageNumber: p.has('page') && !isNull(p.get('page')) ? parseInt(p.get('page')!) : 1,
   };

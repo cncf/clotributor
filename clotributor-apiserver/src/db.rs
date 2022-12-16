@@ -73,5 +73,6 @@ pub(crate) struct SearchIssuesInput {
     pub kind: Option<Vec<String>>,
     pub difficulty: Option<Vec<String>>,
     pub mentor_available: Option<bool>,
+    pub good_first_issue: Option<bool>,
     pub ts_query_web: Option<String>,
 }

@@ -30,6 +30,7 @@ const Search = () => {
   const { setInvisibleFooter } = useOutletContext() as OutletContext;
   const [text, setText] = useState<string | undefined>();
   const [mentorAvailable, setMentorAvailable] = useState<boolean>(false);
+  const [goodFirstIssue, setGoodFirstIssue] = useState<boolean>(false);
   const [filters, setFilters] = useState<FilterSection[] | undefined>(undefined);
   const [activeFilters, setActiveFilters] = useState<FiltersProp>({});
   const [pageNumber, setPageNumber] = useState<number>(1);
@@ -137,6 +138,7 @@ const Search = () => {
     return {
       pageNumber: pageNumber,
       mentor_available: mentorAvailable,
+      good_first_issue: goodFirstIssue,
       ts_query_web: text,
       filters: activeFilters,
     };
@@ -165,6 +167,7 @@ const Search = () => {
     const formattedParams = buildSearchParams(searchParams);
     setText(formattedParams.ts_query_web);
     setMentorAvailable(formattedParams.mentor_available || false);
+    setGoodFirstIssue(formattedParams.good_first_issue || false);
     setActiveFilters(formattedParams.filters || {});
     setPageNumber(formattedParams.pageNumber);
 
@@ -177,6 +180,7 @@ const Search = () => {
         const newSearchResults = await API.searchIssues({
           ts_query_web: formattedParams.ts_query_web,
           mentor_available: formattedParams.mentor_available || false,
+          good_first_issue: formattedParams.good_first_issue || false,
           sort_by: sort.by,
           filters: formattedParams.filters || {},
           offset: calculateOffset(formattedParams.pageNumber),
@@ -234,7 +238,7 @@ const Search = () => {
                     }
                     leftButton={
                       <>
-                        {(!isEmpty(activeFilters) || mentorAvailable) && (
+                        {(!isEmpty(activeFilters) || mentorAvailable || goodFirstIssue) && (
                           <div className="d-flex align-items-center">
                             <IoMdCloseCircleOutline className={`text-dark ${styles.resetBtnDecorator}`} />
                             <button
@@ -256,6 +260,7 @@ const Search = () => {
                         filters={filters}
                         activeFilters={activeFilters}
                         mentorAvailable={mentorAvailable}
+                        goodFirstIssue={goodFirstIssue}
                         onChange={onFiltersChange}
                         visibleTitle={false}
                       />
@@ -312,6 +317,7 @@ const Search = () => {
               onChange={onFiltersChange}
               onResetFilters={onResetFilters}
               mentorAvailable={mentorAvailable}
+              goodFirstIssue={goodFirstIssue}
               isLoadingFilters={isUndefined(filters)}
               device="desktop"
             />

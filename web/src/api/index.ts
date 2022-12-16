@@ -124,6 +124,10 @@ class API_CLASS {
       q += '&mentor_available=true';
     }
 
+    if (query.good_first_issue) {
+      q += '&good_first_issue=true';
+    }
+
     if (!isUndefined(query.filters) && !isEmpty(query.filters)) {
       Object.keys(query.filters!).forEach((k: string) => {
         query.filters![k].forEach((f: string, index: number) => {

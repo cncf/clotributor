@@ -91,7 +91,9 @@ impl repo_view::RepoViewRepository {
                             difficulty: None,
                             mentor_available: None,
                             mentor: None,
+                            good_first_issue: None,
                         };
+                        issue.populate_from_labels();
                         issue.update_digest();
 
                         Some(issue)

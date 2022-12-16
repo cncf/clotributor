@@ -10,6 +10,7 @@ interface Props {
     [key: string]: string[];
   };
   mentorAvailable: boolean;
+  goodFirstIssue: boolean;
   onChange: (name: string, value: string, checked: boolean, type?: string) => void;
   onResetFilters?: () => void;
   device: string;
@@ -17,7 +18,14 @@ interface Props {
 
 const Filters = (props: Props) => {
   const getActiveFiltersForOther = (): string[] => {
-    return props.mentorAvailable ? ['mentor_available'] : [];
+    let otherFilters = [];
+    if (props.mentorAvailable) {
+      otherFilters.push('mentor_available');
+    }
+    if (props.goodFirstIssue) {
+      otherFilters.push('good_first_issue');
+    }
+    return otherFilters;
   };
 
   return (

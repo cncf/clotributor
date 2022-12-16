@@ -61,6 +61,7 @@ begin
             i.kind as issue_kind,
             i.difficulty as issue_difficulty,
             i.mentor_available as issue_mentor_available,
+            i.good_first_issue as good_first_issue,
             r.name as repository_name,
             r.url as repository_url,
             r.homepage_url as repository_homepage_url,
@@ -105,6 +106,10 @@ begin
             case when p_input ? 'mentor_available' and (p_input->>'mentor_available')::boolean = true then
                 i.mentor_available = true
             else true end
+        and
+            case when p_input ? 'good_first_issue' and (p_input->>'good_first_issue')::boolean = true then
+                i.good_first_issue = true
+            else true end
     )
     select
         (
@@ -117,6 +122,7 @@ begin
                 'kind', issue_kind,
                 'difficulty', issue_difficulty,
                 'mentor_available', issue_mentor_available,
+                'good_first_issue', good_first_issue,
                 'repository', json_build_object(
                     'name', repository_name,
                     'url', repository_url,

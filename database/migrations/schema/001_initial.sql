@@ -63,6 +63,7 @@ create table if not exists issue (
     difficulty difficulty,
     mentor_available boolean,
     mentor text,
+    good_first_issue boolean,
     tsdoc tsvector not null,
     published_at timestamptz not null default current_timestamp,
     created_at timestamptz not null default current_timestamp,
