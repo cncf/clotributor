@@ -14,6 +14,7 @@ interface Props {
   };
   projects?: Filter;
   mentorAvailable: boolean;
+  goodFirstIssue: boolean;
   onChange: (name: string, value: string, checked: boolean, type?: string) => void;
   onResetFilters: () => void;
   isLoadingFilters?: boolean;
@@ -65,14 +66,21 @@ const Filters = (props: FiltersProps) => {
 
 const FiltersInLine = (props: Props) => {
   const getActiveFiltersForOther = (): string[] => {
-    return props.mentorAvailable ? ['mentor_available'] : [];
+    let otherFilters = [];
+    if (props.mentorAvailable) {
+      otherFilters.push('mentor_available');
+    }
+    if (props.goodFirstIssue) {
+      otherFilters.push('good_first_issue');
+    }
+    return otherFilters;
   };
 
   return (
     <div className="d-none d-lg-block mb-2">
       <div className="d-flex flex-row align-items-baseline mt-2 mb-3">
         <div className={`text-uppercase text-secondary fw-bold ${styles.title}`}>Filters</div>
-        {(!isEmpty(props.activeFilters) || props.mentorAvailable) && (
+        {(!isEmpty(props.activeFilters) || props.mentorAvailable || props.goodFirstIssue) && (
           <button
             className={`btn btn-link text-secondary btn-sm py-0 me-3 ${styles.btnRemove}`}
             onClick={props.onResetFilters}

@@ -127,6 +127,7 @@ pub(crate) struct Issue {
     pub difficulty: Option<IssueDifficulty>,
     pub mentor_available: Option<bool>,
     pub mentor: Option<String>,
+    pub good_first_issue: Option<bool>,
 }
 
 impl Issue {
@@ -140,7 +141,7 @@ impl Issue {
     }
 
     /// Prepare texts for text search document.
-    fn prepare_ts_texts(&self, repo: &Repository) -> IssueTsTexts {
+    pub(crate) fn prepare_ts_texts(&self, repo: &Repository) -> IssueTsTexts {
         // Weight A
         let weight_a = repo.project_name.clone();
 
@@ -173,7 +174,7 @@ impl Issue {
 
     /// Populate the issue with information extracted from the labels, like the
     /// issue kind, its difficulty, etc.
-    fn populate_from_labels(&mut self) {
+    pub(crate) fn populate_from_labels(&mut self) {
         for label in self.labels.iter() {
             // Kind
             if let Some(kind) = {
@@ -213,6 +214,12 @@ impl Issue {
             // Mentor available
             if label == "mentor available" {
                 self.mentor_available = Some(true);
+                continue;
+            }
+
+            // Good first issue
+            if label == "good first issue" {
+                self.good_first_issue = Some(true);
                 continue;
             }
         }
@@ -329,10 +336,7 @@ async fn track_repository(
     for issue in issues_in_gh.iter_mut() {
         let digest_in_db = find_issue(issue.issue_id, &issues_in_db);
         if issue.digest != digest_in_db {
-            issue.populate_from_labels();
-            let issue_ts_texts = issue.prepare_ts_texts(&repo);
-            db.register_issue(repo.repository_id, issue, &issue_ts_texts)
-                .await?;
+            db.register_issue(&repo, issue).await?;
             debug!("registering issue #{}", issue.number);
         }
     }

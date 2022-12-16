@@ -77,6 +77,11 @@ returns json as $$
             "title": "Other",
             "options": [
                 {
+                    "name": "Good first issue",
+                    "key": "good_first_issue",
+                    "type": "boolean"
+                },
+                {
                     "name": "Mentor available",
                     "key": "mentor_available",
                     "type": "boolean"

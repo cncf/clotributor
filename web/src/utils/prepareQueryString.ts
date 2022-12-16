@@ -17,6 +17,9 @@ const getURLSearchParams = (query: BasicQuery): URLSearchParams => {
   if (!isUndefined(query.mentor_available) && query.mentor_available) {
     q.set('mentor_available', 'true');
   }
+  if (!isUndefined(query.good_first_issue) && query.good_first_issue) {
+    q.set('good_first_issue', 'true');
+  }
   return q;
 };
 
