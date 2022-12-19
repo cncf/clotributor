@@ -30,12 +30,16 @@
   font-size: 0.7rem;
 }
 
-.btnActiveFilter {
+.activeFilter {
   font-size: 0.8rem;
-  padding: 0 0.55rem;
+  padding-left: 0.55rem;
 }
 
 .closeBtn {
+  padding: 0 0.55rem;
+}
+
+.closeIcon {
   min-width: 15px;
 }
 

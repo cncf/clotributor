@@ -132,23 +132,25 @@ const FiltersInLine = (props: Props) => {
                         if (isUndefined(selectedFilter)) return null;
 
                         return (
-                          <button
-                            className={`btn btn-sm btn-link text-start w-100 text-decoration-none ${styles.btnActiveFilter}`}
-                            onClick={() =>
-                              props.onChange(
-                                (selectedFilter.key || section.key)!,
-                                filter as string,
-                                false,
-                                selectedFilter.type
-                              )
-                            }
+                          <div
+                            className={`d-flex flex-row align-items-center w-100 ${styles.activeFilter}`}
                             key={`fil_${selectedFilter.value}`}
                           >
-                            <div className="d-flex flex-row align-items-center">
-                              <div className="flex-grow-1 text-truncate me-2">{selectedFilter.name}</div>
-                              <IoMdCloseCircleOutline className={`ms-auto ${styles.closeBtn}`} />
-                            </div>
-                          </button>
+                            <div className="flex-grow-1 text-truncate me-2">{selectedFilter.name}</div>
+                            <button
+                              className={`btn btn-sm btn-link text-end text-decoration-none ${styles.closeBtn}`}
+                              onClick={() =>
+                                props.onChange(
+                                  (selectedFilter.key || section.key)!,
+                                  filter as string,
+                                  false,
+                                  selectedFilter.type
+                                )
+                              }
+                            >
+                              <IoMdCloseCircleOutline className={styles.closeIcon} />
+                            </button>
+                          </div>
                         );
                       })}
                     </div>
