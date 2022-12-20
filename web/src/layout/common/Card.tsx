@@ -259,6 +259,7 @@ const Card = (props: Props) => {
                   label="Issue url"
                   href={props.issue.url}
                   className="position-relative d-inline-block mw-100 my-3"
+                  externalIconClassName={styles.externalIcon}
                   visibleExternalIcon
                 >
                   <div className={`fw-bold text-start text-truncate ${styles.issueDesc}`}>

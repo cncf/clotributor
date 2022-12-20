@@ -12,6 +12,7 @@ export interface IExternalLinkProps {
   target?: string;
   label?: string;
   ariaHidden?: boolean;
+  externalIconClassName?: string;
   visibleExternalIcon?: boolean;
   disabled?: boolean;
   onClick?: () => void;
@@ -24,7 +25,7 @@ export const ExternalLink: React.FC<IExternalLinkProps> = (props) => {
         {!isUndefined(props.visibleExternalIcon) && props.visibleExternalIcon ? (
           <div className="d-flex flex-row align-items-baseline">
             {props.children}
-            <FiExternalLink className={`ms-2 icon`} />
+            <FiExternalLink className={`ms-2 icon ${props.externalIconClassName}`} />
           </div>
         ) : (
           <>{props.children}</>
