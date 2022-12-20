@@ -3,7 +3,6 @@
 Chart.lock
 chart/charts
 web/build
-web/clo-ui/dist
 web/src/media
 npm-debug.log*
 yarn-debug.log*

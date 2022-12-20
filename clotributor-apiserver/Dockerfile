@@ -14,9 +14,6 @@ FROM node:16-alpine3.16 AS frontend-builder
 WORKDIR /web
 COPY web .
 ENV NODE_OPTIONS=--max_old_space_size=4096
-WORKDIR /web/clo-ui
-RUN yarn install
-RUN yarn build
 WORKDIR /web
 RUN yarn install
 RUN yarn build
