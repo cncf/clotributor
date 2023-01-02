@@ -49,6 +49,7 @@ create table if not exists repository (
 
 create index repository_project_id_idx on repository (project_id);
 
+create type area as enum ('docs');
 create type kind as enum ('bug', 'feature', 'enhancement');
 create type difficulty as enum ('easy', 'medium', 'hard');
 
@@ -59,6 +60,7 @@ create table if not exists issue (
     number integer not null,
     labels text[] not null,
     digest text,
+    area area,
     kind kind,
     difficulty difficulty,
     mentor_available boolean,

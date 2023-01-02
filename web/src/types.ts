@@ -21,6 +21,7 @@ export interface Issue {
   labels?: string[];
   published_at: number;
   kind?: string;
+  area?: string;
   difficulty?: string;
   mentor_available?: string;
   good_first_issue?: string;
@@ -54,6 +55,7 @@ export enum FilterKind {
   Project = 'project',
   Kind = 'kind',
   Difficulty = 'difficulty',
+  Area = 'area',
 }
 
 export enum SortBy {

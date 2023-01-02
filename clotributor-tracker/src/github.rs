@@ -87,6 +87,7 @@ impl repo_view::RepoViewRepository {
                             labels,
                             published_at,
                             digest: None,
+                            area: None,
                             kind: None,
                             difficulty: None,
                             mentor_available: None,

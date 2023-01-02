@@ -37,22 +37,28 @@ It's possible to search by project name, repository name, description, topics or
 
 ## Labels with special meaning
 
-Some of the features of **CLOTributor** are controlled by some special labels that can be set on issues:
+Some of the features of **CLOTributor** are controlled by some special labels (or labels that contain some strings) that can be set on issues. One of the most important labels for CLOTributor is `help wanted`, as it only processes issues where help is wanted. Issues are categorized in some different ways based on these labels:
 
-- `help wanted`: this is the entry point for CLOTributor, as it only processes issues where help is wanted.
+#### Area
 
-- `good first issue`: when this label is present on an issue, it is highlighted in the UI.
+- **docs**: the issue has a label thay contains the string `docs` or `documentation`.
 
-- `difficulty/easy` or `level/easy`: to set an issue's difficulty as easy.
+#### Kind
 
-- `difficulty/medium` or `level/medium`: to set an issue's difficulty as medium.
+- **bug**: the issue has a label thay contains the string `bug`.
+- **feature**: the issue has a label thay contains the string `feature`.
+- **enhancement**: the issue has a label thay contains the string `enhancement` or `improvement`.
 
-- `difficulty/hard` or `level/hard`: to set an issue's difficulty as hard.
+#### Difficulty
 
+- **easy**: the issue has the label `difficulty/easy` or `level/easy`.
+- **medium**: the issue has the label `difficulty/medium` or `level/medium`.
+- **hard**: the issue has the label `difficulty/hard` or `level/hard`.
+
+#### Other filters
+
+- `good first issue`: use this label to highlight issues that may be a good fit for new contributors to the project.
 - `mentor available`: to indicate that someone may be available to guide contributors with this issue.
-
-In addition to those labels, **CLOTributor** tries to categorize issues as a `bug`, `new feature` or an `enhancement`. This kind is set based on the presence of a label that contains the string `bug`, `feature` or `enhancement`/`improvement` respectively.
-
 
 ## Projects and repositories
 

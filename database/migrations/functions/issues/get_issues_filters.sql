@@ -48,6 +48,19 @@ returns json as $$
             )
         ),
         json_build_object(
+            'title', 'Area',
+            'key', 'area',
+            'options', (
+                select coalesce(json_agg(json_build_object(
+                    'name', initcap(area::text),
+                    'value', area::text
+                )), '[]')
+                from (
+                    select unnest(enum_range(null::area)) as area
+                ) a
+            )
+        ),
+        json_build_object(
             'title', 'Kind',
             'key', 'kind',
             'options', (

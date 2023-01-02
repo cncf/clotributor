@@ -87,6 +87,15 @@ impl Repository {
     }
 }
 
+/// Issue area.
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, ToSql, FromSql)]
+#[serde(rename_all = "kebab-case")]
+#[postgres(name = "area")]
+pub enum IssueArea {
+    #[postgres(name = "docs")]
+    Docs,
+}
+
 /// Issue kind.
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, ToSql, FromSql)]
 #[serde(rename_all = "kebab-case")]
@@ -123,6 +132,7 @@ pub(crate) struct Issue {
     pub labels: Vec<String>,
     pub published_at: OffsetDateTime,
     pub digest: Option<String>,
+    pub area: Option<IssueArea>,
     pub kind: Option<IssueKind>,
     pub difficulty: Option<IssueDifficulty>,
     pub mentor_available: Option<bool>,
@@ -176,6 +186,12 @@ impl Issue {
     /// issue kind, its difficulty, etc.
     pub(crate) fn populate_from_labels(&mut self) {
         for label in self.labels.iter() {
+            // Area
+            if label.contains("docs") || label.contains("documentation") {
+                self.area = Some(IssueArea::Docs);
+                continue;
+            }
+
             // Kind
             if let Some(kind) = {
                 if label.contains("enhancement") || label.contains("improvement") {

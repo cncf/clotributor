@@ -99,6 +99,7 @@ impl DB for PgDB {
                     labels,
                     published_at,
                     digest,
+                    area,
                     kind,
                     difficulty,
                     mentor_available,
@@ -119,6 +120,7 @@ impl DB for PgDB {
                 labels: row.get("labels"),
                 published_at: row.get("published_at"),
                 digest: row.get("digest"),
+                area: row.get("area"),
                 kind: row.get("kind"),
                 difficulty: row.get("difficulty"),
                 mentor_available: row.get("mentor_available"),
@@ -141,6 +143,7 @@ impl DB for PgDB {
                 number,
                 labels,
                 digest,
+                area,
                 kind,
                 difficulty,
                 mentor_available,
@@ -150,15 +153,16 @@ impl DB for PgDB {
                 repository_id,
                 tsdoc
             ) values (
-                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13,
-                setweight(to_tsvector($14), 'A') ||
-                setweight(to_tsvector($15), 'B') ||
-                setweight(to_tsvector($16), 'C')
+                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14,
+                setweight(to_tsvector($15), 'A') ||
+                setweight(to_tsvector($16), 'B') ||
+                setweight(to_tsvector($17), 'C')
             ) on conflict (issue_id) do update
             set
                 title = excluded.title,
                 labels = excluded.labels,
                 digest = excluded.digest,
+                area = excluded.area,
                 kind = excluded.kind,
                 difficulty = excluded.difficulty,
                 mentor_available = excluded.mentor_available,
@@ -172,6 +176,7 @@ impl DB for PgDB {
                 &issue.number,
                 &issue.labels,
                 &issue.digest,
+                &issue.area,
                 &issue.kind,
                 &issue.difficulty,
                 &issue.mentor_available,
