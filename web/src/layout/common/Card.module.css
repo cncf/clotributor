@@ -107,8 +107,13 @@
   max-height: 22px;
 }
 
+.dot {
+  min-width: 14px;
+}
+
 .badgesWrapper {
   max-height: 22px;
+  min-width: 150px;
 }
 
 .badge {
