@@ -3,12 +3,13 @@
 }
 
 .dropdownWrapper {
-  width: 180px;
+  width: 115px;
 }
 
 .dropdown {
   left: 0;
-  min-width: 180px !important;
+  /* Min-width for all dropdowns in all breakpoints */
+  min-width: 165px !important;
 }
 
 .btn {
@@ -61,16 +62,19 @@
   max-height: 300px;
 }
 
-@media only screen and (max-width: 1199.98px) {
+@media only screen and (min-width: 1200px) {
   .dropdownWrapper {
-    width: 138px;
-  }
-
-  .dropdown {
-    min-width: 138px !important;
+    width: 130px;
   }
 }
 
+@media only screen and (min-width: 1400px) {
+  .dropdownWrapper {
+    width: 165px;
+  }
+}
+
+/* Overwrite project dropdown width in all breakpoints */
 .projectDropdown {
   min-width: 280px !important;
 }

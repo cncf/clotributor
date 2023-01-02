@@ -9,6 +9,7 @@ declare
     v_foundation text[];
     v_maturity text[];
     v_project text[];
+    v_area text[];
     v_kind text[];
     v_difficulty text[];
     v_tsquery_web tsquery := websearch_to_tsquery(p_input->>'ts_query_web');
@@ -26,6 +27,10 @@ begin
     if p_input ? 'project' and p_input->'project' <> 'null' then
         select array_agg(e::text) into v_project
         from jsonb_array_elements_text(p_input->'project') e;
+    end if;
+    if p_input ? 'area' and p_input->'area' <> 'null' then
+        select array_agg(e::text) into v_area
+        from jsonb_array_elements_text(p_input->'area') e;
     end if;
     if p_input ? 'kind' and p_input->'kind' <> 'null' then
         select array_agg(e::text) into v_kind
@@ -58,6 +63,7 @@ begin
             i.url as issue_url,
             i.labels as issue_labels,
             i.published_at as issue_published_at,
+            i.area as issue_area,
             i.kind as issue_kind,
             i.difficulty as issue_difficulty,
             i.mentor_available as issue_mentor_available,
@@ -97,6 +103,9 @@ begin
             case when cardinality(v_project) > 0 then
             p.name = any(v_project) else true end
         and
+            case when cardinality(v_area) > 0 then
+            i.area::text = any(v_area) else true end
+        and
             case when cardinality(v_kind) > 0 then
             i.kind::text = any(v_kind) else true end
         and
@@ -119,6 +128,7 @@ begin
                 'url', issue_url,
                 'labels', issue_labels,
                 'published_at', floor(extract(epoch from issue_published_at)),
+                'area', issue_area,
                 'kind', issue_kind,
                 'difficulty', issue_difficulty,
                 'mentor_available', issue_mentor_available,

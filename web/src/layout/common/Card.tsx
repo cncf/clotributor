@@ -297,14 +297,16 @@ const Card = (props: Props) => {
                 </ExternalLink>
               </div>
 
-              {(props.issue.good_first_issue || props.issue.kind || props.issue.difficulty) && (
-                <div className="d-flex flex-row align-items-center ms-auto ms-sm-0">
+              {(props.issue.good_first_issue || props.issue.kind || props.issue.difficulty || props.issue.area) && (
+                <div
+                  className={`d-flex flex-row align-items-center flex-wrap overflow-hidden ms-auto ms-sm-0 ${styles.badgesWrapper}`}
+                >
                   <BsDot className="d-none d-sm-flex mx-1" />
 
                   {props.issue.good_first_issue && (
                     <GenericBadge
                       content="Good first issue"
-                      className={`mx-1 text-uppercase bg-green ${styles.badge} lighterText`}
+                      className={`text-uppercase bg-green ${styles.badge} lighterText`}
                       onClick={searchByGoodFirstIssue}
                     />
                   )}
@@ -326,8 +328,16 @@ const Card = (props: Props) => {
                   {!isUndefined(props.issue.difficulty) && (
                     <GenericBadge
                       content={props.issue.difficulty}
-                      className={classNames('ms-1 text-uppercase bg-blue', styles.badge, 'lighterText')}
+                      className={classNames('text-uppercase bg-blue', styles.badge, 'lighterText')}
                       onClick={() => searchByFilter(FilterKind.Difficulty, props.issue.difficulty!)}
+                    />
+                  )}
+
+                  {!isUndefined(props.issue.area) && (
+                    <GenericBadge
+                      content={props.issue.area}
+                      className={classNames('text-uppercase bg-blue', styles.badge, 'lighterText')}
+                      onClick={() => searchByFilter(FilterKind.Area, props.issue.area!)}
                     />
                   )}
                 </div>

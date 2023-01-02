@@ -107,8 +107,12 @@
   max-height: 22px;
 }
 
+.badgesWrapper {
+  max-height: 22px;
+}
+
 .badge {
-  margin: 1px 0;
+  margin: 1px 0.25rem;
 }
 
 .mentorBadge {
