@@ -299,9 +299,9 @@ const Card = (props: Props) => {
 
               {(props.issue.good_first_issue || props.issue.kind || props.issue.difficulty || props.issue.area) && (
                 <div
-                  className={`d-flex flex-row align-items-center flex-wrap overflow-hidden ms-auto ms-sm-0 ${styles.badgesWrapper}`}
+                  className={`d-flex flex-row align-items-center justify-content-end justify-content-sm-start flex-wrap overflow-hidden ms-auto ms-sm-0 ${styles.badgesWrapper}`}
                 >
-                  <BsDot className="d-none d-sm-flex mx-1" />
+                  <BsDot className={`d-none d-sm-flex mx-1 ${styles.dot}`} />
 
                   {props.issue.good_first_issue && (
                     <GenericBadge
@@ -315,7 +315,7 @@ const Card = (props: Props) => {
                     <GenericBadge
                       content={props.issue.kind}
                       className={classNames(
-                        'ms-1 text-uppercase',
+                        'text-uppercase text-truncate',
                         { 'bg-red': props.issue.kind === 'bug' },
                         { 'bg-blue': props.issue.kind !== 'bug' },
                         styles.badge,

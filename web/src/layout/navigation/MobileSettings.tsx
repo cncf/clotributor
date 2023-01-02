@@ -26,7 +26,7 @@ const MobileSettings = () => {
       </button>
 
       <div role="menu" className={classNames('dropdown-menu rounded-0', styles.dropdown, { show: visibleDropdown })}>
-        <ThemeMode device="mobile" />
+        <ThemeMode device="mobile" closeDropdown={() => setVisibleDropdown(false)} />
 
         <hr />
 
