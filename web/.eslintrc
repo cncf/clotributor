@@ -1,5 +1,5 @@
 {
-  "extends": ["react-app", "plugin:prettier/recommended"],
+  "extends": ["react-app", "react-app/jest", "plugin:prettier/recommended"],
   "plugins": ["simple-import-sort"],
   "rules": {
     "simple-import-sort/imports": "error",
