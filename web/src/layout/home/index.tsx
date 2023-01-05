@@ -77,7 +77,7 @@ const Home = () => {
               </Link>{' '}
               available.
             </p>
-            <p className={`d-block d-sm-none px-0 mx-auto ${styles.legend}`}>
+            <p className={`d-block d-sm-none px-0 mx-auto mb-1 ${styles.legend}`}>
               or{' '}
               <Link
                 to="/search"
@@ -93,8 +93,8 @@ const Home = () => {
       </div>
 
       <div className={classnames({ 'd-none': !isUndefined(latestOpportunities) && latestOpportunities.length === 0 })}>
-        <div className="w-100 py-3 py-sm-4">
-          <div className="h3 fw-bold text-center text-dark mt-0 mt-md-2 mb-3 mb-sm-4">
+        <div className="w-100 py-1 py-sm-4">
+          <div className="h3 fw-bold text-center text-dark mt-0 mt-md-2 mb-1 mb-sm-4">
             Latest opportunities <span className="d-none d-sm-inline-block">published</span>
           </div>
 
@@ -105,12 +105,12 @@ const Home = () => {
               {loadingLatestOpportunities && <Loading transparentBg />}
               {!isUndefined(latestOpportunities) && (
                 <>
-                  <div className="pt-2 mb-5 row g-0 justify-content-center w-100" role="list">
+                  <div className="pt-2 mb-3 mb-sm-5 row g-0 justify-content-center w-100" role="list">
                     {latestOpportunities.map((issue: Issue, index: number) => {
                       return <Card key={`issue_${issue.number}_${index}`} issue={issue} />;
                     })}
                   </div>
-                  <div className="text-center mb-5">
+                  <div className="text-center mb-4 mb-sm-5">
                     <Link
                       to="/search"
                       type="button"

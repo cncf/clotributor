@@ -227,6 +227,16 @@ const Card = (props: Props) => {
                 </div>
               </div>
 
+              {props.issue.repository.languages.length > 0 && (
+                <div className="ms-auto d-flex d-sm-none">
+                  <GenericBadge
+                    content={props.issue.repository.languages[0]}
+                    className={`fw-normal text-secondary lighterText text-uppercase ms-2 bg-purple ${styles.badge}`}
+                    onClick={() => searchByText(props.issue.repository.languages[0])}
+                  />
+                </div>
+              )}
+
               <div
                 className={`d-none d-sm-flex flex-row flex-wrap overflow-hidden justify-content-end ${styles.topicsWrapper}`}
               >
@@ -248,7 +258,7 @@ const Card = (props: Props) => {
               href={props.issue.url}
               className={`position-relative d-block d-md-none mw-100 my-3 text-decoration-none ${styles.linkMobile}`}
             >
-              <div className={`fw-bold text-start text-truncate lighterText ${styles.issueDesc}`}>
+              <div className={`fw-bold text-start lighterText ${styles.issueDesc}`}>
                 {removeLastDot(removeEmojis(props.issue.title))}
               </div>
             </ExternalLink>
