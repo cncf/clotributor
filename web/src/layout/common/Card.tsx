@@ -87,7 +87,7 @@ const Card = (props: Props) => {
   }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
 
   return (
-    <CardWrapper wrapperClassname={styles.cardWrapper} hoverable={false}>
+    <CardWrapper className={styles.card} wrapperClassName={styles.cardWrapper} hoverable={false}>
       <div className="d-flex flex-column flex-md-row align-items-stretch">
         <div
           className={`d-flex flex-row justify-content-between align-items-center d-md-none ${styles.smProjectWrapper}`}
@@ -105,14 +105,14 @@ const Card = (props: Props) => {
               {props.issue.repository.homepage_url ? (
                 <ExternalLink label="Project url" href={props.issue.repository.homepage_url}>
                   <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
-                    <span className={`text-truncate fw-bold mb-0 ${styles.title}`}>
+                    <span className={`text-truncate fw-bold mb-0 lighterText ${styles.title}`}>
                       {props.issue.project.display_name || props.issue.project.name}
                     </span>
                   </div>
                 </ExternalLink>
               ) : (
                 <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
-                  <span className={`text-truncate fw-bold mb-0 ${styles.title}`}>
+                  <span className={`text-truncate fw-bold mb-0 lighterText ${styles.title}`}>
                     {props.issue.project.display_name || props.issue.project.name}
                   </span>
                 </div>
@@ -150,14 +150,14 @@ const Card = (props: Props) => {
                       {props.issue.repository.homepage_url ? (
                         <ExternalLink label="Project url" href={props.issue.repository.homepage_url}>
                           <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
-                            <span className={`text-truncate fw-bold mb-0 ${styles.title}`}>
+                            <span className={`text-truncate fw-bold mb-0 lighterText ${styles.title}`}>
                               {props.issue.project.display_name || props.issue.project.name}
                             </span>
                           </div>
                         </ExternalLink>
                       ) : (
                         <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
-                          <span className={`text-truncate fw-bold mb-0 ${styles.title}`}>
+                          <span className={`text-truncate fw-bold mb-0 lighterText ${styles.title}`}>
                             {props.issue.project.display_name || props.issue.project.name}
                           </span>
                         </div>
@@ -248,7 +248,7 @@ const Card = (props: Props) => {
               href={props.issue.url}
               className={`position-relative d-block d-md-none mw-100 my-3 text-decoration-none ${styles.linkMobile}`}
             >
-              <div className={`fw-bold text-start text-truncate ${styles.issueDesc}`}>
+              <div className={`fw-bold text-start text-truncate lighterText ${styles.issueDesc}`}>
                 {removeLastDot(removeEmojis(props.issue.title))}
               </div>
             </ExternalLink>
@@ -262,7 +262,7 @@ const Card = (props: Props) => {
                   externalIconClassName={styles.externalIcon}
                   visibleExternalIcon
                 >
-                  <div className={`fw-bold text-start text-truncate ${styles.issueDesc}`}>
+                  <div className={`fw-bold text-start text-truncate lighterText ${styles.issueDesc}`}>
                     {removeLastDot(removeEmojis(props.issue.title))}
                   </div>
                 </ExternalLink>
