@@ -134,6 +134,10 @@
   min-width: 16px;
 }
 
+[data-theme='dark'] .card {
+  background-color: var(--clo-secondary-15);
+}
+
 @media only screen and (max-width: 575.98px) {
   .title {
     font-size: 1rem;
