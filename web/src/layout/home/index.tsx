@@ -94,7 +94,7 @@ const Home = () => {
 
       <div className={classnames({ 'd-none': !isUndefined(latestOpportunities) && latestOpportunities.length === 0 })}>
         <div className="w-100 py-1 py-sm-4">
-          <div className="h3 fw-bold text-center text-dark mt-0 mt-md-2 mb-1 mb-sm-4">
+          <div className="h3 text-center text-dark mt-0 mt-sm-2 mb-1 mb-sm-5 fw-semibold">
             Latest opportunities <span className="d-none d-sm-inline-block">published</span>
           </div>
 
@@ -110,7 +110,7 @@ const Home = () => {
                       return <Card key={`issue_${issue.number}_${index}`} issue={issue} />;
                     })}
                   </div>
-                  <div className="text-center mb-4 mb-sm-5">
+                  <div className="text-center mt-1 mt-sm-0 mb-4">
                     <Link
                       to="/search"
                       type="button"

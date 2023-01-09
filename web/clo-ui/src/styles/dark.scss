@@ -21,6 +21,7 @@
   --color-light-gray: #676869;
   --bg-color: #2c2e31;
   --color-font: #a3a3a6;
+  --color-gray-font: #cbd3da;
   --body-bg: #222529;
 
   --highlighted: #f0a;
@@ -72,24 +73,69 @@
     background-color: var(--highlighted) !important;
   }
 
-  .bg-green,
-  .bg-purple,
-  .bg-red,
-  .bg-blue,
-  .bg-solid-yellow {
-    border-color: var(--default-border) !important;
-    background-color: transparent !important;
+  .bg-green {
+    background-color: rgba(75, 101, 31, 0.2) !important;
+    border-color: rgba(75, 101, 31, 0.75) !important;
+    color: var(--color-lighter-font) !important;
 
     &.clickable:hover,
     &.clickable:active {
-      background-color: transparent !important;
-      box-shadow: inset 0px 0px 25px 10px var(--color-black-5);
-      border-color: var(--default-border) !important;
+      background-color: rgba(75, 101, 31, 0.4) !important;
+      border-color: rgba(75, 101, 31, 0.75) !important;
+      color: var(--color-extra-light-font) !important;
+    }
+  }
+
+  .bg-purple {
+    background-color: rgba(95, 51, 142, 0.2) !important;
+    border-color: rgba(95, 51, 142, 0.75) !important;
+    color: var(--color-lighter-font) !important;
+
+    &.clickable:hover,
+    &.clickable:active {
+      background-color: rgba(95, 51, 142, 0.4) !important;
+      border-color: rgba(95, 51, 142, 0.75) !important;
+      color: var(--color-extra-light-font) !important;
     }
   }
 
   .bg-solid-yellow {
+    background-color: #c69c14 !important;
+    border-color: #c69c14 !important;
+    color: var(--clo-secondary) !important;
+
+    &.clickable:hover,
+    &.clickable:active {
+      background-color: #c69c14 !important;
+      border-color: #94750f !important;
+      color: var(--clo-secondary) !important;
+    }
+  }
+
+  .bg-red {
+    background-color: rgba(232, 40, 43, 0.2) !important;
+    border-color: rgba(232, 40, 43, 0.75) !important;
     color: var(--color-lighter-font) !important;
+
+    &.clickable:hover,
+    &.clickable:active {
+      background-color: rgba(232, 40, 43, 0.4) !important;
+      border-color: rgba(232, 40, 43, 0.75) !important;
+      color: var(--color-extra-light-font) !important;
+    }
+  }
+
+  .bg-blue {
+    background-color: rgba(20, 58, 116, 0.2) !important;
+    border-color: rgba(20, 58, 116, 0.75) !important;
+    color: var(--color-lighter-font) !important;
+
+    &.clickable:hover,
+    &.clickable:active {
+      background-color: rgba(20, 58, 116, 0.4) !important;
+      border-color: rgba(20, 58, 116, 0.75) !important;
+      color: var(--color-extra-light-font) !important;
+    }
   }
 
   .border,

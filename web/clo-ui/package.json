@@ -7,6 +7,7 @@
   "module": "dist/esm/index. js",
   "scripts": {
     "build": "rimraf dist && NODE_ENV=production BABEL_ENV=production rollup -c --bundleConfigAsCjs",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx src --fix"
   },
   "files": [

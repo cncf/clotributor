@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import { isNull, isUndefined } from 'lodash';
-import React, { ChangeEvent, ForwardedRef, forwardRef, Ref, useEffect, useImperativeHandle, useState } from 'react';
+import React, { ChangeEvent, forwardRef, Ref, useEffect, useImperativeHandle, useState } from 'react';
 
 import { CheckBox } from '../Checkbox/Checkbox';
 import { Searchbar } from '../Searchbar/Searchbar';
