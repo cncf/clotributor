@@ -7,6 +7,7 @@ import { BsDot } from 'react-icons/bs';
 import { FaChartBar, FaGithub } from 'react-icons/fa';
 import { FiExternalLink, FiStar } from 'react-icons/fi';
 import { GoCalendar } from 'react-icons/go';
+import { IoGlobeOutline } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 
 import { AppContext } from '../../context/AppContextProvider';
@@ -107,27 +108,24 @@ const Card = (props: Props) => {
               />
             </div>
             <div className="truncateWrapper w-100">
-              {props.issue.repository.homepage_url ? (
-                <ExternalLink label="Project url" href={props.issue.repository.homepage_url}>
-                  <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
-                    <span className={`text-truncate fw-bold mb-0 ${styles.title}`}>
-                      {props.issue.project.display_name || props.issue.project.name}
-                    </span>
-                  </div>
-                </ExternalLink>
-              ) : (
-                <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
-                  <span className={`text-truncate fw-bold mb-0 ${styles.title}`}>
-                    {props.issue.project.display_name || props.issue.project.name}
-                  </span>
-                </div>
-              )}
+              <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
+                <span className={`text-truncate fw-bold mb-0 ${styles.title}`}>
+                  {props.issue.project.display_name || props.issue.project.name}
+                </span>
+              </div>
             </div>
           </div>
 
           <div className="d-flex flex-row align-items-center ms-2">
-            <MaturityBadge maturityLevel={props.issue.project.maturity} className="d-none d-sm-flex me-2" />
-            <FoundationBadge foundation={props.issue.project.foundation} />
+            <MaturityBadge
+              maturityLevel={props.issue.project.maturity}
+              className="d-none d-sm-flex me-2"
+              onClick={() => searchByFilter(FilterKind.Maturity, props.issue.project.maturity)}
+            />
+            <FoundationBadge
+              foundation={props.issue.project.foundation}
+              onClick={() => searchByFilter(FilterKind.Foundation, props.issue.project.foundation)}
+            />
           </div>
         </div>
 
@@ -144,7 +142,7 @@ const Card = (props: Props) => {
             <div className="p-0 p-xl-2 pe-xl-0">
               <div className="d-flex flex-row align-items-center">
                 <div className="d-flex flex-column w-100 truncateWrapper">
-                  <div className="d-flex flex-row w-100 truncateWrapper">
+                  <div className="d-flex flex-row align-items-center w-100 truncateWrapper">
                     <div
                       className={`d-flex d-xl-none align-items-center justify-content-center me-2 ${styles.miniImageWrapper}`}
                     >
@@ -156,30 +154,40 @@ const Card = (props: Props) => {
                       />
                     </div>
                     <div className="truncateWrapper">
-                      {props.issue.repository.homepage_url ? (
-                        <ExternalLink label="Project url" href={props.issue.repository.homepage_url}>
-                          <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
-                            <span className={`text-truncate fw-semibold mb-0 lightText ${styles.title}`}>
-                              {props.issue.project.display_name || props.issue.project.name}
-                            </span>
-                          </div>
-                        </ExternalLink>
-                      ) : (
+                      <button
+                        className="btn btn-sm btn-link border-0 p-0 mw-100 align-baseline"
+                        onClick={() => searchByFilter(FilterKind.Project, props.issue.project.name)}
+                      >
                         <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
                           <span className={`text-truncate fw-semibold mb-0 lightText ${styles.title}`}>
                             {props.issue.project.display_name || props.issue.project.name}
                           </span>
                         </div>
-                      )}
+                      </button>
                     </div>
                   </div>
 
                   <div className="d-flex flex-row align-items-center my-2">
-                    <FoundationBadge foundation={props.issue.project.foundation} />
-                    <MaturityBadge maturityLevel={props.issue.project.maturity} className="ms-2" />
+                    <FoundationBadge
+                      foundation={props.issue.project.foundation}
+                      onClick={() => searchByFilter(FilterKind.Foundation, props.issue.project.foundation)}
+                    />
+                    <MaturityBadge
+                      maturityLevel={props.issue.project.maturity}
+                      className="ms-2"
+                      onClick={() => searchByFilter(FilterKind.Maturity, props.issue.project.maturity)}
+                    />
                   </div>
 
                   <div className={`d-none d-md-flex flex-row mt-0 mt-md-1 align-items-center ${styles.info}`}>
+                    {props.issue.repository.homepage_url && (
+                      <ExternalLink label="Project url" href={props.issue.repository.homepage_url} className="me-3">
+                        <div className={`d-flex flex-row align-items-center text-muted ${styles.link}`}>
+                          <IoGlobeOutline className={styles.urlIcon} />
+                        </div>
+                      </ExternalLink>
+                    )}
+
                     {props.issue.project.devstats_url && (
                       <ExternalLink label="Dev stats link" href={props.issue.project.devstats_url} className="me-3">
                         <div className={`d-flex flex-row align-items-center text-muted ${styles.link}`}>
