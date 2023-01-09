@@ -54,6 +54,22 @@ label {
   width: 2rem;
 }
 
+.filtersBadge::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background-color: var(--clo-tertiary);
+  border: 2px solid #dfdbe5;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+[data-theme='dark'] .filtersBadge::before {
+  border-color: #1c1d21;
+}
+
 .list {
   margin-top: 1.3rem;
 }
