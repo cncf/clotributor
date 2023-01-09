@@ -18,6 +18,7 @@ create table if not exists project (
     display_name text check (display_name <> ''),
     description text check (description <> ''),
     logo_url text check (logo_url <> ''),
+    logo_dark_url text check (logo_dark_url <> ''),
     devstats_url text check (devstats_url <> ''),
     accepted_at date,
     maturity maturity not null,

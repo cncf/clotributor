@@ -34,6 +34,7 @@ export interface Project {
   display_name?: string;
   keywords?: string[];
   logo_url?: string;
+  logo_dark_url?: string;
   devstats_url?: string;
   accepted_at: number;
   maturity: Maturity;

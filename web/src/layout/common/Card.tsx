@@ -2,13 +2,14 @@ import classNames from 'classnames';
 import { Card as CardWrapper, ExternalLink, FoundationBadge, GenericBadge, Image, MaturityBadge } from 'clo-ui';
 import { isUndefined } from 'lodash';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { BsDot } from 'react-icons/bs';
 import { FaChartBar, FaGithub } from 'react-icons/fa';
 import { FiExternalLink, FiStar } from 'react-icons/fi';
 import { GoCalendar } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
 
+import { AppContext } from '../../context/AppContextProvider';
 import { FilterKind, Issue } from '../../types';
 import prepareQueryString from '../../utils/prepareQueryString';
 import prettifyNumber from '../../utils/prettifyNumber';
@@ -22,6 +23,8 @@ interface Props {
 
 const Card = (props: Props) => {
   const navigate = useNavigate();
+  const { ctx } = useContext(AppContext);
+  const { effective } = ctx.prefs.theme;
   const [availableTopics, setAvailableTopics] = useState<string[]>([]);
 
   const searchByText = (text: string) => {
@@ -99,6 +102,8 @@ const Card = (props: Props) => {
               <Image
                 alt={`${props.issue.project.display_name || props.issue.project.name} logo`}
                 url={props.issue.project.logo_url}
+                dark_url={props.issue.project.logo_dark_url}
+                effective_theme={effective}
               />
             </div>
             <div className="truncateWrapper w-100">
@@ -131,6 +136,8 @@ const Card = (props: Props) => {
             <Image
               alt={`${props.issue.project.display_name || props.issue.project.name} logo`}
               url={props.issue.project.logo_url}
+              dark_url={props.issue.project.logo_dark_url}
+              effective_theme={effective}
             />
           </div>
           <div className="ms-0 ms-xl-3 flex-grow-1 w-100 truncateWrapper">
@@ -144,6 +151,8 @@ const Card = (props: Props) => {
                       <Image
                         alt={`${props.issue.project.display_name || props.issue.project.name} logo`}
                         url={props.issue.project.logo_url}
+                        dark_url={props.issue.project.logo_dark_url}
+                        effective_theme={effective}
                       />
                     </div>
                     <div className="truncateWrapper">

@@ -26,6 +26,7 @@ pub(crate) struct Project {
     pub display_name: Option<String>,
     pub description: String,
     pub logo_url: Option<String>,
+    pub logo_dark_url: Option<String>,
     pub devstats_url: Option<String>,
     pub accepted_at: Option<String>,
     pub maturity: String,
