@@ -5,6 +5,8 @@ import { MdOutlineImageNotSupported } from 'react-icons/md';
 
 export interface IImageProps {
   url?: string | null;
+  dark_url?: string | null;
+  effective_theme: string;
   alt: string;
   className?: string;
 }
@@ -21,7 +23,7 @@ export const Image: React.FC<IImageProps> = (props) => {
         <img
           ref={image}
           alt={props.alt}
-          src={props.url}
+          src={props.effective_theme === 'dark' ? props.dark_url || props.url : props.url}
           className={props.className}
           onError={() => setError(true)}
           aria-hidden="true"
