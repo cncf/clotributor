@@ -42,6 +42,7 @@
 .title {
   font-size: 1.3rem;
   line-height: 1.2;
+  color: var(--color-gray-font);
 }
 
 .subtitle {
@@ -56,6 +57,7 @@
 .calendarIcon {
   width: 18px;
   height: 18px;
+  margin-left: -2px;
 }
 
 .issueContent {
@@ -79,8 +81,8 @@
 }
 
 .issueDesc {
-  color: var(--color-font);
-  font-size: 1.25rem;
+  color: var(--color-gray-font);
+  font-size: 1.15rem;
 }
 
 .repoInfo {
@@ -198,5 +200,15 @@
 @media only screen and (max-width: 575.98px) {
   .cardWrapper {
     padding: 0.5rem 0;
+  }
+}
+
+@media only screen and (min-width: 576px) {
+  .cardWrapper:first-child {
+    padding-top: 0;
+  }
+
+  .cardWrapper:last-child {
+    padding-bottom: 0;
   }
 }

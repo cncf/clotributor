@@ -105,14 +105,14 @@ const Card = (props: Props) => {
               {props.issue.repository.homepage_url ? (
                 <ExternalLink label="Project url" href={props.issue.repository.homepage_url}>
                   <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
-                    <span className={`text-truncate fw-bold mb-0 lighterText ${styles.title}`}>
+                    <span className={`text-truncate fw-bold mb-0 ${styles.title}`}>
                       {props.issue.project.display_name || props.issue.project.name}
                     </span>
                   </div>
                 </ExternalLink>
               ) : (
                 <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
-                  <span className={`text-truncate fw-bold mb-0 lighterText ${styles.title}`}>
+                  <span className={`text-truncate fw-bold mb-0 ${styles.title}`}>
                     {props.issue.project.display_name || props.issue.project.name}
                   </span>
                 </div>
@@ -150,14 +150,14 @@ const Card = (props: Props) => {
                       {props.issue.repository.homepage_url ? (
                         <ExternalLink label="Project url" href={props.issue.repository.homepage_url}>
                           <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
-                            <span className={`text-truncate fw-bold mb-0 lighterText ${styles.title}`}>
+                            <span className={`text-truncate fw-semibold mb-0 lightText ${styles.title}`}>
                               {props.issue.project.display_name || props.issue.project.name}
                             </span>
                           </div>
                         </ExternalLink>
                       ) : (
                         <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
-                          <span className={`text-truncate fw-bold mb-0 lighterText ${styles.title}`}>
+                          <span className={`text-truncate fw-semibold mb-0 lightText ${styles.title}`}>
                             {props.issue.project.display_name || props.issue.project.name}
                           </span>
                         </div>
@@ -231,7 +231,7 @@ const Card = (props: Props) => {
                 <div className="ms-auto d-flex d-sm-none">
                   <GenericBadge
                     content={props.issue.repository.languages[0]}
-                    className={`fw-normal text-secondary lighterText text-uppercase ms-2 bg-purple ${styles.badge}`}
+                    className={`fw-normal text-secondary text-uppercase ms-2 bg-purple ${styles.badge}`}
                     onClick={() => searchByText(props.issue.repository.languages[0])}
                   />
                 </div>
@@ -258,7 +258,7 @@ const Card = (props: Props) => {
               href={props.issue.url}
               className={`position-relative d-block d-md-none mw-100 my-3 text-decoration-none ${styles.linkMobile}`}
             >
-              <div className={`fw-bold text-start lighterText ${styles.issueDesc}`}>
+              <div className={`fw-semibold text-start ${styles.issueDesc}`}>
                 {removeLastDot(removeEmojis(props.issue.title))}
               </div>
             </ExternalLink>
@@ -272,7 +272,7 @@ const Card = (props: Props) => {
                   externalIconClassName={styles.externalIcon}
                   visibleExternalIcon
                 >
-                  <div className={`fw-bold text-start text-truncate lighterText ${styles.issueDesc}`}>
+                  <div className={`fw-semibold text-start text-truncate ${styles.issueDesc}`}>
                     {removeLastDot(removeEmojis(props.issue.title))}
                   </div>
                 </ExternalLink>
@@ -282,12 +282,7 @@ const Card = (props: Props) => {
                 <div className="d-none d-xl-flex">
                   <GenericBadge
                     content="Mentor available"
-                    className={classNames(
-                      'ms-3 text-uppercase bg-solid-yellow',
-                      styles.badge,
-                      styles.mentorBadge,
-                      'lighterText'
-                    )}
+                    className={classNames('ms-3 text-uppercase bg-solid-yellow', styles.badge, styles.mentorBadge)}
                     onClick={searchByMentor}
                   />
                 </div>
@@ -316,7 +311,7 @@ const Card = (props: Props) => {
                   {props.issue.good_first_issue && (
                     <GenericBadge
                       content="Good first issue"
-                      className={`text-uppercase bg-green ${styles.badge} lighterText`}
+                      className={`text-uppercase bg-green ${styles.badge}`}
                       onClick={searchByGoodFirstIssue}
                     />
                   )}
@@ -328,8 +323,7 @@ const Card = (props: Props) => {
                         'text-uppercase text-truncate',
                         { 'bg-red': props.issue.kind === 'bug' },
                         { 'bg-blue': props.issue.kind !== 'bug' },
-                        styles.badge,
-                        'lighterText'
+                        styles.badge
                       )}
                       onClick={() => searchByFilter(FilterKind.Kind, props.issue.kind!)}
                     />
@@ -338,7 +332,7 @@ const Card = (props: Props) => {
                   {!isUndefined(props.issue.difficulty) && (
                     <GenericBadge
                       content={props.issue.difficulty}
-                      className={classNames('text-uppercase bg-blue', styles.badge, 'lighterText')}
+                      className={classNames('text-uppercase bg-blue', styles.badge)}
                       onClick={() => searchByFilter(FilterKind.Difficulty, props.issue.difficulty!)}
                     />
                   )}
@@ -346,7 +340,7 @@ const Card = (props: Props) => {
                   {!isUndefined(props.issue.area) && (
                     <GenericBadge
                       content={props.issue.area}
-                      className={classNames('text-uppercase bg-blue', styles.badge, 'lighterText')}
+                      className={classNames('text-uppercase bg-blue', styles.badge)}
                       onClick={() => searchByFilter(FilterKind.Area, props.issue.area!)}
                     />
                   )}
@@ -361,7 +355,7 @@ const Card = (props: Props) => {
                     return (
                       <GenericBadge
                         content={label}
-                        className={`fw-normal text-secondary lighterText text-uppercase ms-2 bg-purple ${styles.badge}`}
+                        className={`fw-normal text-secondary text-uppercase ms-2 bg-purple ${styles.badge}`}
                         key={`label_${props.issue.number}_${label}`}
                         onClick={() => searchByText(label)}
                       />
