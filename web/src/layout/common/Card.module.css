@@ -54,6 +54,12 @@
   height: 20px;
 }
 
+.urlIcon {
+  width: 20px;
+  height: 20px;
+  margin-left: -2px;
+}
+
 .calendarIcon {
   width: 18px;
   height: 18px;
