@@ -38,6 +38,8 @@ const Search = () => {
   const [issues, setIssues] = useState<Issue[] | null | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  // Check if some filters are active
+  const ifActiveFilters = !isEmpty(activeFilters) || mentorAvailable || goodFirstIssue;
 
   const onResetFilters = (): void => {
     navigate({
@@ -221,7 +223,11 @@ const Search = () => {
                     label="Filters"
                     className="d-inline-block d-lg-none me-2"
                     wrapperClassName="d-inline-block px-4"
-                    buttonType={`btn-primary btn-sm rounded-circle position-relative ${styles.btnMobileFilters}`}
+                    buttonType={classNames(
+                      'btn-primary btn-sm rounded-circle position-relative',
+                      styles.btnMobileFilters,
+                      { [styles.filtersBadge]: ifActiveFilters }
+                    )}
                     buttonIcon={<FaFilter />}
                     closeButtonClassName={styles.closeSidebar}
                     closeButton={
@@ -238,7 +244,7 @@ const Search = () => {
                     }
                     leftButton={
                       <>
-                        {(!isEmpty(activeFilters) || mentorAvailable || goodFirstIssue) && (
+                        {ifActiveFilters && (
                           <div className="d-flex align-items-center">
                             <IoMdCloseCircleOutline className={`text-dark ${styles.resetBtnDecorator}`} />
                             <button
@@ -320,6 +326,7 @@ const Search = () => {
               goodFirstIssue={goodFirstIssue}
               isLoadingFilters={isUndefined(filters)}
               device="desktop"
+              ifActiveFilters={ifActiveFilters}
             />
           </div>
         </div>

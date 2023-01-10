@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { DotsLoading, Dropdown, FilterOption, FilterSection, FiltersSection, RefFiltersSection } from 'clo-ui';
-import { isEmpty, isUndefined } from 'lodash';
+import { isUndefined } from 'lodash';
 import React, { useEffect, useRef } from 'react';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 
@@ -19,6 +19,7 @@ interface Props {
   onResetFilters: () => void;
   isLoadingFilters?: boolean;
   device: string;
+  ifActiveFilters: boolean;
 }
 
 interface FiltersProps {
@@ -80,7 +81,7 @@ const FiltersInLine = (props: Props) => {
     <div className="d-none d-lg-block mb-2">
       <div className="d-flex flex-row align-items-baseline mt-2 mb-3">
         <div className={`text-uppercase text-secondary fw-bold ${styles.title}`}>Filters</div>
-        {(!isEmpty(props.activeFilters) || props.mentorAvailable || props.goodFirstIssue) && (
+        {props.ifActiveFilters && (
           <button
             className={`btn btn-link text-secondary btn-sm py-0 me-3 ${styles.btnRemove}`}
             onClick={props.onResetFilters}
