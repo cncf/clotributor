@@ -1,5 +1,5 @@
 # Build apiserver
-FROM rust:1-alpine3.16 as builder
+FROM rust:1-alpine3.17 as builder
 RUN apk --no-cache add musl-dev perl make
 WORKDIR /clotributor
 COPY Cargo.* ./
@@ -10,7 +10,7 @@ WORKDIR /clotributor/clotributor-apiserver
 RUN cargo build --release
 
 # Build frontend
-FROM node:16-alpine3.16 AS frontend-builder
+FROM node:16-alpine3.17 AS frontend-builder
 WORKDIR /web
 COPY web .
 ENV NODE_OPTIONS=--max_old_space_size=4096
@@ -22,7 +22,7 @@ RUN yarn install
 RUN yarn build
 
 # Final stage
-FROM alpine:3.16.3
+FROM alpine:3.17.1
 RUN apk --no-cache add ca-certificates && addgroup -S clotributor && adduser -S clotributor -G clotributor
 USER clotributor
 WORKDIR /home/clotributor
