@@ -11,7 +11,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.7.1",
-    "react-router-dom": "^6.6.1",
+    "react-router-dom": "^6.6.2",
     "source-map-explorer": "^2.5.3",
     "tinycolor2": "^1.5.2",
     "ua-parser-js": "^1.0.32"
@@ -29,7 +29,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-simple-import-sort": "^8.0.0",
     "postcss": "^8.4.20",
-    "prettier": "^2.8.1",
+    "prettier": "^2.8.2",
     "react-scripts": "5.0.1",
     "sass": "^1.57.1",
     "shx": "^0.3.4",
