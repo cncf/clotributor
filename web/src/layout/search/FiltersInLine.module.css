@@ -9,7 +9,7 @@
 .dropdown {
   left: 0;
   /* Min-width for all dropdowns in all breakpoints */
-  min-width: 165px !important;
+  min-width: 145px !important;
 }
 
 .btn {
@@ -75,6 +75,11 @@
   .dropdownWrapper {
     width: 111px;
   }
+
+  .dropdown {
+    /* Min-width for all dropdowns in all breakpoints */
+    min-width: 165px !important;
+  }
 }
 
 @media only screen and (min-width: 1400px) {
@@ -96,8 +101,12 @@
 }
 
 /* Overwrite dropdown width in all breakpoints */
-.searchDropdown {
+.projectDropdown {
   min-width: 280px !important;
+}
+
+.languageDropdown {
+  min-width: 250px !important;
 }
 
 @media (hover: hover) {
