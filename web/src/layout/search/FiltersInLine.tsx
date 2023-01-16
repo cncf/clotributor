@@ -50,7 +50,7 @@ const Filters = (props: FiltersProps) => {
   }, [props.isVisibleDropdown]);
 
   return (
-    <div className="ms-3 mt-2">
+    <div className="ms-2 ms-xl-3 mt-2">
       <FiltersSection
         ref={filtersSection}
         device={props.device}
@@ -113,7 +113,15 @@ const FiltersInLine = (props: Props) => {
                     label="Filters"
                     btnContent={section.title}
                     btnClassName={`btn btn-md btn-light text-decoration-none text-start w-100 ${styles.btn}`}
-                    dropdownClassName={classNames(styles.dropdown, { [styles.searchDropdown]: isSearchSection })}
+                    dropdownClassName={classNames(
+                      styles.dropdown,
+                      {
+                        [styles.projectDropdown]: section.key === 'project',
+                      },
+                      {
+                        [styles.languageDropdown]: section.key === 'language',
+                      }
+                    )}
                   >
                     <Filters
                       section={section}

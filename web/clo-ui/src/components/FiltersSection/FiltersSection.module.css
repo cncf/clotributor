@@ -15,3 +15,7 @@ label {
   box-shadow: 0 0 0 0.3rem var(--clo-secondary-15) !important;
   margin: 0rem !important;
 }
+
+.searchWithClose input {
+  max-width: calc(100% - 70px);
+}

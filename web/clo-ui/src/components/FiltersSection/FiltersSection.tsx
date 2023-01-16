@@ -52,7 +52,13 @@ export const FiltersSection = forwardRef<RefFiltersSection, IFiltersSectionProps
     const filterOptions = () => {
       if (props.section.options) {
         if (value !== '') {
-          setVisibleOptions(props.section.options.filter((f: FilterOption) => f.value && f.value.includes(value)));
+          setVisibleOptions(
+            props.section.options.filter(
+              (f: FilterOption) =>
+                (f.value && f.value.toLowerCase().includes(value.toLowerCase())) ||
+                f.name.toLowerCase().includes(value.toLowerCase())
+            )
+          );
         } else {
           setVisibleOptions(props.section.options);
         }
@@ -97,7 +103,7 @@ export const FiltersSection = forwardRef<RefFiltersSection, IFiltersSectionProps
               onValueChange={(newValue: string) => setValue(newValue)}
               onSearch={filterOptions}
               cleanSearchValue={() => setValue('')}
-              classNameSearch={styles.search}
+              classNameSearch={classnames(styles.search, { [styles.searchWithClose]: value !== '' })}
               placeholder={`Search ${props.section.key || ''}`}
               bigSize={false}
             />
