@@ -249,7 +249,7 @@ const Card = (props: Props) => {
                   <GenericBadge
                     content={props.issue.repository.languages[0]}
                     className={`fw-normal text-secondary text-uppercase ms-2 bg-purple ${styles.badge}`}
-                    onClick={() => searchByText(props.issue.repository.languages[0])}
+                    onClick={() => searchByFilter(FilterKind.Language, props.issue.repository.languages[0])}
                   />
                 </div>
               )}
@@ -374,7 +374,7 @@ const Card = (props: Props) => {
                         content={label}
                         className={`fw-normal text-secondary text-uppercase ms-2 bg-purple ${styles.badge}`}
                         key={`label_${props.issue.number}_${label}`}
-                        onClick={() => searchByText(label)}
+                        onClick={() => searchByFilter(FilterKind.Language, label)}
                       />
                     );
                   })}

@@ -131,7 +131,7 @@ class API_CLASS {
     if (!isUndefined(query.filters) && !isEmpty(query.filters)) {
       Object.keys(query.filters!).forEach((k: string) => {
         query.filters![k].forEach((f: string, index: number) => {
-          q += `&${k}[${index}]=${f}`;
+          q += `&${k}[${index}]=${encodeURIComponent(f)}`;
         });
       });
     }
