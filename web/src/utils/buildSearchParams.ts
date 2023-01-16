@@ -13,6 +13,7 @@ const WHITELISTED_FILTER_KEYS = [
   FilterKind.Kind, // Issue kind
   FilterKind.Difficulty, // Issue difficulty
   FilterKind.Area, // Issue area
+  FilterKind.Language, // Issue language
 ];
 
 const buildSearchParams = (p: URLSearchParams): SearchFiltersURL => {

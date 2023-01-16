@@ -57,6 +57,7 @@ export enum FilterKind {
   Kind = 'kind',
   Difficulty = 'difficulty',
   Area = 'area',
+  Language = 'language',
 }
 
 export enum SortBy {

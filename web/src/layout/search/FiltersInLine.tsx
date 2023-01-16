@@ -55,7 +55,7 @@ const Filters = (props: FiltersProps) => {
         ref={filtersSection}
         device={props.device}
         activeFilters={props.activeFilters}
-        contentClassName={`overflow-auto ${styles.projectOptions}`}
+        contentClassName={`overflow-auto ${styles.options}`}
         section={props.section}
         withSearchBar={props.withSearchBar}
         onChange={onChangeFilter}
@@ -99,7 +99,7 @@ const FiltersInLine = (props: Props) => {
       ) : (
         <div className="d-flex flex-row align-items-top">
           {props.filters.map((section: FilterSection, index: number) => {
-            const isProjectSection = section.key && section.key === 'project';
+            const isSearchSection = section.key && ['project', 'language'].includes(section.key);
             const activeFilters = section.key ? props.activeFilters[section.key] : getActiveFiltersForOther();
 
             return (
@@ -113,13 +113,13 @@ const FiltersInLine = (props: Props) => {
                     label="Filters"
                     btnContent={section.title}
                     btnClassName={`btn btn-md btn-light text-decoration-none text-start w-100 ${styles.btn}`}
-                    dropdownClassName={classNames(styles.dropdown, { [styles.projectDropdown]: isProjectSection })}
+                    dropdownClassName={classNames(styles.dropdown, { [styles.searchDropdown]: isSearchSection })}
                   >
                     <Filters
                       section={section}
                       device={props.device}
                       activeFilters={activeFilters}
-                      withSearchBar={isProjectSection ? true : undefined}
+                      withSearchBar={isSearchSection ? true : undefined}
                       onChange={props.onChange}
                     />
                   </Dropdown>

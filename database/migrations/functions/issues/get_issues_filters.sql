@@ -86,6 +86,21 @@ returns json as $$
                 ) d
             )
         ),
+        json_build_object(
+            'title', 'Language',
+            'key', 'language',
+            'options', (
+                select coalesce(json_agg(json_build_object(
+                    'name', language,
+                    'value', language
+                )), '[]')
+                from (
+                    select distinct(unnest(languages)) as language
+                    from repository
+                    order by language asc
+                ) m
+            )
+        ),
         '{
             "title": "Other",
             "options": [

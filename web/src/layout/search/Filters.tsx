@@ -47,7 +47,8 @@ const Filters = (props: Props) => {
 
       {props.filters.map((section: FilterSection) => {
         const activeFilters = section.key ? props.activeFilters[section.key] : getActiveFiltersForOther();
-        if (section.key === 'project') return null;
+        // Does not render project and language filters on mobile version
+        if (section.key && ['project', 'language'].includes(section.key)) return null;
         return (
           <React.Fragment key={`sec_${section.key}`}>
             <FiltersSection
