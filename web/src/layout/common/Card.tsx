@@ -249,7 +249,6 @@ const Card = (props: Props) => {
                   <GenericBadge
                     content={props.issue.repository.languages[0]}
                     className={`fw-normal text-secondary text-uppercase ms-2 bg-purple ${styles.badge}`}
-                    onClick={() => searchByFilter(FilterKind.Language, props.issue.repository.languages[0])}
                   />
                 </div>
               )}
