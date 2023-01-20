@@ -1,7 +1,10 @@
+use crate::tracker::Issue;
 use anyhow::{format_err, Context, Result};
 use async_trait::async_trait;
 use graphql_client::{GraphQLQuery, Response};
 use lazy_static::lazy_static;
+#[cfg(test)]
+use mockall::automock;
 use regex::Regex;
 use reqwest::StatusCode;
 use std::sync::Arc;
@@ -10,8 +13,6 @@ use time::{
     format_description::well_known::{Iso8601, Rfc3339},
     OffsetDateTime,
 };
-
-use crate::tracker::Issue;
 
 /// GitHub GraphQL API URL.
 const GITHUB_GRAPHQL_API_URL: &str = "https://api.github.com/graphql";
@@ -107,6 +108,7 @@ impl repo_view::RepoViewRepository {
 
 /// Trait that defines some operations a GH implementation must support.
 #[async_trait]
+#[cfg_attr(test, automock)]
 pub(crate) trait GH {
     /// Get repository information from GitHub.
     async fn repository(&self, token: &str, url: &str) -> Result<repo_view::RepoViewRepository>;

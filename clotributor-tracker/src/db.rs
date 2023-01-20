@@ -2,6 +2,8 @@ use crate::tracker::{Issue, Repository};
 use anyhow::Result;
 use async_trait::async_trait;
 use deadpool_postgres::Pool;
+#[cfg(test)]
+use mockall::automock;
 use std::sync::Arc;
 use uuid::Uuid;
 
@@ -10,6 +12,7 @@ pub(crate) type DynDB = Arc<dyn DB + Send + Sync>;
 
 /// Trait that defines some operations a DB implementation must support.
 #[async_trait]
+#[cfg_attr(test, automock)]
 pub(crate) trait DB {
     /// Get repositories that need to be tracked.
     async fn get_repositories_to_track(&self) -> Result<Vec<Repository>>;

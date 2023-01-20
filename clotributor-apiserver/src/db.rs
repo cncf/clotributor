@@ -1,6 +1,8 @@
 use anyhow::Result;
 use async_trait::async_trait;
 use deadpool_postgres::Pool;
+#[cfg(test)]
+use mockall::automock;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio_postgres::types::Json;
@@ -16,6 +18,7 @@ type Count = i64;
 
 /// Trait that defines some operations a DB implementation must support.
 #[async_trait]
+#[cfg_attr(test, automock)]
 pub(crate) trait DB {
     /// Get filters that can be used when searching for issues.
     async fn get_issues_filters(&self) -> Result<JsonString>;

@@ -1,6 +1,8 @@
+#[cfg(not(test))]
+use crate::github;
 use crate::{
     db::DynDB,
-    github::{self, repo_view, DynGH},
+    github::{repo_view, DynGH},
 };
 use anyhow::{format_err, Context, Error, Result};
 use config::Config;
@@ -8,6 +10,7 @@ use deadpool::unmanaged::{Object, Pool};
 use futures::stream::{self, StreamExt};
 use postgres_types::{FromSql, ToSql};
 use serde::{Deserialize, Serialize};
+#[cfg(not(test))]
 use serde_json::Value;
 use sha2::{Digest, Sha256};
 use std::time::{Duration, Instant};
@@ -20,7 +23,7 @@ use uuid::Uuid;
 const REPOSITORY_TRACK_TIMEOUT: u64 = 300;
 
 /// Repository information.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Default)]
 pub(crate) struct Repository {
     pub repository_id: Uuid,
     pub name: String,
@@ -123,7 +126,7 @@ pub enum IssueDifficulty {
 }
 
 /// Issue information.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub(crate) struct Issue {
     pub issue_id: i64,
     pub title: String,
@@ -170,7 +173,9 @@ impl Issue {
                 .as_ref()
                 .map(|languages| languages.join(" "))
                 .unwrap_or_default()
-        );
+        )
+        .trim()
+        .to_owned();
 
         // Weight C
         let weight_c = format!("{} {}", self.title, self.labels.join(" "));
@@ -243,6 +248,7 @@ impl Issue {
 }
 
 /// Texts used to build the issue's text search document.
+#[derive(Debug, Clone, PartialEq)]
 pub(crate) struct IssueTsTexts {
     pub weight_a: String,
     pub weight_b: String,
@@ -305,6 +311,7 @@ pub(crate) async fn run(cfg: &Config, db: DynDB, gh: DynGH) -> Result<()> {
         );
 
     // Check Github API rate limit status for each token
+    #[cfg(not(test))]
     for (i, gh_token) in gh_tokens.into_iter().enumerate() {
         let gh_client = github::setup_http_client(&gh_token)?;
         let response: Value = gh_client
@@ -379,4 +386,423 @@ fn find_issue(issue_id: i64, issues: &[Issue]) -> Option<String> {
         .iter()
         .find(|i| i.issue_id == issue_id)
         .map(|i| i.digest.clone().expect("to be present"))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{
+        db::MockDB,
+        github::{repo_view::*, MockGH},
+    };
+    use futures::future;
+    use lazy_static::lazy_static;
+    use mockall::predicate::eq;
+    use std::sync::Arc;
+    use time::format_description::well_known::Rfc3339;
+
+    const TOKEN1: &str = "0001";
+    const REPOSITORY_URL: &str = "https://repo1.url";
+
+    lazy_static! {
+        static ref REPOSITORY_ID: Uuid =
+            Uuid::parse_str("00000000-0001-0000-0000-000000000000").unwrap();
+    }
+
+    #[test]
+    fn repository_update_gh_data_no_changes() {
+        let mut repo = Repository {
+            repository_id: *REPOSITORY_ID,
+            url: REPOSITORY_URL.to_string(),
+            stars: Some(0),
+            digest: Some(
+                "ac07f8e8751d1696c492c15d0b812feeb05c783b7584385986770192a058a85b".to_string(),
+            ),
+            ..Default::default()
+        };
+        let gh_repo = RepoViewRepository {
+            description: None,
+            homepage_url: Some(REPOSITORY_URL.to_string()),
+            issues: RepoViewRepositoryIssues { nodes: None },
+            languages: None,
+            repository_topics: RepoViewRepositoryRepositoryTopics { nodes: None },
+            stargazer_count: 0,
+        };
+
+        assert!(!repo.update_gh_data(&gh_repo).unwrap());
+    }
+
+    #[test]
+    fn repository_update_gh_data_description_changed() {
+        let mut repo = Repository {
+            repository_id: *REPOSITORY_ID,
+            url: REPOSITORY_URL.to_string(),
+            stars: Some(0),
+            digest: Some(
+                "ac07f8e8751d1696c492c15d0b812feeb05c783b7584385986770192a058a85b".to_string(),
+            ),
+            ..Default::default()
+        };
+        let gh_repo = RepoViewRepository {
+            description: Some("description".to_string()),
+            homepage_url: Some(REPOSITORY_URL.to_string()),
+            issues: RepoViewRepositoryIssues { nodes: None },
+            languages: None,
+            repository_topics: RepoViewRepositoryRepositoryTopics { nodes: None },
+            stargazer_count: 0,
+        };
+
+        assert!(repo.update_gh_data(&gh_repo).unwrap());
+        assert_eq!(
+            repo.digest,
+            Some("5a31ae9579be1f97427de912fdd1943a9b0ef07cefe07b23a614b8d02384b7ea".to_string())
+        );
+    }
+
+    #[test]
+    fn repository_update_digest() {
+        let mut repo = Repository {
+            repository_id: *REPOSITORY_ID,
+            url: REPOSITORY_URL.to_string(),
+            stars: Some(0),
+            ..Default::default()
+        };
+
+        repo.update_digest().unwrap();
+        assert_eq!(
+            repo.digest,
+            Some("cdb032de4c6cb506da0606e0934e69ad1ae64773ffaa76f9d6e28192067c43cf".to_string())
+        );
+    }
+
+    #[test]
+    fn issue_update_digest() {
+        let mut issue = Issue {
+            issue_id: 1,
+            title: "issue1".to_string(),
+            url: "issue1_url".to_string(),
+            number: 1,
+            labels: vec!["label1".to_string()],
+            published_at: OffsetDateTime::parse("1985-04-12T23:20:50.52Z", &Rfc3339).unwrap(),
+            digest: None,
+            area: None,
+            kind: None,
+            difficulty: None,
+            mentor_available: None,
+            mentor: None,
+            good_first_issue: None,
+        };
+
+        issue.update_digest();
+        assert_eq!(
+            issue.digest,
+            Some("1538f7e131ac0277d3a4a7239fc0dd9b02e579dadb4fa1e9e9b074c9a789a594".to_string())
+        );
+    }
+
+    #[test]
+    fn issue_prepare_ts_texts() {
+        let repo = Repository {
+            repository_id: *REPOSITORY_ID,
+            name: "repo".to_string(),
+            description: Some("description".to_string()),
+            url: REPOSITORY_URL.to_string(),
+            topics: Some(vec!["topic1".to_string(), "topic2".to_string()]),
+            languages: Some(vec!["language1".to_string()]),
+            project_name: "project".to_string(),
+            ..Default::default()
+        };
+        let issue = Issue {
+            issue_id: 1,
+            title: "issue1".to_string(),
+            url: "issue1_url".to_string(),
+            number: 1,
+            labels: vec!["label1".to_string(), "label2".to_string()],
+            published_at: OffsetDateTime::parse("1985-04-12T23:20:50.52Z", &Rfc3339).unwrap(),
+            digest: None,
+            area: None,
+            kind: None,
+            difficulty: None,
+            mentor_available: None,
+            mentor: None,
+            good_first_issue: None,
+        };
+
+        assert_eq!(
+            issue.prepare_ts_texts(&repo),
+            IssueTsTexts {
+                weight_a: "project".to_string(),
+                weight_b: "repo description topic1 topic2 language1".to_string(),
+                weight_c: "issue1 label1 label2".to_string(),
+            },
+        );
+    }
+
+    #[test]
+    fn issue_populate_from_labels() {
+        let mut issue = Issue {
+            issue_id: 1,
+            title: "issue1".to_string(),
+            url: "issue1_url".to_string(),
+            number: 1,
+            labels: vec![
+                "documentation".to_string(),
+                "bug".to_string(),
+                "difficulty/medium".to_string(),
+                "mentor available".to_string(),
+                "good first issue".to_string(),
+            ],
+            published_at: OffsetDateTime::parse("1985-04-12T23:20:50.52Z", &Rfc3339).unwrap(),
+            digest: None,
+            area: None,
+            kind: None,
+            difficulty: None,
+            mentor_available: None,
+            mentor: None,
+            good_first_issue: None,
+        };
+
+        issue.populate_from_labels();
+        assert_eq!(issue.area, Some(IssueArea::Docs));
+        assert_eq!(issue.kind, Some(IssueKind::Bug));
+        assert_eq!(issue.difficulty, Some(IssueDifficulty::Medium));
+        assert_eq!(issue.mentor_available, Some(true));
+        assert_eq!(issue.good_first_issue, Some(true));
+    }
+
+    #[tokio::test]
+    async fn run_error_getting_github_tokens() {
+        let cfg = Config::builder().build().unwrap();
+        let db = MockDB::new();
+        let gh = MockGH::new();
+
+        let result = run(&cfg, Arc::new(db), Arc::new(gh)).await;
+        assert_eq!(
+            result.unwrap_err().to_string(),
+            r#"configuration property "creds.githubTokens" not found"#
+        );
+    }
+
+    #[tokio::test]
+    async fn run_empty_list_of_github_tokens_provided() {
+        let cfg = Config::builder()
+            .set_default("creds.githubTokens", Vec::<String>::new())
+            .unwrap()
+            .build()
+            .unwrap();
+        let db = MockDB::new();
+        let gh = MockGH::new();
+
+        let result = run(&cfg, Arc::new(db), Arc::new(gh)).await;
+        assert_eq!(
+            result.unwrap_err().to_string(),
+            "GitHub tokens not found in config file (creds.githubTokens)"
+        );
+    }
+
+    #[tokio::test]
+    async fn run_error_getting_repositories_to_track() {
+        let cfg = Config::builder()
+            .set_default("creds.githubTokens", vec![TOKEN1.to_string()])
+            .unwrap()
+            .build()
+            .unwrap();
+        let mut db = MockDB::new();
+        let gh = MockGH::new();
+
+        db.expect_get_repositories_to_track()
+            .times(1)
+            .returning(|| Box::pin(future::ready(Err(format_err!("fake error")))));
+
+        let result = run(&cfg, Arc::new(db), Arc::new(gh)).await;
+        assert_eq!(result.unwrap_err().to_string(), "fake error");
+    }
+
+    #[tokio::test]
+    async fn run_no_repositories_found() {
+        let cfg = Config::builder()
+            .set_default("creds.githubTokens", vec![TOKEN1.to_string()])
+            .unwrap()
+            .build()
+            .unwrap();
+        let mut db = MockDB::new();
+        let gh = MockGH::new();
+
+        db.expect_get_repositories_to_track()
+            .times(1)
+            .returning(|| Box::pin(future::ready(Ok(vec![]))));
+
+        run(&cfg, Arc::new(db), Arc::new(gh)).await.unwrap();
+    }
+
+    #[tokio::test]
+    async fn run_error_getting_repository_data_from_gh() {
+        let cfg = Config::builder()
+            .set_default("tracker.concurrency", 1)
+            .unwrap()
+            .set_default("creds.githubTokens", vec![TOKEN1.to_string()])
+            .unwrap()
+            .build()
+            .unwrap();
+        let mut db = MockDB::new();
+        let mut gh = MockGH::new();
+
+        db.expect_get_repositories_to_track()
+            .times(1)
+            .returning(|| {
+                Box::pin(future::ready(Ok(vec![Repository {
+                    url: REPOSITORY_URL.to_string(),
+                    ..Default::default()
+                }])))
+            });
+        gh.expect_repository()
+            .with(eq(TOKEN1), eq(REPOSITORY_URL))
+            .times(1)
+            .returning(|_, _| Box::pin(future::ready(Err(format_err!("fake error")))));
+
+        let result = run(&cfg, Arc::new(db), Arc::new(gh)).await;
+        assert_eq!(
+            format!("{:#}", result.err().unwrap()),
+            "error tracking repository https://repo1.url: fake error"
+        );
+    }
+
+    #[tokio::test]
+    async fn run_register_one_issue_and_unregister_another_successfully() {
+        let cfg = Config::builder()
+            .set_default("tracker.concurrency", 1)
+            .unwrap()
+            .set_default("creds.githubTokens", vec![TOKEN1.to_string()])
+            .unwrap()
+            .build()
+            .unwrap();
+        let mut db = MockDB::new();
+        let mut gh = MockGH::new();
+
+        db.expect_get_repositories_to_track()
+            .times(1)
+            .returning(|| {
+                Box::pin(future::ready(Ok(vec![Repository {
+                    repository_id: *REPOSITORY_ID,
+                    url: REPOSITORY_URL.to_string(),
+                    ..Default::default()
+                }])))
+            });
+        gh.expect_repository()
+            .with(eq(TOKEN1), eq(REPOSITORY_URL))
+            .times(1)
+            .returning(|_, _| {
+                Box::pin(future::ready(Ok(RepoViewRepository {
+                    description: Some("description".to_string()),
+                    homepage_url: None,
+                    issues: RepoViewRepositoryIssues {
+                        nodes: Some(vec![Some(RepoViewRepositoryIssuesNodes {
+                            database_id: Some(1),
+                            title: "issue1".to_string(),
+                            url: "issue1_url".to_string(),
+                            number: 1,
+                            published_at: Some("1985-04-12T23:20:50.52Z".to_string()),
+                            labels: Some(RepoViewRepositoryIssuesNodesLabels {
+                                nodes: Some(vec![
+                                    Some(RepoViewRepositoryIssuesNodesLabelsNodes {
+                                        name: "good first issue".to_string(),
+                                    }),
+                                    Some(RepoViewRepositoryIssuesNodesLabelsNodes {
+                                        name: "bug".to_string(),
+                                    }),
+                                    Some(RepoViewRepositoryIssuesNodesLabelsNodes {
+                                        name: "difficulty/easy".to_string(),
+                                    }),
+                                ]),
+                            }),
+                        })]),
+                    },
+                    languages: None,
+                    repository_topics: RepoViewRepositoryRepositoryTopics { nodes: None },
+                    stargazer_count: 0,
+                })))
+            });
+        db.expect_update_repository_gh_data()
+            .with(eq(Repository {
+                repository_id: *REPOSITORY_ID,
+                url: REPOSITORY_URL.to_string(),
+                description: Some("description".to_string()),
+                stars: Some(0),
+                digest: Some(
+                    "16139cdd47898d43806d0fd1fb6b2596dbf618362f6b9c22a5a2ec1ec0b882f9".to_string(),
+                ),
+                ..Default::default()
+            }))
+            .times(1)
+            .returning(|_| Box::pin(future::ready(Ok(()))));
+        db.expect_get_repository_issues()
+            .with(eq(*REPOSITORY_ID))
+            .times(1)
+            .returning(|_| {
+                Box::pin(future::ready(Ok(vec![Issue {
+                    issue_id: 2,
+                    title: "issue2".to_string(),
+                    url: "issue2_url".to_string(),
+                    number: 2,
+                    labels: vec![],
+                    published_at: OffsetDateTime::now_utc(),
+                    digest: None,
+                    area: None,
+                    kind: None,
+                    difficulty: None,
+                    mentor_available: None,
+                    mentor: None,
+                    good_first_issue: None,
+                }])))
+            });
+        db.expect_register_issue()
+            .with(
+                eq(Repository {
+                    repository_id: *REPOSITORY_ID,
+                    url: REPOSITORY_URL.to_string(),
+                    description: Some("description".to_string()),
+                    stars: Some(0),
+                    digest: Some(
+                        "16139cdd47898d43806d0fd1fb6b2596dbf618362f6b9c22a5a2ec1ec0b882f9"
+                            .to_string(),
+                    ),
+                    ..Default::default()
+                }),
+                eq(Issue {
+                    issue_id: 1,
+                    title: "issue1".to_string(),
+                    url: "issue1_url".to_string(),
+                    number: 1,
+                    labels: vec![
+                        "good first issue".to_string(),
+                        "bug".to_string(),
+                        "difficulty/easy".to_string(),
+                    ],
+                    published_at: OffsetDateTime::parse("1985-04-12T23:20:50.52Z", &Rfc3339)
+                        .unwrap(),
+                    digest: Some(
+                        "3b9c21b338d14e57e8e590a434bdf4f5bd7e71528519ebdce8bf0907c647f94f"
+                            .to_string(),
+                    ),
+                    area: None,
+                    kind: Some(IssueKind::Bug),
+                    difficulty: Some(IssueDifficulty::Easy),
+                    mentor_available: None,
+                    mentor: None,
+                    good_first_issue: Some(true),
+                }),
+            )
+            .times(1)
+            .returning(|_, _| Box::pin(future::ready(Ok(()))));
+        db.expect_unregister_issue()
+            .with(eq(2))
+            .times(1)
+            .returning(|_| Box::pin(future::ready(Ok(()))));
+        db.expect_update_repository_last_track_ts()
+            .with(eq(*REPOSITORY_ID))
+            .times(1)
+            .returning(|_| Box::pin(future::ready(Ok(()))));
+
+        run(&cfg, Arc::new(db), Arc::new(gh)).await.unwrap();
+    }
 }
