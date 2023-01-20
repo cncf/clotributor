@@ -113,3 +113,116 @@ where
     error!("{err}");
     StatusCode::INTERNAL_SERVER_ERROR
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::db::MockDB;
+    use axum::{body::Body, http::Request};
+    use futures::future;
+    use mockall::predicate::eq;
+    use tower::ServiceExt;
+
+    #[tokio::test]
+    async fn get_issues_filters() {
+        let mut db = MockDB::new();
+        db.expect_get_issues_filters()
+            .times(1)
+            .returning(|| Box::pin(future::ready(Ok(r#"{"some": "filters"}"#.to_string()))));
+
+        let response = setup_test_router(db)
+            .oneshot(
+                Request::builder()
+                    .method("GET")
+                    .uri("/api/filters/issues")
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(response.status(), StatusCode::OK);
+        assert_eq!(
+            response.headers()[CACHE_CONTROL],
+            format!("max-age={}", DEFAULT_API_MAX_AGE)
+        );
+        assert_eq!(response.headers()[CONTENT_TYPE], APPLICATION_JSON.as_ref());
+        assert_eq!(
+            hyper::body::to_bytes(response.into_body()).await.unwrap(),
+            r#"{"some": "filters"}"#.to_string(),
+        );
+    }
+
+    #[tokio::test]
+    async fn search_issues() {
+        let mut db = MockDB::new();
+        db.expect_search_issues()
+            .with(eq(SearchIssuesInput {
+                limit: Some(10),
+                offset: Some(1),
+                sort_by: Some("most_recent".to_string()),
+                foundation: Some(vec!["cncf".to_string()]),
+                maturity: Some(vec!["graduated".to_string(), "incubating".to_string()]),
+                project: Some(vec!["artifacthub".to_string()]),
+                area: Some(vec!["docs".to_string()]),
+                kind: Some(vec!["bug".to_string()]),
+                difficulty: Some(vec!["easy".to_string()]),
+                language: Some(vec!["rust".to_string()]),
+                mentor_available: Some(true),
+                good_first_issue: Some(true),
+                ts_query_web: Some("text".to_string()),
+            }))
+            .times(1)
+            .returning(|_| Box::pin(future::ready(Ok((1, r#"[{"issue": "info"}]"#.to_string())))));
+
+        let response = setup_test_router(db)
+            .oneshot(
+                Request::builder()
+                    .method("GET")
+                    .uri(
+                        "\
+                        /api/issues/search?\
+                            limit=10&\
+                            offset=1&\
+                            sort_by=most_recent&\
+                            foundation[0]=cncf&\
+                            maturity[0]=graduated&\
+                            maturity[1]=incubating&\
+                            project[0]=artifacthub&\
+                            area[0]=docs&\
+                            kind[0]=bug&\
+                            difficulty[0]=easy&\
+                            language[0]=rust&\
+                            mentor_available=true&\
+                            good_first_issue=true&\
+                            ts_query_web=text&\
+                        ",
+                    )
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(response.status(), StatusCode::OK);
+        assert_eq!(
+            response.headers()[CACHE_CONTROL],
+            format!("max-age={}", DEFAULT_API_MAX_AGE)
+        );
+        assert_eq!(response.headers()[CONTENT_TYPE], APPLICATION_JSON.as_ref());
+        assert_eq!(response.headers()[PAGINATION_TOTAL_COUNT], "1");
+        assert_eq!(
+            hyper::body::to_bytes(response.into_body()).await.unwrap(),
+            r#"[{"issue": "info"}]"#.to_string(),
+        );
+    }
+
+    fn setup_test_router(db: MockDB) -> Router {
+        let cfg = Config::builder()
+            .set_default("apiserver.staticPath", "")
+            .unwrap()
+            .build()
+            .unwrap();
+        setup_router(Arc::new(cfg), Arc::new(db)).unwrap()
+    }
+}
