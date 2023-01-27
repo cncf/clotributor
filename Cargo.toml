@@ -13,7 +13,7 @@ rust-version = "1.65"
 
 [workspace.dependencies]
 anyhow = "1.0.68"
-async-trait = "0.1.62"
+async-trait = "0.1.63"
 axum = { version = "0.6.2", features = ["macros"] }
 bincode = "1.3.3"
 clap = { version = "4.1.1", features = ["derive"] }
