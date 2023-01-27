@@ -293,7 +293,7 @@ pub(crate) async fn run(cfg: &Config, db: DynDB, gh: DynGH) -> Result<()> {
                 Ok(result) => result,
                 Err(err) => Err(format_err!("{}", err)),
             }
-            .context(format!("error tracking repository {}", repo_url))
+            .context(format!("error tracking repository {repo_url}"))
         })
         .buffer_unordered(cfg.get("tracker.concurrency")?)
         .collect::<Vec<Result<()>>>()

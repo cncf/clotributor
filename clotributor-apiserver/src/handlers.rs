@@ -43,7 +43,7 @@ pub(crate) fn setup_router(cfg: Arc<Config>, db: DynDB) -> Result<Router> {
     let error_handler = |err: std::io::Error| async move {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("internal error: {}", err),
+            format!("internal error: {err}"),
         )
     };
 
@@ -64,7 +64,7 @@ pub(crate) fn setup_router(cfg: Arc<Config>, db: DynDB) -> Result<Router> {
             get_service(SetResponseHeader::overriding(
                 ServeDir::new(static_path),
                 CACHE_CONTROL,
-                HeaderValue::try_from(format!("max-age={}", STATIC_CACHE_MAX_AGE))?,
+                HeaderValue::try_from(format!("max-age={STATIC_CACHE_MAX_AGE}"))?,
             ))
             .handle_error(error_handler),
         )
@@ -82,7 +82,7 @@ async fn issues_filters(State(db): State<DynDB>) -> impl IntoResponse {
 
     // Return issues filters as json
     Response::builder()
-        .header(CACHE_CONTROL, format!("max-age={}", DEFAULT_API_MAX_AGE))
+        .header(CACHE_CONTROL, format!("max-age={DEFAULT_API_MAX_AGE}"))
         .header(CONTENT_TYPE, APPLICATION_JSON.as_ref())
         .body(Full::from(filters))
         .map_err(internal_error)
@@ -98,7 +98,7 @@ async fn search_issues(State(db): State<DynDB>, RawQuery(query): RawQuery) -> im
 
     // Return search results as json
     Response::builder()
-        .header(CACHE_CONTROL, format!("max-age={}", DEFAULT_API_MAX_AGE))
+        .header(CACHE_CONTROL, format!("max-age={DEFAULT_API_MAX_AGE}"))
         .header(CONTENT_TYPE, APPLICATION_JSON.as_ref())
         .header(PAGINATION_TOTAL_COUNT, count.to_string())
         .body(Full::from(issues))
@@ -144,7 +144,7 @@ mod tests {
         assert_eq!(response.status(), StatusCode::OK);
         assert_eq!(
             response.headers()[CACHE_CONTROL],
-            format!("max-age={}", DEFAULT_API_MAX_AGE)
+            format!("max-age={DEFAULT_API_MAX_AGE}")
         );
         assert_eq!(response.headers()[CONTENT_TYPE], APPLICATION_JSON.as_ref());
         assert_eq!(
@@ -207,7 +207,7 @@ mod tests {
         assert_eq!(response.status(), StatusCode::OK);
         assert_eq!(
             response.headers()[CACHE_CONTROL],
-            format!("max-age={}", DEFAULT_API_MAX_AGE)
+            format!("max-age={DEFAULT_API_MAX_AGE}")
         );
         assert_eq!(response.headers()[CONTENT_TYPE], APPLICATION_JSON.as_ref());
         assert_eq!(response.headers()[PAGINATION_TOTAL_COUNT], "1");
