@@ -14,7 +14,7 @@
     "react-router-dom": "^6.6.2",
     "source-map-explorer": "^2.5.3",
     "tinycolor2": "^1.5.2",
-    "ua-parser-js": "^1.0.32"
+    "ua-parser-js": "^1.0.33"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.14.1",
