@@ -173,7 +173,7 @@ pub(crate) fn setup_http_client(github_token: &str) -> Result<reqwest::Client, r
         .default_headers(
             std::iter::once((
                 reqwest::header::AUTHORIZATION,
-                reqwest::header::HeaderValue::from_str(&format!("Bearer {}", github_token))
+                reqwest::header::HeaderValue::from_str(&format!("Bearer {github_token}"))
                     .expect("header value only uses visible ascii chars"),
             ))
             .collect(),
