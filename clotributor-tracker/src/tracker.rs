@@ -403,6 +403,7 @@ mod tests {
 
     const TOKEN1: &str = "0001";
     const REPOSITORY_URL: &str = "https://repo1.url";
+    const FAKE_ERROR: &str = "fake error";
 
     lazy_static! {
         static ref REPOSITORY_ID: Uuid =
@@ -585,11 +586,7 @@ mod tests {
 
     #[tokio::test]
     async fn run_empty_list_of_github_tokens_provided() {
-        let cfg = Config::builder()
-            .set_default("creds.githubTokens", Vec::<String>::new())
-            .unwrap()
-            .build()
-            .unwrap();
+        let cfg = setup_test_config(&[]);
         let db = MockDB::new();
         let gh = MockGH::new();
 
@@ -602,29 +599,21 @@ mod tests {
 
     #[tokio::test]
     async fn run_error_getting_repositories_to_track() {
-        let cfg = Config::builder()
-            .set_default("creds.githubTokens", vec![TOKEN1.to_string()])
-            .unwrap()
-            .build()
-            .unwrap();
+        let cfg = setup_test_config(&[TOKEN1]);
         let mut db = MockDB::new();
         let gh = MockGH::new();
 
         db.expect_get_repositories_to_track()
             .times(1)
-            .returning(|| Box::pin(future::ready(Err(format_err!("fake error")))));
+            .returning(|| Box::pin(future::ready(Err(format_err!(FAKE_ERROR)))));
 
         let result = run(&cfg, Arc::new(db), Arc::new(gh)).await;
-        assert_eq!(result.unwrap_err().to_string(), "fake error");
+        assert_eq!(result.unwrap_err().to_string(), FAKE_ERROR);
     }
 
     #[tokio::test]
     async fn run_no_repositories_found() {
-        let cfg = Config::builder()
-            .set_default("creds.githubTokens", vec![TOKEN1.to_string()])
-            .unwrap()
-            .build()
-            .unwrap();
+        let cfg = setup_test_config(&[TOKEN1]);
         let mut db = MockDB::new();
         let gh = MockGH::new();
 
@@ -637,13 +626,7 @@ mod tests {
 
     #[tokio::test]
     async fn run_error_getting_repository_data_from_gh() {
-        let cfg = Config::builder()
-            .set_default("tracker.concurrency", 1)
-            .unwrap()
-            .set_default("creds.githubTokens", vec![TOKEN1.to_string()])
-            .unwrap()
-            .build()
-            .unwrap();
+        let cfg = setup_test_config(&[TOKEN1]);
         let mut db = MockDB::new();
         let mut gh = MockGH::new();
 
@@ -658,24 +641,15 @@ mod tests {
         gh.expect_repository()
             .with(eq(TOKEN1), eq(REPOSITORY_URL))
             .times(1)
-            .returning(|_, _| Box::pin(future::ready(Err(format_err!("fake error")))));
+            .returning(|_, _| Box::pin(future::ready(Err(format_err!(FAKE_ERROR)))));
 
         let result = run(&cfg, Arc::new(db), Arc::new(gh)).await;
-        assert_eq!(
-            format!("{:#}", result.err().unwrap()),
-            "error tracking repository https://repo1.url: fake error"
-        );
+        assert_eq!(result.unwrap_err().root_cause().to_string(), FAKE_ERROR);
     }
 
     #[tokio::test]
     async fn run_register_one_issue_and_unregister_another_successfully() {
-        let cfg = Config::builder()
-            .set_default("tracker.concurrency", 1)
-            .unwrap()
-            .set_default("creds.githubTokens", vec![TOKEN1.to_string()])
-            .unwrap()
-            .build()
-            .unwrap();
+        let cfg = setup_test_config(&[TOKEN1]);
         let mut db = MockDB::new();
         let mut gh = MockGH::new();
 
@@ -804,5 +778,21 @@ mod tests {
             .returning(|_| Box::pin(future::ready(Ok(()))));
 
         run(&cfg, Arc::new(db), Arc::new(gh)).await.unwrap();
+    }
+
+    fn setup_test_config(tokens: &[&str]) -> Config {
+        Config::builder()
+            .set_default("tracker.concurrency", 1)
+            .unwrap()
+            .set_default(
+                "creds.githubTokens",
+                tokens
+                    .iter()
+                    .map(|t| t.to_string())
+                    .collect::<Vec<String>>(),
+            )
+            .unwrap()
+            .build()
+            .unwrap()
     }
 }
