@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "classnames": "^2.3.2",
-    "clo-ui": "file:./clo-ui",
+    "clo-ui": "https://github.com/cncf/clo-ui.git#a442560e6e1e42dd9cf88172353bdf19bb190abf",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "react": "^18.2.0",
