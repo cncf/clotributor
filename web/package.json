@@ -13,7 +13,7 @@
     "react-icons": "^4.7.1",
     "react-router-dom": "^6.8.0",
     "source-map-explorer": "^2.5.3",
-    "tinycolor2": "^1.5.2",
+    "tinycolor2": "^1.6.0",
     "ua-parser-js": "^1.0.33"
   },
   "devDependencies": {
