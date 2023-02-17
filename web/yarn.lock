@@ -3088,8 +3088,9 @@ cliui@^7.0.2:
     strip-ansi "^6.0.0"
     wrap-ansi "^7.0.0"
 
-"clo-ui@file:./clo-ui":
+"clo-ui@https://github.com/cncf/clo-ui.git#a442560e6e1e42dd9cf88172353bdf19bb190abf":
   version "0.0.1"
+  resolved "https://github.com/cncf/clo-ui.git#a442560e6e1e42dd9cf88172353bdf19bb190abf"
   dependencies:
     bootstrap "^5.2.2"
     classnames "^2.3.2"

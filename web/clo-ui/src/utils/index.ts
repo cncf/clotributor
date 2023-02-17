@@ -1,1 +1,0 @@
-export { getMetaTag } from './getMetaTag';
