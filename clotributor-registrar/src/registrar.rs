@@ -98,7 +98,7 @@ pub(crate) async fn run(cfg: &Config, db: DynDB) -> Result<()> {
 /// in the database and existing ones which have changed will be updated. When
 /// a project is removed from the data file, it'll be removed from the database
 /// as well.
-#[instrument(fields(foundation_id = foundation.foundation_id), skip_all, err)]
+#[instrument(fields(foundation = foundation.foundation_id), skip_all, err)]
 async fn process_foundation(
     db: DynDB,
     http_client: reqwest::Client,
@@ -139,9 +139,9 @@ async fn process_foundation(
         }
 
         // Register project
-        debug!("registering project {}", project.name);
+        debug!(project = project.name, "registering");
         if let Err(err) = db.register_project(foundation_id, project).await {
-            error!("error registering project {}: {}", project.name, err);
+            error!(?err, project = project.name, "error registering");
         }
     }
 
@@ -149,15 +149,15 @@ async fn process_foundation(
     if !projects_available.is_empty() {
         for name in projects_registered.keys() {
             if !projects_available.contains_key(name) {
-                debug!("unregistering project {}", name);
+                debug!(project = name, "unregistering");
                 if let Err(err) = db.unregister_project(foundation_id, name).await {
-                    error!("error unregistering project {}: {}", name, err);
+                    error!(?err, project = name, "error unregistering");
                 };
             }
         }
     }
 
-    debug!("completed in {}s", start.elapsed().as_secs());
+    debug!(duration_secs = start.elapsed().as_secs(), "completed");
     Ok(())
 }
 

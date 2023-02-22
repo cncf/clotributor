@@ -256,6 +256,7 @@ pub(crate) struct IssueTsTexts {
 }
 
 /// Track repositories that need to be tracked.
+#[instrument(skip_all, err)]
 pub(crate) async fn run(cfg: &Config, db: DynDB, gh: DynGH) -> Result<()> {
     // Setup GitHub tokens pool
     let gh_tokens = cfg.get::<Vec<String>>("creds.githubTokens")?;
@@ -270,8 +271,7 @@ pub(crate) async fn run(cfg: &Config, db: DynDB, gh: DynGH) -> Result<()> {
     debug!("getting repositories to track");
     let repositories_to_track = db.get_repositories_to_track().await?;
     if repositories_to_track.is_empty() {
-        info!("no repositories to track");
-        info!("tracker finished");
+        info!("no repositories to track, finished");
         return Ok(());
     }
 
@@ -321,12 +321,14 @@ pub(crate) async fn run(cfg: &Config, db: DynDB, gh: DynGH) -> Result<()> {
             .json()
             .await?;
         debug!(
-            "token [{}] github rate limit info: [rate: {}] [graphql: {}]",
-            i, response["rate"], response["resources"]["graphql"]
+            token = i,
+            rate = %response["rate"],
+            graphql = %response["resources"]["graphql"],
+            "token github rate limit info"
         );
     }
 
-    info!("tracker finished");
+    info!("finished");
     result
 }
 
@@ -360,7 +362,7 @@ async fn track_repository(
         let digest_in_db = find_issue(issue.issue_id, &issues_in_db);
         if issue.digest != digest_in_db {
             db.register_issue(&repo, issue).await?;
-            debug!("registering issue #{}", issue.number);
+            debug!(issue.number, "registering issue");
         }
     }
 
@@ -368,7 +370,7 @@ async fn track_repository(
     for issue in &issues_in_db {
         if find_issue(issue.issue_id, &issues_in_gh).is_none() {
             db.unregister_issue(issue.issue_id).await?;
-            debug!("unregistering issue #{}", issue.number);
+            debug!(issue.number, "unregistering issue");
         }
     }
 
@@ -376,7 +378,7 @@ async fn track_repository(
     db.update_repository_last_track_ts(repo.repository_id)
         .await?;
 
-    debug!("completed in {}ms", start.elapsed().as_millis());
+    debug!(duration_ms = start.elapsed().as_millis(), "completed");
     Ok(())
 }
 

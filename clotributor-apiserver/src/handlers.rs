@@ -110,7 +110,7 @@ fn internal_error<E>(err: E) -> StatusCode
 where
     E: Into<Error> + Display,
 {
-    error!("{err}");
+    error!(%err);
     StatusCode::INTERNAL_SERVER_ERROR
 }
 
