@@ -39,14 +39,6 @@ struct RouterState {
 
 /// Setup HTTP server router.
 pub(crate) fn setup_router(cfg: Arc<Config>, db: DynDB) -> Result<Router> {
-    // Setup error handler
-    let error_handler = |err: std::io::Error| async move {
-        (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            format!("internal error: {err}"),
-        )
-    };
-
     // Setup some paths
     let static_path = cfg.get_string("apiserver.staticPath")?;
     let index_path = Path::new(&static_path).join("index.html");
@@ -55,20 +47,16 @@ pub(crate) fn setup_router(cfg: Arc<Config>, db: DynDB) -> Result<Router> {
     let router = Router::new()
         .route("/api/filters/issues", get(issues_filters))
         .route("/api/issues/search", get(search_issues))
-        .route(
-            "/",
-            get_service(ServeFile::new(&index_path)).handle_error(error_handler),
-        )
+        .route("/", get_service(ServeFile::new(&index_path)))
         .nest_service(
             "/static",
             get_service(SetResponseHeader::overriding(
                 ServeDir::new(static_path),
                 CACHE_CONTROL,
                 HeaderValue::try_from(format!("max-age={STATIC_CACHE_MAX_AGE}"))?,
-            ))
-            .handle_error(error_handler),
+            )),
         )
-        .fallback_service(get_service(ServeFile::new(&index_path)).handle_error(error_handler))
+        .fallback_service(get_service(ServeFile::new(&index_path)))
         .layer(ServiceBuilder::new().layer(TraceLayer::new_for_http()))
         .with_state(RouterState { db });
 
