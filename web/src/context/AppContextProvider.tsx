@@ -1,9 +1,8 @@
+import { detectActiveThemeMode, useSystemThemeMode } from 'clo-ui';
 import { isNull } from 'lodash';
 import { createContext, Dispatch, useContext, useEffect, useReducer, useState } from 'react';
 
-import useSystemThemeMode from '../hooks/useSystemThemeMode';
 import { Prefs, SortBy } from '../types';
-import detectActiveThemeMode from '../utils/detectActiveThemeMode';
 import lsStorage from '../utils/localStoragePreferences';
 
 interface AppState {

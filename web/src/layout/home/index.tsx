@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import { Loading } from 'clo-ui';
+import { Loading, scrollToTop } from 'clo-ui';
 import { isUndefined } from 'lodash';
 import { useEffect, useState } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
@@ -7,7 +7,6 @@ import { Link, useOutletContext } from 'react-router-dom';
 import API from '../../api';
 import { DEFAULT_SORT_BY } from '../../data';
 import { Issue, OutletContext } from '../../types';
-import scrollToTop from '../../utils/scrollToTop';
 import Card from '../common/Card';
 import Searchbar from '../navigation/Searchbar';
 import styles from './Home.module.css';

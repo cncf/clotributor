@@ -5,16 +5,14 @@
   "license": "Apache-2.0",
   "dependencies": {
     "classnames": "^2.3.2",
-    "clo-ui": "https://github.com/cncf/clo-ui.git#a442560e6e1e42dd9cf88172353bdf19bb190abf",
+    "clo-ui": "https://github.com/cncf/clo-ui.git#0.1.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.7.1",
     "react-router-dom": "^6.8.1",
-    "source-map-explorer": "^2.5.3",
-    "tinycolor2": "^1.6.0",
-    "ua-parser-js": "^1.0.33"
+    "source-map-explorer": "^2.5.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.14.1",
@@ -50,7 +48,7 @@
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "format:diff": "prettier --list-different \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
-  "proxy": "http://localhost:8000",
+  "proxy": "http://127.0.0.1:8000",
   "browserslist": {
     "production": [
       ">0.2%",

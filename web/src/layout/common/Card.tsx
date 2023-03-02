@@ -1,8 +1,16 @@
 import classNames from 'classnames';
-import { Card as CardWrapper, ExternalLink, FoundationBadge, GenericBadge, Image, MaturityBadge } from 'clo-ui';
+import {
+  Card as CardWrapper,
+  ExternalLink,
+  FoundationBadge,
+  GenericBadge,
+  Image,
+  MaturityBadge,
+  prettifyNumber,
+} from 'clo-ui';
 import { isUndefined } from 'lodash';
 import moment from 'moment';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { BsDot } from 'react-icons/bs';
 import { FaChartBar, FaGithub } from 'react-icons/fa';
 import { FiExternalLink, FiStar } from 'react-icons/fi';
@@ -13,7 +21,6 @@ import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../../context/AppContextProvider';
 import { FilterKind, Issue } from '../../types';
 import prepareQueryString from '../../utils/prepareQueryString';
-import prettifyNumber from '../../utils/prettifyNumber';
 import removeEmojis from '../../utils/removeEmojis';
 import removeLastDot from '../../utils/removeLastDot';
 import styles from './Card.module.css';
