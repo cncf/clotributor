@@ -1,10 +1,9 @@
 import classNames from 'classnames';
-import { ExternalLink } from 'clo-ui';
+import { ExternalLink, useOutsideClick } from 'clo-ui';
 import { useRef, useState } from 'react';
 import { BsList } from 'react-icons/bs';
 import { FaGithub } from 'react-icons/fa';
 
-import useOutsideClick from '../../hooks/useOutsideClick';
 import styles from './MobileSettings.module.css';
 import ThemeMode from './ThemeMode';
 

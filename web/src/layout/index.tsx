@@ -1,7 +1,7 @@
+import { useScrollRestorationFix } from 'clo-ui';
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
-import useScrollRestorationFix from '../hooks/useScrollRestorationFix';
 import styles from './Layout.module.css';
 import Footer from './navigation/Footer';
 import Navbar from './navigation/Navbar';

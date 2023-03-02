@@ -1,5 +1,14 @@
 import classNames from 'classnames';
-import { FilterSection, Loading, NoData, Pagination, PaginationLimitOptions, Sidebar, SortOptions } from 'clo-ui';
+import {
+  FilterSection,
+  Loading,
+  NoData,
+  Pagination,
+  PaginationLimitOptions,
+  scrollToTop,
+  Sidebar,
+  SortOptions,
+} from 'clo-ui';
 import { isEmpty, isUndefined } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
 import { FaFilter } from 'react-icons/fa';
@@ -12,7 +21,6 @@ import { DEFAULT_SORT_BY, SORT_OPTIONS } from '../../data';
 import { Issue, OutletContext, SearchFiltersURL, SortBy } from '../../types';
 import buildSearchParams from '../../utils/buildSearchParams';
 import prepareQueryString from '../../utils/prepareQueryString';
-import scrollToTop from '../../utils/scrollToTop';
 import Card from '../common/Card';
 import Filters from './Filters';
 import FiltersInLine from './FiltersInLine';
