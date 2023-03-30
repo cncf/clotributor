@@ -3,7 +3,7 @@
 }
 
 .dropdownWrapper {
-  width: 99px;
+  width: 103px;
 }
 
 .dropdown {
@@ -73,7 +73,7 @@
 
 @media only screen and (min-width: 1200px) {
   .dropdownWrapper {
-    width: 111px;
+    width: 119px;
   }
 
   .dropdown {
