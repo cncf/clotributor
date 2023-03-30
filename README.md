@@ -58,7 +58,7 @@ Some of the features of **CLOTributor** are controlled by some special labels (o
 #### Other filters
 
 - `good first issue`: use this label to highlight issues that may be a good fit for new contributors to the project.
-- `mentor available`: to indicate that someone may be available to guide contributors with this issue.
+- `mentor available` or `mentorship`: to indicate that someone may be available to guide contributors with this issue.
 
 ## Projects and repositories
 
