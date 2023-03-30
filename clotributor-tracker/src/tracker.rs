@@ -233,7 +233,7 @@ impl Issue {
             }
 
             // Mentor available
-            if label == "mentor available" {
+            if label == "mentor available" || label == "mentorship" {
                 self.mentor_available = Some(true);
                 continue;
             }
