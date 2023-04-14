@@ -1,10 +1,10 @@
 # Build tern
-FROM golang:1.20.2-alpine3.17 AS tern
+FROM golang:1.20.3-alpine3.17 AS tern
 RUN apk --no-cache add git
 RUN go install github.com/jackc/tern@latest
 
 # Build final image
-FROM alpine:3.17.2
+FROM alpine:3.17.3
 RUN addgroup -S clotributor && adduser -S clotributor -G clotributor
 USER clotributor
 WORKDIR /home/clotributor
