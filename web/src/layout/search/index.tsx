@@ -307,7 +307,7 @@ const Search = () => {
                     by={sort.by}
                     width={150}
                     onSortChange={onSortChange}
-                    className="mt-3 mt-sm-0"
+                    className="mt-3 mt-sm-0 me-2 me-md-4"
                   />
                 )}
                 <PaginationLimitOptions limit={limit} onPaginationLimitChange={onPaginationLimitChange} />

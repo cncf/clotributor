@@ -134,9 +134,8 @@ const FiltersInLine = (props: Props) => {
                   {activeFilters && (
                     <div className="mt-2">
                       {activeFilters.map((filter: string) => {
-                        const selectedFilter = section.options.find(
-                          (f: FilterOption) => f.key === filter || f.value === filter
-                        );
+                        const opts: FilterOption[] = section.options as FilterOption[];
+                        const selectedFilter = opts.find((f: FilterOption) => f.key === filter || f.value === filter);
 
                         if (isUndefined(selectedFilter)) return null;
 
