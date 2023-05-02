@@ -60,6 +60,25 @@ Some of the features of **CLOTributor** are controlled by some special labels (o
 - `good first issue`: use this label to highlight issues that may be a good fit for new contributors to the project.
 - `mentor available` or `mentorship`: to indicate that someone may be available to guide contributors with this issue.
 
+## Maintainers wanted
+
+If your project is looking for maintainers, CLOTributor can highlight this in a special way to let potential candidates know. This feature can be enabled by submitting a PR to add the block below to the corresponding project in the [data files](https://github.com/cncf/clomonitor/tree/main/data). You can add as many links or contacts as you need, or omit any of them if you prefer.
+
+```yaml
+maintainers_wanted:
+  enabled: true
+  links:
+    - title: How to contribute to the project
+      url: https://github.com/org/repo/CONTRIBUTING.md
+    - title: Development environment setup
+      url: https://github.com/org/repo/docs/dev_env_setup.md
+  contacts:
+    - github_handle: user1
+    - github_handle: user2
+```
+
+*NOTE: the user submitting the pull request **must** already be a project's maintainer.*
+
 ## Projects and repositories
 
 **CLOTributor's** data source for projects and repositories is [**CLOMonitor**](https://github.com/cncf/clomonitor#projects), which lists most of the projects in the [CNCF](https://www.cncf.io/projects/) and [LF AI & DATA](https://lfaidata.foundation/projects/) foundations.

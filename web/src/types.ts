@@ -29,6 +29,21 @@ export interface Issue {
   repository: Repository;
 }
 
+export interface MaintainersWanted {
+  enabled: boolean;
+  links?: MaintainersWantedLink[];
+  contacts?: MaintainersWantedContact[];
+}
+
+export interface MaintainersWantedLink {
+  title?: string;
+  url: string;
+}
+
+export interface MaintainersWantedContact {
+  github_handle: string;
+}
+
 export interface Project {
   name: string;
   display_name?: string;
@@ -39,6 +54,7 @@ export interface Project {
   accepted_at: number;
   maturity: Maturity;
   foundation: Foundation;
+  maintainers_wanted?: MaintainersWanted;
 }
 
 export interface Repository {

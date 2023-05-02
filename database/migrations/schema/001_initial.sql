@@ -22,6 +22,7 @@ create table if not exists project (
     devstats_url text check (devstats_url <> ''),
     accepted_at date,
     maturity maturity not null,
+    maintainers_wanted jsonb,
     digest text,
     created_at timestamptz not null default current_timestamp,
     updated_at timestamptz not null default current_timestamp,

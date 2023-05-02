@@ -146,6 +146,10 @@
   background-color: var(--clo-secondary-15);
 }
 
+.negativeMarginTop {
+  margin-top: -1.3rem;
+}
+
 @media only screen and (max-width: 575.98px) {
   .title {
     font-size: 1rem;

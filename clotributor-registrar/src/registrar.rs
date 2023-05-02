@@ -30,6 +30,8 @@ pub(crate) struct Project {
     pub devstats_url: Option<String>,
     pub accepted_at: Option<String>,
     pub maturity: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub maintainers_wanted: Option<MaintainersWanted>,
     pub digest: Option<String>,
     pub repositories: Vec<Repository>,
 }
@@ -49,6 +51,31 @@ impl Project {
 pub(crate) struct Repository {
     pub name: String,
     pub url: String,
+}
+
+/// Defines if the project is looking for maintainers, as well as some extra
+/// reference and contact information.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub(crate) struct MaintainersWanted {
+    enabled: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    links: Option<Vec<Link>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    contacts: Option<Vec<Contact>>,
+}
+
+/// Represents some information about a link.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub(crate) struct Link {
+    title: Option<String>,
+    url: String,
+}
+
+/// Represents some information about a contact.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub(crate) struct Contact {
+    github_handle: String,
 }
 
 /// Process foundations registered in the database.
@@ -362,7 +389,8 @@ mod tests {
                     repositories: vec![Repository{
                         name: "artifact-hub".to_string(),
                         url: "https://github.com/artifacthub/hub".to_string(),
-                    }]
+                    }],
+                    maintainers_wanted: None,
                 }),
             )
             .times(1)

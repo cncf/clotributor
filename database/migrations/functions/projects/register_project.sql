@@ -15,6 +15,7 @@ begin
         devstats_url,
         accepted_at,
         maturity,
+        maintainers_wanted,
         digest,
         foundation_id
     ) values (
@@ -26,6 +27,7 @@ begin
         p_project->>'devstats_url',
         (p_project->>'accepted_at')::date,
         (p_project->>'maturity')::maturity,
+        p_project->'maintainers_wanted',
         p_project->>'digest',
         p_foundation_id
     )
@@ -38,6 +40,7 @@ begin
         devstats_url = excluded.devstats_url,
         accepted_at = excluded.accepted_at,
         maturity = excluded.maturity,
+        maintainers_wanted = excluded.maintainers_wanted,
         digest = excluded.digest
     returning project_id into v_project_id;
 
