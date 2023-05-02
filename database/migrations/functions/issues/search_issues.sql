@@ -86,6 +86,7 @@ begin
             p.devstats_url as project_devstats_url,
             p.accepted_at as project_accepted_at,
             p.maturity as project_maturity,
+            p.maintainers_wanted as project_maintainers_wanted,
             p.foundation_id as project_foundation,
             (
                 case when v_tsquery_web is not null then
@@ -158,6 +159,7 @@ begin
                     'devstats_url', project_devstats_url,
                     'accepted_at', project_accepted_at,
                     'maturity', project_maturity,
+                    'maintainers_wanted', project_maintainers_wanted,
                     'foundation', project_foundation
                 ),
                 '_relevance', relevance

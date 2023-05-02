@@ -24,6 +24,7 @@ import prepareQueryString from '../../utils/prepareQueryString';
 import removeEmojis from '../../utils/removeEmojis';
 import removeLastDot from '../../utils/removeLastDot';
 import styles from './Card.module.css';
+import MaintainersWantedBadge from './MaintainersWantedBadge';
 
 interface Props {
   issue: Issue;
@@ -34,6 +35,8 @@ const Card = (props: Props) => {
   const { ctx } = useContext(AppContext);
   const { effective } = ctx.prefs.theme;
   const [availableTopics, setAvailableTopics] = useState<string[]>([]);
+  const isMaintainersWantedAvailable: boolean =
+    !isUndefined(props.issue.project.maintainers_wanted) && props.issue.project.maintainers_wanted.enabled;
 
   const searchByText = (text: string) => {
     navigate({
@@ -124,6 +127,13 @@ const Card = (props: Props) => {
           </div>
 
           <div className="d-flex flex-row align-items-center ms-2">
+            {isMaintainersWantedAvailable && (
+              <MaintainersWantedBadge
+                className="d-none d-sm-flex me-2"
+                maintainers_wanted={props.issue.project.maintainers_wanted!}
+                buttonStyle
+              />
+            )}
             <MaturityBadge
               maturityLevel={props.issue.project.maturity}
               className="d-none d-sm-flex me-2"
@@ -136,8 +146,14 @@ const Card = (props: Props) => {
           </div>
         </div>
 
-        <div className={`d-none d-md-flex flex-column flex-sm-row align-items-center ps-3 ${styles.projectWrapper}`}>
-          <div className={`d-none d-xl-flex align-items-center justify-content-center ${styles.imageWrapper}`}>
+        <div
+          className={`d-none d-md-flex flex-column flex-sm-row align-items-center ps-3 position-relative ${styles.projectWrapper}`}
+        >
+          <div
+            className={classNames('d-none d-xl-flex align-items-center justify-content-center', styles.imageWrapper, {
+              [styles.negativeMarginTop]: isMaintainersWantedAvailable,
+            })}
+          >
             <Image
               alt={`${props.issue.project.display_name || props.issue.project.name} logo`}
               url={props.issue.project.logo_url}
@@ -145,7 +161,11 @@ const Card = (props: Props) => {
               effective_theme={effective}
             />
           </div>
-          <div className="ms-0 ms-xl-3 flex-grow-1 w-100 truncateWrapper">
+          <div
+            className={classNames('ms-0 ms-xl-3 flex-grow-1 w-100 truncateWrapper', {
+              [styles.negativeMarginTop]: isMaintainersWantedAvailable,
+            })}
+          >
             <div className="p-0 p-xl-2 pe-xl-0">
               <div className="d-flex flex-row align-items-center">
                 <div className="d-flex flex-column w-100 truncateWrapper">
@@ -212,6 +232,10 @@ const Card = (props: Props) => {
               </div>
             </div>
           </div>
+
+          {isMaintainersWantedAvailable && (
+            <MaintainersWantedBadge maintainers_wanted={props.issue.project.maintainers_wanted!} />
+          )}
         </div>
 
         <div className={`flex-grow-1 p-3 text-muted ${styles.issueContent}`}>

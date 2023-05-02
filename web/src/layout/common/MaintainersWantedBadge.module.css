@@ -1,0 +1,46 @@
+.dropdown {
+  margin-top: 25px;
+}
+
+.badge {
+  padding: 0.2em 0.5em;
+  background-color: var(--bs-white);
+  border: 1px solid rgba(0, 0, 0, 0.176);
+  color: var(--clo-tertiary);
+}
+
+[data-theme='dark'] .badge {
+  border-color: var(--solid-border);
+  background-color: var(--clo-secondary-15);
+}
+
+.icon {
+  top: -1px;
+}
+
+.dot {
+  top: 1px;
+}
+
+.wrapper {
+  left: 3rem;
+  right: 3rem;
+  bottom: -1px;
+}
+
+.badgeInBottom {
+  padding-top: 3.64px;
+  padding-bottom: 2.64px;
+  font-size: 0.65rem;
+  line-height: 0.6rem;
+  letter-spacing: 0.05rem;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+}
+
+@media only screen and (max-width: 1199.98px) {
+  .wrapper {
+    left: 1rem;
+    right: 1rem;
+  }
+}
