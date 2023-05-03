@@ -53,7 +53,7 @@ const MaintainersWantedBadge = (props: Props) => {
           <div className="text-start p-2">
             {props.maintainers_wanted.links && props.maintainers_wanted.links.length > 0 && (
               <>
-                <div className="border-bottom border-1 pb-1 mb-2 fw-bold">Links</div>
+                <div className="border-bottom border-1 pb-1 mb-3 fw-bold">Links</div>
                 <div
                   className={classNames('mb-1', {
                     'mb-3': props.maintainers_wanted.contacts && props.maintainers_wanted.contacts.length > 0,
@@ -61,7 +61,7 @@ const MaintainersWantedBadge = (props: Props) => {
                 >
                   {props.maintainers_wanted.links.map((link: MaintainersWantedLink, index: number) => {
                     return (
-                      <div key={`link_${index}_${link.url}`} className="d-flex flex-row align-items-center ms-2">
+                      <div key={`link_${index}_${link.url}`} className="d-flex flex-row align-items-center ms-2 my-1">
                         <RxDotFilled className={`me-2 position-relative ${styles.dot}`} />
                         <ExternalLink className="text-truncate w-100" href={link.url}>
                           {link.title || link.url}
@@ -74,13 +74,13 @@ const MaintainersWantedBadge = (props: Props) => {
             )}
             {props.maintainers_wanted.contacts && props.maintainers_wanted.contacts.length > 0 && (
               <>
-                <div className="border-bottom border-1 pb-1 mb-2 fw-bold">Contacts</div>
+                <div className="border-bottom border-1 pb-1 mb-3 fw-bold">Contacts</div>
                 <div className="mb-1">
                   {props.maintainers_wanted.contacts.map((contact: MaintainersWantedContact, index: number) => {
                     return (
                       <div
                         key={`contact_${index}_${contact.github_handle}`}
-                        className="d-flex flex-row align-items-center ms-2"
+                        className="d-flex flex-row align-items-center ms-2 my-1"
                       >
                         <RxDotFilled className={`me-2 position-relative ${styles.dot}`} />
                         <ExternalLink
