@@ -51,6 +51,7 @@ impl Project {
 pub(crate) struct Repository {
     pub name: String,
     pub url: String,
+    pub exclude: Option<Vec<String>>,
 }
 
 /// Defines if the project is looking for maintainers, as well as some extra
@@ -148,6 +149,14 @@ async fn process_foundation(
     let tmp: Vec<Project> = serde_yaml::from_str(&data)?;
     let mut projects_available: HashMap<String, Project> = HashMap::with_capacity(tmp.len());
     for mut project in tmp {
+        // Do not include repositories that have been excluded for this service
+        project.repositories.retain(|r| {
+            if let Some(exclude) = &r.exclude {
+                return !exclude.contains(&"clotributor".to_string());
+            }
+            true
+        });
+
         project.set_digest()?;
         projects_available.insert(project.name.clone(), project);
     }
@@ -337,7 +346,7 @@ mod tests {
                 projects_registered.insert(
                     "artifact-hub".to_string(),
                     Some(
-                        "b0066337ee0887eafc0324e7432e622312b649cfdacaa322dfd433466bc0219c"
+                        "cda91a89489ac52d9160edee5e41828995e9f37832951180d30d7103f5f4f1ee"
                             .to_string(),
                     ),
                 );
@@ -385,10 +394,11 @@ mod tests {
                     devstats_url: Some("https://artifacthub.devstats.cncf.io/".to_string()),
                     accepted_at: Some("2020-06-23".to_string()),
                     maturity: "sandbox".to_string(),
-                    digest: Some("b0066337ee0887eafc0324e7432e622312b649cfdacaa322dfd433466bc0219c".to_string()),
+                    digest: Some("cda91a89489ac52d9160edee5e41828995e9f37832951180d30d7103f5f4f1ee".to_string()),
                     repositories: vec![Repository{
                         name: "artifact-hub".to_string(),
                         url: "https://github.com/artifacthub/hub".to_string(),
+                        exclude: None,
                     }],
                     maintainers_wanted: None,
                 }),
@@ -429,7 +439,7 @@ mod tests {
                 projects_registered.insert(
                     "artifact-hub".to_string(),
                     Some(
-                        "b0066337ee0887eafc0324e7432e622312b649cfdacaa322dfd433466bc0219c"
+                        "cda91a89489ac52d9160edee5e41828995e9f37832951180d30d7103f5f4f1ee"
                             .to_string(),
                     ),
                 );
