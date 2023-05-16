@@ -41,7 +41,7 @@ const Navbar = () => {
             label="Github link"
             href="https://github.com/cncf/clotributor"
           >
-            <FaGithub />
+            <FaGithub className={`position-relative ${styles.githubIcon}`} />
           </ExternalLink>
           <Settings />
         </div>
