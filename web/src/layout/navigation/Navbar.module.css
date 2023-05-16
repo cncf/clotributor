@@ -16,6 +16,10 @@
   font-size: 0.6rem;
 }
 
+.githubIcon {
+  margin-top: -3px;
+}
+
 [data-theme='dark'] .alpha {
   background-color: var(--color-black-25);
 }
