@@ -191,7 +191,7 @@ const Card = (props: Props) => {
                           <span
                             className={classNames('text-truncate fw-semibold mb-0 lightText', styles.title, {
                               [styles.longProjectName]:
-                                (props.issue.project.display_name || props.issue.project.name).length > 23,
+                                (props.issue.project.display_name || props.issue.project.name).length > 22,
                             })}
                           >
                             {props.issue.project.display_name || props.issue.project.name}
