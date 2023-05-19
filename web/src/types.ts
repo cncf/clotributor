@@ -51,8 +51,8 @@ export interface Project {
   logo_url?: string;
   logo_dark_url?: string;
   devstats_url?: string;
-  accepted_at: number;
-  maturity: Maturity;
+  accepted_at?: number;
+  maturity?: Maturity;
   foundation: Foundation;
   maintainers_wanted?: MaintainersWanted;
 }

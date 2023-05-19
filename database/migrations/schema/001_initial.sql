@@ -21,7 +21,7 @@ create table if not exists project (
     logo_dark_url text check (logo_dark_url <> ''),
     devstats_url text check (devstats_url <> ''),
     accepted_at date,
-    maturity maturity not null,
+    maturity maturity,
     maintainers_wanted jsonb,
     digest text,
     created_at timestamptz not null default current_timestamp,
