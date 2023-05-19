@@ -134,11 +134,13 @@ const Card = (props: Props) => {
                 buttonStyle
               />
             )}
-            <MaturityBadge
-              maturityLevel={props.issue.project.maturity}
-              className="d-none d-sm-flex me-2"
-              onClick={() => searchByFilter(FilterKind.Maturity, props.issue.project.maturity)}
-            />
+            {props.issue.project.maturity && (
+              <MaturityBadge
+                maturityLevel={props.issue.project.maturity}
+                className="d-none d-sm-flex me-2"
+                onClick={() => searchByFilter(FilterKind.Maturity, props.issue.project.maturity!)}
+              />
+            )}
             <FoundationBadge
               foundation={props.issue.project.foundation}
               onClick={() => searchByFilter(FilterKind.Foundation, props.issue.project.foundation)}
@@ -186,7 +188,12 @@ const Card = (props: Props) => {
                         onClick={() => searchByFilter(FilterKind.Project, props.issue.project.name)}
                       >
                         <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
-                          <span className={`text-truncate fw-semibold mb-0 lightText ${styles.title}`}>
+                          <span
+                            className={classNames('text-truncate fw-semibold mb-0 lightText', styles.title, {
+                              [styles.longProjectName]:
+                                (props.issue.project.display_name || props.issue.project.name).length > 23,
+                            })}
+                          >
                             {props.issue.project.display_name || props.issue.project.name}
                           </span>
                         </div>
@@ -199,11 +206,13 @@ const Card = (props: Props) => {
                       foundation={props.issue.project.foundation}
                       onClick={() => searchByFilter(FilterKind.Foundation, props.issue.project.foundation)}
                     />
-                    <MaturityBadge
-                      maturityLevel={props.issue.project.maturity}
-                      className="ms-2"
-                      onClick={() => searchByFilter(FilterKind.Maturity, props.issue.project.maturity)}
-                    />
+                    {props.issue.project.maturity && (
+                      <MaturityBadge
+                        maturityLevel={props.issue.project.maturity}
+                        className="ms-2"
+                        onClick={() => searchByFilter(FilterKind.Maturity, props.issue.project.maturity!)}
+                      />
+                    )}
                   </div>
 
                   <div className={`d-none d-md-flex flex-row mt-0 mt-md-1 align-items-center ${styles.info}`}>
@@ -223,10 +232,14 @@ const Card = (props: Props) => {
                       </ExternalLink>
                     )}
 
-                    <div className={`d-flex flex-row align-items-center ${styles.subtitle} ${styles.wrapperCalendar}`}>
-                      <GoCalendar className={`me-1 text-muted ${styles.calendarIcon}`} />
-                      <div>{moment(props.issue.project.accepted_at, 'YYYY-MM-DD').format('YYYY')}</div>
-                    </div>
+                    {props.issue.project.accepted_at && (
+                      <div
+                        className={`d-flex flex-row align-items-center ${styles.subtitle} ${styles.wrapperCalendar}`}
+                      >
+                        <GoCalendar className={`me-1 text-muted ${styles.calendarIcon}`} />
+                        <div>{moment(props.issue.project.accepted_at, 'YYYY-MM-DD').format('YYYY')}</div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

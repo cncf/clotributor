@@ -23,16 +23,33 @@ pub(crate) struct Foundation {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub(crate) struct Project {
     pub name: String,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub display_name: Option<String>,
+
     pub description: String,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub logo_url: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub logo_dark_url: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub devstats_url: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub accepted_at: Option<String>,
-    pub maturity: String,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub maturity: Option<String>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub maintainers_wanted: Option<MaintainersWanted>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub digest: Option<String>,
+
     pub repositories: Vec<Repository>,
 }
 
@@ -51,6 +68,8 @@ impl Project {
 pub(crate) struct Repository {
     pub name: String,
     pub url: String,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub exclude: Option<Vec<String>>,
 }
 
@@ -169,6 +188,7 @@ async fn process_foundation(
     for (name, project) in &projects_available {
         // Check if the project is already registered
         if let Some(registered_digest) = projects_registered.get(name) {
+            println!("{:?}", &project.digest);
             if registered_digest == &project.digest {
                 continue;
             }
@@ -346,7 +366,7 @@ mod tests {
                 projects_registered.insert(
                     "artifact-hub".to_string(),
                     Some(
-                        "cda91a89489ac52d9160edee5e41828995e9f37832951180d30d7103f5f4f1ee"
+                        "fa26e52492428be17cb753516b2f8aabc7b9ceb43c3f3d5706ad155ca7747840"
                             .to_string(),
                     ),
                 );
@@ -393,8 +413,8 @@ mod tests {
                     logo_dark_url: None,
                     devstats_url: Some("https://artifacthub.devstats.cncf.io/".to_string()),
                     accepted_at: Some("2020-06-23".to_string()),
-                    maturity: "sandbox".to_string(),
-                    digest: Some("cda91a89489ac52d9160edee5e41828995e9f37832951180d30d7103f5f4f1ee".to_string()),
+                    maturity: Some("sandbox".to_string()),
+                    digest: Some("fa26e52492428be17cb753516b2f8aabc7b9ceb43c3f3d5706ad155ca7747840".to_string()),
                     repositories: vec![Repository{
                         name: "artifact-hub".to_string(),
                         url: "https://github.com/artifacthub/hub".to_string(),
@@ -439,7 +459,7 @@ mod tests {
                 projects_registered.insert(
                     "artifact-hub".to_string(),
                     Some(
-                        "cda91a89489ac52d9160edee5e41828995e9f37832951180d30d7103f5f4f1ee"
+                        "fa26e52492428be17cb753516b2f8aabc7b9ceb43c3f3d5706ad155ca7747840"
                             .to_string(),
                     ),
                 );

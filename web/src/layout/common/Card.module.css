@@ -40,9 +40,13 @@
 }
 
 .title {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   line-height: 1.2;
   color: var(--color-gray-font);
+}
+
+.longProjectName {
+  font-size: 0.9rem;
 }
 
 .subtitle {
@@ -150,30 +154,13 @@
   margin-top: -1.3rem;
 }
 
-@media only screen and (max-width: 575.98px) {
-  .title {
-    font-size: 1rem;
-  }
-
-  .issueDesc {
-    font-size: 0.75rem;
-  }
-
-  .repoInfo {
-    font-size: 0.85rem;
-    width: 100%;
-    min-width: 0;
-  }
-
-  .repoLink,
-  .star {
-    font-size: 0.75rem;
-  }
-}
-
 @media only screen and (max-width: 1199.98px) {
   .title {
     font-size: 1rem;
+  }
+
+  .longProjectName {
+    font-size: 0.9rem;
   }
 
   .projectWrapper {
@@ -208,6 +195,25 @@
 }
 
 @media only screen and (max-width: 575.98px) {
+  .longProjectName {
+    font-size: 1rem;
+  }
+
+  .issueDesc {
+    font-size: 0.75rem;
+  }
+
+  .repoInfo {
+    font-size: 0.85rem;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .repoLink,
+  .star {
+    font-size: 0.75rem;
+  }
+
   .cardWrapper {
     padding: 0.5rem 0;
   }
