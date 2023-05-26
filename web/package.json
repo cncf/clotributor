@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "classnames": "^2.3.2",
-    "clo-ui": "https://github.com/cncf/clo-ui.git#0.1.9",
+    "clo-ui": "https://github.com/cncf/clo-ui.git#0.1.10",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "react": "^18.2.0",
@@ -19,9 +19,9 @@
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^29.5.1",
-    "@types/lodash": "^4.14.194",
-    "@types/node": "^20.2.3",
-    "@types/react": "^18.2.6",
+    "@types/lodash": "^4.14.195",
+    "@types/node": "^20.2.4",
+    "@types/react": "^18.2.7",
     "@types/react-dom": "^18.2.4",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -34,7 +34,7 @@
     "typescript": "^5.0.4"
   },
   "resolutions": {
-    "react-scripts/**/core-js-pure": "3.25.3"
+    "react-scripts/**/core-js-pure": "3.30.2"
   },
   "scripts": {
     "copy:static": "shx rm -rf src/static && shx mkdir src/static && shx cp -r public/static/* src",
