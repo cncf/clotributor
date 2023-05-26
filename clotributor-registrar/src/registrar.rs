@@ -188,7 +188,6 @@ async fn process_foundation(
     for (name, project) in &projects_available {
         // Check if the project is already registered
         if let Some(registered_digest) = projects_registered.get(name) {
-            println!("{:?}", &project.digest);
             if registered_digest == &project.digest {
                 continue;
             }
