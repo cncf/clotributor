@@ -31,9 +31,9 @@ The generated index can be searched from <https://clotributor.dev>. The followin
 - Use multiple words to refine the search. **Example:** [*gitops go*](https://clotributor.dev/search?ts_query_web=gitops+go)
 - Use `-` to exclude words from the search. **Example:** [*rust -webassembly*](https://clotributor.dev/search?ts_query_web=rust+-webassembly)
 - Put a phrase inside `double quotes` for an exact match. **Example:** [*"machine learning"*](https://clotributor.dev/search?ts_query_web=%22machine+learning%22)
-- Use `or` to combine multiple searches. **Example:** [*networking or security*](https://clotributor.dev/search?ts_query_web=networking+or+security)
+- Use `or` combine multiple searches. **Example:** [*networking or security*](https://clotributor.dev/search?ts_query_web=networking+or+security)
 
-It's possible to search by project name, repository name, description, topics or programming languages, as well as issue title and labels. Prefix matching for all of them is also supported (e.g. searching for `backst` should return issues from the `Backstage` project).
+It's possible to search by project name, repository name, description, topics, or programming languages, as well as issue titles and labels. Prefix matching for all of them is also supported (e.g. searching for `backst` should return issues from the `Backstage` project).
 
 ## Labels with special meaning
 
@@ -41,13 +41,13 @@ Some of the features of **CLOTributor** are controlled by some special labels (o
 
 #### Area
 
-- **docs**: the issue has a label thay contains the string `docs` or `documentation`.
+- **docs**: the issue has a label that contains the string `docs` or `documentation`.
 
 #### Kind
 
-- **bug**: the issue has a label thay contains the string `bug`.
-- **feature**: the issue has a label thay contains the string `feature`.
-- **enhancement**: the issue has a label thay contains the string `enhancement` or `improvement`.
+- **bug**: the issue has a label that contains the string `bug`.
+- **feature**: the issue has a label that contains the string `feature`.
+- **enhancement**: the issue has a label that contains the string `enhancement` or `improvement`.
 
 #### Difficulty
 
