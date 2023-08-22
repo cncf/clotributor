@@ -33,7 +33,7 @@ The generated index can be searched from <https://clotributor.dev>. The followin
 - Put a phrase inside `double quotes` for an exact match. **Example:** [*"machine learning"*](https://clotributor.dev/search?ts_query_web=%22machine+learning%22)
 - Use `or` combine multiple searches. **Example:** [*networking or security*](https://clotributor.dev/search?ts_query_web=networking+or+security)
 
-It's possible to search by project name, repository name, description, topics, or programming languages, as well as issue titles and labels. Prefix matching for all of them is also supported (e.g. searching for `backst` should return issues from the `Backstage` project).
+It's possible to search by project name, repository name, description, topics, or programming languages, as well as issue title and labels. Prefix matching for all of them is also supported (e.g. searching for `backst` should return issues from the `Backstage` project).
 
 ## Labels with special meaning
 
