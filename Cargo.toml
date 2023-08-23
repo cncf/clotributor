@@ -45,7 +45,7 @@ time = { version = "0.3.25", features = [
     "parsing",
     "serde",
 ] }
-tokio = { version = "1.31.0", features = [
+tokio = { version = "1.32.0", features = [
     "macros",
     "process",
     "rt-multi-thread",
