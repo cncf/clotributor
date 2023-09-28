@@ -1,7 +1,5 @@
 # CLOTributor
 
-[![CI](https://github.com/cncf/clotributor/workflows/CI/badge.svg)](https://github.com/cncf/clotributor/actions?query=workflow%3ACI)
-
 [**CLOTributor**](https://clotributor.dev) makes it easier to discover great opportunities to become a [**Cloud Native**](https://www.cncf.io) contributor.
 
 <table>
