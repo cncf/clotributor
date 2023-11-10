@@ -24,18 +24,18 @@ deadpool-postgres = { version = "0.11.0", features = ["serde"] }
 futures = "0.3.29"
 graphql_client = { version = "0.13.0", features = ["reqwest"] }
 hex = "0.4.3"
-http = "0.2.9"
+http = "0.2.10"
 hyper = "0.14.27"
 lazy_static = "1.4.0"
 mime = "0.3.17"
 mockall = "0.11.4"
 mockito = "1.2.0"
-openssl = { version = "0.10.57", features = ["vendored"] }
+openssl = { version = "0.10.59", features = ["vendored"] }
 postgres-openssl = "0.5.0"
 postgres-types = { version = "0.2.6", features = ["derive"] }
 regex = "1.10.2"
 reqwest = { version = "0.11.22", features = ["json"] }
-serde = { version = "1.0.190", features = ["derive"] }
+serde = { version = "1.0.192", features = ["derive"] }
 serde_json = "1.0.108"
 serde_qs = "0.12.0"
 serde_yaml = "0.9.27"
@@ -46,7 +46,7 @@ time = { version = "0.3.30", features = [
     "parsing",
     "serde",
 ] }
-tokio = { version = "1.33.0", features = [
+tokio = { version = "1.34.0", features = [
     "macros",
     "process",
     "rt-multi-thread",
