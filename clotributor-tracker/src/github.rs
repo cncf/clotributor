@@ -80,6 +80,7 @@ impl repo_view::RepoViewRepository {
                                 .expect("date to be valid");
 
                         // Prepare issue
+                        #[allow(clippy::cast_possible_truncation)]
                         let mut issue = Issue {
                             issue_id: node.database_id.unwrap(),
                             title: node.title.clone(),
@@ -134,8 +135,8 @@ impl GH for GHGraphQL {
             .saturating_sub(365.days())
             .format(&Iso8601::DEFAULT)?;
         let vars = repo_view::Variables {
-            owner,
             repo,
+            owner,
             issues_since,
         };
         let req_body = &RepoView::build_query(vars);

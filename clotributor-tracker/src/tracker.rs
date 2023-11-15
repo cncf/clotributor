@@ -39,6 +39,7 @@ pub(crate) struct Repository {
 
 impl Repository {
     /// Update repository's GitHub data.
+    #[allow(clippy::cast_possible_truncation)]
     fn update_gh_data(&mut self, gh_repo: &repo_view::RepoViewRepository) -> Result<bool> {
         // Description
         self.description = gh_repo.description.clone();
@@ -190,7 +191,7 @@ impl Issue {
     /// Populate the issue with information extracted from the labels, like the
     /// issue kind, its difficulty, etc.
     pub(crate) fn populate_from_labels(&mut self) {
-        for label in self.labels.iter() {
+        for label in &self.labels {
             // Area
             if label.contains("docs") || label.contains("documentation") {
                 self.area = Some(IssueArea::Docs);
@@ -359,7 +360,7 @@ async fn track_repository(
     let issues_in_db = db.get_repository_issues(repo.repository_id).await?;
 
     // Register/update new or outdated issues
-    for issue in issues_in_gh.iter_mut() {
+    for issue in &mut issues_in_gh {
         let digest_in_db = find_issue(issue.issue_id, &issues_in_db);
         if issue.digest != digest_in_db {
             db.register_issue(&repo, issue).await?;
@@ -651,6 +652,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[allow(clippy::too_many_lines)]
     async fn run_register_one_issue_and_unregister_another_successfully() {
         let cfg = setup_test_config(&[TOKEN1]);
         let mut db = MockDB::new();
@@ -791,7 +793,7 @@ mod tests {
                 "creds.githubTokens",
                 tokens
                     .iter()
-                    .map(|t| t.to_string())
+                    .map(std::string::ToString::to_string)
                     .collect::<Vec<String>>(),
             )
             .unwrap()

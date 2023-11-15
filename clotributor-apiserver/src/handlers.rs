@@ -38,7 +38,7 @@ struct RouterState {
 }
 
 /// Setup HTTP server router.
-pub(crate) fn setup_router(cfg: Arc<Config>, db: DynDB) -> Result<Router> {
+pub(crate) fn setup_router(cfg: &Arc<Config>, db: DynDB) -> Result<Router> {
     // Setup some paths
     let static_path = cfg.get_string("apiserver.staticPath")?;
     let index_path = Path::new(&static_path).join("index.html");
@@ -94,6 +94,7 @@ async fn search_issues(State(db): State<DynDB>, RawQuery(query): RawQuery) -> im
 }
 
 /// Helper for mapping any error into a `500 Internal Server Error` response.
+#[allow(clippy::needless_pass_by_value)]
 fn internal_error<E>(err: E) -> StatusCode
 where
     E: Into<Error> + Display,
@@ -211,6 +212,6 @@ mod tests {
             .unwrap()
             .build()
             .unwrap();
-        setup_router(Arc::new(cfg), Arc::new(db)).unwrap()
+        setup_router(&Arc::new(cfg), Arc::new(db)).unwrap()
     }
 }
