@@ -1,3 +1,6 @@
+#![warn(clippy::all, clippy::pedantic)]
+#![allow(clippy::doc_markdown)]
+
 use crate::db::PgDB;
 use anyhow::{Context, Result};
 use clap::Parser;
@@ -37,7 +40,7 @@ async fn main() -> Result<()> {
 
     // Setup logging
     if std::env::var_os("RUST_LOG").is_none() {
-        std::env::set_var("RUST_LOG", "clotributor_apiserver=debug,tower_http=debug")
+        std::env::set_var("RUST_LOG", "clotributor_apiserver=debug,tower_http=debug");
     }
     let s = tracing_subscriber::fmt().with_env_filter(EnvFilter::from_default_env());
     match cfg.get_string("log.format").as_deref() {
@@ -56,7 +59,7 @@ async fn main() -> Result<()> {
 
     // Setup and launch API HTTP server
     debug!("setting up apiserver");
-    let router = handlers::setup_router(cfg.clone(), db)?;
+    let router = handlers::setup_router(&cfg.clone(), db)?;
     let addr: SocketAddr = cfg.get_string("apiserver.addr")?.parse()?;
     info!("apiserver started");
     info!(%addr, "listening");
