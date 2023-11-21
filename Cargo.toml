@@ -24,7 +24,7 @@ deadpool-postgres = { version = "0.11.0", features = ["serde"] }
 futures = "0.3.29"
 graphql_client = { version = "0.13.0", features = ["reqwest"] }
 hex = "0.4.3"
-http = "0.2.10"
+http = "0.2.11"
 hyper = "0.14.27"
 lazy_static = "1.4.0"
 mime = "0.3.17"
