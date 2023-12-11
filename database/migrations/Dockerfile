@@ -4,7 +4,7 @@ RUN apk --no-cache add git
 RUN go install github.com/jackc/tern@latest
 
 # Build final image
-FROM alpine:3.18.4
+FROM alpine:3.19.0
 RUN addgroup -S clotributor && adduser -S clotributor -G clotributor
 USER clotributor
 WORKDIR /home/clotributor
