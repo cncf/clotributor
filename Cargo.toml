@@ -21,16 +21,16 @@ clap = { version = "4.4.11", features = ["derive"] }
 config = "0.13.4"
 deadpool = "0.10.0"
 deadpool-postgres = { version = "0.12.1", features = ["serde"] }
-futures = "0.3.29"
+futures = "0.3.30"
 graphql_client = { version = "0.13.0", features = ["reqwest"] }
 hex = "0.4.3"
 http = "0.2.11"
 hyper = "0.14.28"
 lazy_static = "1.4.0"
 mime = "0.3.17"
-mockall = "0.12.0"
+mockall = "0.12.1"
 mockito = "1.2.0"
-openssl = { version = "0.10.61", features = ["vendored"] }
+openssl = { version = "0.10.62", features = ["vendored"] }
 postgres-openssl = "0.5.0"
 postgres-types = { version = "0.2.6", features = ["derive"] }
 regex = "1.10.2"
@@ -38,7 +38,7 @@ reqwest = { version = "0.11.23", features = ["json"] }
 serde = { version = "1.0.193", features = ["derive"] }
 serde_json = "1.0.108"
 serde_qs = "0.12.0"
-serde_yaml = "0.9.28"
+serde_yaml = "0.9.29"
 sha2 = "0.10.8"
 time = { version = "0.3.31", features = [
     "formatting",
