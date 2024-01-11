@@ -24,6 +24,7 @@ const REPOSITORY_TRACK_TIMEOUT: u64 = 300;
 
 /// Repository information.
 #[derive(Debug, Clone, PartialEq, Default)]
+#[allow(clippy::struct_field_names)]
 pub(crate) struct Repository {
     pub repository_id: Uuid,
     pub name: String,
@@ -128,6 +129,7 @@ pub enum IssueDifficulty {
 
 /// Issue information.
 #[derive(Debug, Clone, PartialEq)]
+#[allow(clippy::struct_field_names)]
 pub(crate) struct Issue {
     pub issue_id: i64,
     pub title: String,
@@ -250,6 +252,7 @@ impl Issue {
 
 /// Texts used to build the issue's text search document.
 #[derive(Debug, Clone, PartialEq)]
+#[allow(clippy::struct_field_names)]
 pub(crate) struct IssueTsTexts {
     pub weight_a: String,
     pub weight_b: String,

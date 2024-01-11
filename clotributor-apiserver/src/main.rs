@@ -11,7 +11,7 @@ use postgres_openssl::MakeTlsConnector;
 use std::net::SocketAddr;
 use std::path::PathBuf;
 use std::sync::Arc;
-use tokio::signal;
+use tokio::{net::TcpListener, signal};
 use tracing::{debug, info};
 use tracing_subscriber::EnvFilter;
 
@@ -61,10 +61,10 @@ async fn main() -> Result<()> {
     debug!("setting up apiserver");
     let router = handlers::setup_router(&cfg.clone(), db)?;
     let addr: SocketAddr = cfg.get_string("apiserver.addr")?.parse()?;
+    let listener = TcpListener::bind(addr).await?;
     info!("apiserver started");
     info!(%addr, "listening");
-    axum::Server::bind(&addr)
-        .serve(router.into_make_service())
+    axum::serve(listener, router)
         .with_graceful_shutdown(shutdown_signal())
         .await?;
     info!("apiserver stopped");
