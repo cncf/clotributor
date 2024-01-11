@@ -1,7 +1,7 @@
 use crate::db::{DynDB, SearchIssuesInput};
 use anyhow::{Error, Result};
 use axum::{
-    body::Full,
+    body::Body,
     extract::{FromRef, RawQuery, State},
     http::{
         header::{CACHE_CONTROL, CONTENT_TYPE},
@@ -72,7 +72,7 @@ async fn issues_filters(State(db): State<DynDB>) -> impl IntoResponse {
     Response::builder()
         .header(CACHE_CONTROL, format!("max-age={DEFAULT_API_MAX_AGE}"))
         .header(CONTENT_TYPE, APPLICATION_JSON.as_ref())
-        .body(Full::from(filters))
+        .body(Body::from(filters))
         .map_err(internal_error)
 }
 
@@ -89,7 +89,7 @@ async fn search_issues(State(db): State<DynDB>, RawQuery(query): RawQuery) -> im
         .header(CACHE_CONTROL, format!("max-age={DEFAULT_API_MAX_AGE}"))
         .header(CONTENT_TYPE, APPLICATION_JSON.as_ref())
         .header(PAGINATION_TOTAL_COUNT, count.to_string())
-        .body(Full::from(issues))
+        .body(Body::from(issues))
         .map_err(internal_error)
 }
 
@@ -107,7 +107,10 @@ where
 mod tests {
     use super::*;
     use crate::db::MockDB;
-    use axum::{body::Body, http::Request};
+    use axum::{
+        body::{to_bytes, Body},
+        http::Request,
+    };
     use futures::future;
     use mockall::predicate::eq;
     use tower::ServiceExt;
@@ -137,7 +140,7 @@ mod tests {
         );
         assert_eq!(response.headers()[CONTENT_TYPE], APPLICATION_JSON.as_ref());
         assert_eq!(
-            hyper::body::to_bytes(response.into_body()).await.unwrap(),
+            to_bytes(response.into_body(), usize::MAX).await.unwrap(),
             r#"{"some": "filters"}"#.to_string(),
         );
     }
@@ -201,7 +204,7 @@ mod tests {
         assert_eq!(response.headers()[CONTENT_TYPE], APPLICATION_JSON.as_ref());
         assert_eq!(response.headers()[PAGINATION_TOTAL_COUNT], "1");
         assert_eq!(
-            hyper::body::to_bytes(response.into_body()).await.unwrap(),
+            to_bytes(response.into_body(), usize::MAX).await.unwrap(),
             r#"[{"issue": "info"}]"#.to_string(),
         );
     }
