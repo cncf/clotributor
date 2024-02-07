@@ -26,7 +26,7 @@ begin
         p_project->>'logo_dark_url',
         p_project->>'devstats_url',
         (p_project->>'accepted_at')::date,
-        (p_project->>'maturity')::maturity,
+        (p_project->>'maturity'),
         p_project->'maintainers_wanted',
         p_project->>'digest',
         p_foundation_id

@@ -22,11 +22,14 @@ returns json as $$
             'key', 'maturity',
             'options', (
                 select coalesce(json_agg(json_build_object(
-                    'name', initcap(maturity::text),
-                    'value', maturity::text
+                    'name', initcap(maturity),
+                    'value', maturity
                 )), '[]')
                 from (
-                    select unnest(enum_range(null::maturity)) as maturity
+                    select distinct maturity
+                    from project
+                    where maturity is not null
+                    order by maturity asc
                 ) m
             )
         ),

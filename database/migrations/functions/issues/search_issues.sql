@@ -105,7 +105,7 @@ begin
             p.foundation_id = any(v_foundation) else true end
         and
             case when cardinality(v_maturity) > 0 then
-            p.maturity::text = any(v_maturity) else true end
+            p.maturity = any(v_maturity) else true end
         and
             case when cardinality(v_project) > 0 then
             p.name = any(v_project) else true end
