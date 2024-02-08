@@ -139,7 +139,6 @@ const Card = (props: Props) => {
                 maturityLevel={props.issue.project.maturity}
                 maxLength={14}
                 className="d-none d-sm-flex me-2"
-                onClick={() => searchByFilter(FilterKind.Maturity, props.issue.project.maturity!)}
               />
             )}
             <FoundationBadge
@@ -210,12 +209,7 @@ const Card = (props: Props) => {
                       onClick={() => searchByFilter(FilterKind.Foundation, props.issue.project.foundation)}
                     />
                     {props.issue.project.maturity && (
-                      <MaturityBadge
-                        maturityLevel={props.issue.project.maturity}
-                        className="ms-2"
-                        maxLength={14}
-                        onClick={() => searchByFilter(FilterKind.Maturity, props.issue.project.maturity!)}
-                      />
+                      <MaturityBadge maturityLevel={props.issue.project.maturity} className="ms-2" maxLength={14} />
                     )}
                   </div>
 

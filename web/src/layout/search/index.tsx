@@ -1,6 +1,8 @@
 import classNames from 'classnames';
 import {
+  FilterOption,
   FilterSection,
+  Foundation,
   Loading,
   NoData,
   Pagination,
@@ -9,7 +11,7 @@ import {
   Sidebar,
   SortOptions,
 } from 'clo-ui';
-import { isEmpty, isUndefined } from 'lodash';
+import { isEmpty, isNull, isUndefined } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
 import { FaFilter } from 'react-icons/fa';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
@@ -18,7 +20,7 @@ import { useNavigate, useOutletContext, useSearchParams } from 'react-router-dom
 import API from '../../api';
 import { AppContext, updateLimit, updateSort } from '../../context/AppContextProvider';
 import { DEFAULT_SORT_BY, SORT_OPTIONS } from '../../data';
-import { Issue, OutletContext, SearchFiltersURL, SortBy } from '../../types';
+import { FilterKind, FiltersExtra, Issue, OutletContext, SearchFiltersURL, SortBy } from '../../types';
 import buildSearchParams from '../../utils/buildSearchParams';
 import prepareQueryString from '../../utils/prepareQueryString';
 import Card from '../common/Card';
@@ -39,17 +41,22 @@ const Search = () => {
   const [text, setText] = useState<string | undefined>();
   const [mentorAvailable, setMentorAvailable] = useState<boolean>(false);
   const [goodFirstIssue, setGoodFirstIssue] = useState<boolean>(false);
+  const [fullFilters, setFullFilters] = useState<FilterSection[] | undefined>(undefined);
+  const [cleanFilters, setCleanFilters] = useState<FilterSection[] | undefined>(undefined);
   const [filters, setFilters] = useState<FilterSection[] | undefined>(undefined);
+  const [filtersExtra, setFiltersExtra] = useState<FiltersExtra | undefined>();
   const [activeFilters, setActiveFilters] = useState<FiltersProp>({});
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
   const [issues, setIssues] = useState<Issue[] | null | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  const [selectedFoundation, setSelectedFoundation] = useState<Foundation | null>(null);
   // Check if some filters are active
   const ifActiveFilters = !isEmpty(activeFilters) || mentorAvailable || goodFirstIssue;
 
   const onResetFilters = (): void => {
+    setSelectedFoundation(null);
     navigate({
       pathname: '/search',
       search: prepareQueryString({
@@ -69,19 +76,18 @@ const Search = () => {
       let newFilters = isUndefined(currentFilters[name]) ? [] : currentFilters[name].slice();
       if (checked) {
         newFilters.push(value);
-        switch (name) {
-          case 'project':
-            additionalChanges = { foundation: [], maturity: [] };
-            break;
-          case 'foundation':
-          case 'maturity':
-            additionalChanges = { project: [] };
-            break;
-          default:
-            break;
+        if (name === FilterKind.Foundation) {
+          if (newFilters.length > 1) {
+            additionalChanges = { project: [], maturity: [] };
+          }
         }
       } else {
         newFilters = newFilters.filter((el) => el !== value);
+        if (name === FilterKind.Foundation) {
+          if (newFilters.length !== 1) {
+            additionalChanges = { project: [], maturity: [] };
+          }
+        }
       }
 
       updateCurrentPage({
@@ -158,6 +164,31 @@ const Search = () => {
     return pNumber && limit ? (pNumber - 1) * limit : 0;
   };
 
+  const prepareFilters = (foundation: Foundation, allFilters?: FilterSection[], extra?: FiltersExtra) => {
+    let currentFilters = !isUndefined(allFilters) ? [...allFilters] : [];
+    if (foundation && !isUndefined(extra)) {
+      [FilterKind.Maturity, FilterKind.Project].forEach((k: FilterKind) => {
+        const kind = k as FilterKind.Project | FilterKind.Maturity;
+        const objIndex = currentFilters.findIndex((f: FilterSection) => (f.key || f.title) === k);
+        const values = extra[kind][foundation];
+        const activeValues = (currentFilters[objIndex].options as FilterOption[]).filter((opt: FilterOption) =>
+          values.includes(opt.value || opt.name)
+        );
+        currentFilters[objIndex] = { ...currentFilters[objIndex], options: activeValues };
+      });
+    }
+    setFilters(currentFilters);
+  };
+
+  const cleanFullFilters = (f: FilterSection[]): FilterSection[] => {
+    let tmpFilters = [...f];
+    [FilterKind.Maturity, FilterKind.Project].forEach((k: FilterKind) => {
+      const objIndex = tmpFilters.findIndex((f: FilterSection) => (f.key || f.title) === k);
+      tmpFilters[objIndex] = { ...tmpFilters[objIndex], options: [] };
+    });
+    return tmpFilters;
+  };
+
   useEffect(() => {
     async function getIssuesFilters() {
       setIsLoading(true);
@@ -165,7 +196,16 @@ const Search = () => {
       scrollToTop();
 
       try {
-        setFilters(await API.getIssuesFilters());
+        const response = await API.getIssuesFilters();
+        setFilters(response.filters);
+        setFullFilters(response.filters);
+        setCleanFilters(cleanFullFilters(response.filters));
+        setFiltersExtra(response.extra);
+
+        const selectedFoundations = searchParams.getAll('foundation');
+        if (selectedFoundations.length === 1) {
+          prepareFilters(selectedFoundations[0] as Foundation, response.filters, response.extra);
+        }
       } catch {
         setFilters([]);
       }
@@ -180,6 +220,19 @@ const Search = () => {
     setGoodFirstIssue(formattedParams.good_first_issue || false);
     setActiveFilters(formattedParams.filters || {});
     setPageNumber(formattedParams.pageNumber);
+
+    const foundationActive: Foundation | null =
+      !isUndefined(formattedParams.filters) &&
+      formattedParams.filters[FilterKind.Foundation] &&
+      formattedParams.filters[FilterKind.Foundation].length === 1
+        ? (formattedParams.filters[FilterKind.Foundation][0] as Foundation)
+        : null;
+
+    if (foundationActive) {
+      setSelectedFoundation(foundationActive);
+    } else {
+      setSelectedFoundation(null);
+    }
 
     async function searchIssues() {
       setIsLoading(true);
@@ -218,6 +271,17 @@ const Search = () => {
   }, [searchParams, limit, sort.by]);
   /* eslint-enable react-hooks/exhaustive-deps */
 
+  useEffect(() => {
+    if (!isUndefined(cleanFilters)) {
+      if (isNull(selectedFoundation)) {
+        setFilters(cleanFilters);
+      } else {
+        prepareFilters(selectedFoundation, fullFilters, filtersExtra);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedFoundation]);
+
   return (
     <>
       {/* Subnavbar */}
@@ -226,61 +290,60 @@ const Search = () => {
           <div className="d-flex flex-column w-100">
             <div className="d-flex flex-column flex-sm-row align-items-center justify-content-between flex-nowrap">
               <div className="d-flex flex-row flex-lg-column align-items-center align-items-lg-start w-100 text-truncate">
-                {!isUndefined(filters) && filters.length > 0 && (
-                  <Sidebar
-                    label="Filters"
-                    className="d-inline-block d-lg-none me-2"
-                    wrapperClassName="d-inline-block px-4"
-                    buttonType={classNames(
-                      'btn-primary btn-sm rounded-circle position-relative',
-                      styles.btnMobileFilters,
-                      { [styles.filtersBadge]: ifActiveFilters }
-                    )}
-                    buttonIcon={<FaFilter />}
-                    closeButtonClassName={styles.closeSidebar}
-                    closeButton={
-                      <>
-                        {isLoading ? (
-                          <>
-                            <Loading spinnerClassName={styles.spinner} noWrapper smallSize />
-                            <span className="ms-2">Searching...</span>
-                          </>
-                        ) : (
-                          <>See {total} results</>
-                        )}
-                      </>
-                    }
-                    leftButton={
-                      <>
-                        {ifActiveFilters && (
-                          <div className="d-flex align-items-center">
-                            <IoMdCloseCircleOutline className={`text-dark ${styles.resetBtnDecorator}`} />
-                            <button
-                              className="btn btn-link btn-sm p-0 ps-1 text-dark"
-                              onClick={onResetFilters}
-                              aria-label="Reset filters"
-                            >
-                              Reset
-                            </button>
-                          </div>
-                        )}
-                      </>
-                    }
-                    header={<div className="h6 text-uppercase mb-0 flex-grow-1">Filters</div>}
-                  >
-                    <div role="menu">
-                      <Filters
-                        device="mobile"
-                        filters={filters}
-                        activeFilters={activeFilters}
-                        mentorAvailable={mentorAvailable}
-                        goodFirstIssue={goodFirstIssue}
-                        onChange={onFiltersChange}
-                        visibleTitle={false}
-                      />
-                    </div>
-                  </Sidebar>
-                )}
+                <Sidebar
+                  label="Filters"
+                  className="d-inline-block d-lg-none me-2"
+                  wrapperClassName="d-inline-block px-4"
+                  buttonType={classNames(
+                    'btn-primary btn-sm rounded-circle position-relative',
+                    styles.btnMobileFilters,
+                    { [styles.filtersBadge]: ifActiveFilters }
+                  )}
+                  buttonIcon={<FaFilter />}
+                  closeButtonClassName={styles.closeSidebar}
+                  closeButton={
+                    <>
+                      {isLoading ? (
+                        <>
+                          <Loading spinnerClassName={styles.spinner} noWrapper smallSize />
+                          <span className="ms-2">Searching...</span>
+                        </>
+                      ) : (
+                        <>See {total} results</>
+                      )}
+                    </>
+                  }
+                  leftButton={
+                    <>
+                      {ifActiveFilters && (
+                        <div className="d-flex align-items-center">
+                          <IoMdCloseCircleOutline className={`text-dark ${styles.resetBtnDecorator}`} />
+                          <button
+                            className="btn btn-link btn-sm p-0 ps-1 text-dark"
+                            onClick={onResetFilters}
+                            aria-label="Reset filters"
+                          >
+                            Reset
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  }
+                  header={<div className="h6 text-uppercase mb-0 flex-grow-1">Filters</div>}
+                >
+                  <div role="menu">
+                    <Filters
+                      device="mobile"
+                      filters={filters || []}
+                      disabledSections={isNull(selectedFoundation) ? [FilterKind.Maturity, FilterKind.Project] : []}
+                      activeFilters={activeFilters}
+                      mentorAvailable={mentorAvailable}
+                      goodFirstIssue={goodFirstIssue}
+                      onChange={onFiltersChange}
+                      visibleTitle={false}
+                    />
+                  </div>
+                </Sidebar>
 
                 <div className="text-truncate fw-bold w-100 Search_searchResults__hU0s2" role="status">
                   {total > 0 && (
@@ -327,6 +390,7 @@ const Search = () => {
           <div className="d-flex flex-column w-100">
             <FiltersInLine
               filters={filters || []}
+              disabledSections={isNull(selectedFoundation) ? [FilterKind.Maturity, FilterKind.Project] : []}
               activeFilters={activeFilters}
               onChange={onFiltersChange}
               onResetFilters={onResetFilters}

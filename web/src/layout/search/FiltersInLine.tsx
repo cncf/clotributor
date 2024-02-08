@@ -1,10 +1,18 @@
 import classNames from 'classnames';
-import { DotsLoading, Dropdown, FilterOption, FilterSection, FiltersSection, RefFiltersSection } from 'clo-ui';
+import {
+  DotsLoading,
+  Dropdown,
+  ElementWithTooltip,
+  FilterOption,
+  FilterSection,
+  FiltersSection,
+  RefFiltersSection,
+} from 'clo-ui';
 import { isUndefined } from 'lodash';
 import React, { useEffect, useRef } from 'react';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 
-import { Filter } from '../../types';
+import { Filter, FilterKind } from '../../types';
 import styles from './FiltersInLine.module.css';
 
 interface Props {
@@ -12,6 +20,7 @@ interface Props {
   activeFilters: {
     [key: string]: string[];
   };
+  disabledSections: FilterKind[];
   projects?: Filter;
   mentorAvailable: boolean;
   goodFirstIssue: boolean;
@@ -24,6 +33,7 @@ interface Props {
 
 interface FiltersProps {
   activeFilters: string[];
+  disabled: boolean;
   contentClassName?: string;
   section: FilterSection;
   device: string;
@@ -60,6 +70,7 @@ const Filters = (props: FiltersProps) => {
         withSearchBar={props.withSearchBar}
         onChange={onChangeFilter}
         visibleTitle={false}
+        disabled={props.disabled}
       />
     </div>
   );
@@ -101,6 +112,7 @@ const FiltersInLine = (props: Props) => {
           {props.filters.map((section: FilterSection, index: number) => {
             const isSearchSection = section.key && ['project', 'language'].includes(section.key);
             const activeFilters = section.key ? props.activeFilters[section.key] : getActiveFiltersForOther();
+            const isDisabled = props.disabledSections.includes((section.key || section.title) as FilterKind);
 
             return (
               <React.Fragment key={`sec_${section.key}`}>
@@ -109,28 +121,40 @@ const FiltersInLine = (props: Props) => {
                     'me-2 me-lg-3 me-xl-4': index !== props.filters.length - 1,
                   })}
                 >
-                  <Dropdown
-                    label="Filters"
-                    btnContent={section.title}
-                    btnClassName={`btn btn-md btn-light text-decoration-none text-start w-100 ${styles.btn}`}
-                    dropdownClassName={classNames(
-                      styles.dropdown,
-                      {
-                        [styles.projectDropdown]: section.key === 'project',
-                      },
-                      {
-                        [styles.languageDropdown]: section.key === 'language',
-                      }
-                    )}
-                  >
-                    <Filters
-                      section={section}
-                      device={props.device}
-                      activeFilters={activeFilters}
-                      withSearchBar={isSearchSection ? true : undefined}
-                      onChange={props.onChange}
-                    />
-                  </Dropdown>
+                  <ElementWithTooltip
+                    element={
+                      <Dropdown
+                        label="Filters"
+                        btnContent={section.title}
+                        btnClassName={`btn btn-md btn-light text-decoration-none text-start w-100 ${styles.btn}`}
+                        dropdownClassName={classNames(
+                          styles.dropdown,
+                          {
+                            [styles.projectDropdown]: section.key === 'project',
+                          },
+                          {
+                            [styles.languageDropdown]: section.key === 'language',
+                          }
+                        )}
+                        disabled={isDisabled}
+                      >
+                        <Filters
+                          section={section}
+                          disabled={isDisabled}
+                          device={props.device}
+                          activeFilters={activeFilters}
+                          withSearchBar={isSearchSection ? true : undefined}
+                          onChange={props.onChange}
+                        />
+                      </Dropdown>
+                    }
+                    tooltipWidth={210}
+                    tooltipArrowClassName={styles.tooltipArrow}
+                    tooltipMessage="Please select a foundation to use this filter"
+                    visibleTooltip={isDisabled}
+                    active
+                  />
+
                   {activeFilters && (
                     <div className="mt-2">
                       {activeFilters.map((filter: string) => {

@@ -2,7 +2,7 @@ import { isEmpty, isNull, isUndefined } from 'lodash';
 import isArray from 'lodash/isArray';
 
 import { DEFAULT_SORT_BY } from '../data';
-import { Error, ErrorKind, Filter, Issue, SearchQuery } from '../types';
+import { Error, ErrorKind, FiltersReponse, Issue, SearchQuery } from '../types';
 
 interface FetchOptions {
   method: 'POST' | 'GET' | 'PUT' | 'DELETE' | 'HEAD';
@@ -104,7 +104,7 @@ class API_CLASS {
       .catch((error) => Promise.reject(error));
   }
 
-  public getIssuesFilters(): Promise<Filter[]> {
+  public getIssuesFilters(): Promise<FiltersReponse> {
     return this.apiFetch({
       url: `${this.API_BASE_URL}/filters/issues`,
     });
