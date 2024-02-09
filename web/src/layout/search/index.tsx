@@ -57,6 +57,7 @@ const Search = () => {
 
   const onResetFilters = (): void => {
     setSelectedFoundation(null);
+    setFilters(cleanFilters);
     navigate({
       pathname: '/search',
       search: prepareQueryString({
@@ -229,8 +230,10 @@ const Search = () => {
         : null;
 
     if (foundationActive) {
+      prepareFilters(foundationActive, fullFilters, filtersExtra);
       setSelectedFoundation(foundationActive);
     } else {
+      setFilters(cleanFilters);
       setSelectedFoundation(null);
     }
 
@@ -270,17 +273,6 @@ const Search = () => {
     /* eslint-disable react-hooks/exhaustive-deps */
   }, [searchParams, limit, sort.by]);
   /* eslint-enable react-hooks/exhaustive-deps */
-
-  useEffect(() => {
-    if (!isUndefined(cleanFilters)) {
-      if (isNull(selectedFoundation)) {
-        setFilters(cleanFilters);
-      } else {
-        prepareFilters(selectedFoundation, fullFilters, filtersExtra);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedFoundation]);
 
   return (
     <>
