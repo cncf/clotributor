@@ -10,7 +10,7 @@
     "moment": "^2.30.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-icons": "^4.12.0",
+    "react-icons": "^5.0.1",
     "react-router-dom": "^6.21.1",
     "source-map-explorer": "^2.5.3"
   },
