@@ -3,6 +3,8 @@ import { isEmpty } from 'lodash';
 import React from 'react';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 
+import { FilterKind } from '../../types';
+
 interface Props {
   visibleTitle: boolean;
   filters: FilterSection[];
@@ -14,6 +16,7 @@ interface Props {
   onChange: (name: string, value: string, checked: boolean, type?: string) => void;
   onResetFilters?: () => void;
   device: string;
+  disabledSections: FilterKind[];
 }
 
 const Filters = (props: Props) => {
@@ -47,10 +50,17 @@ const Filters = (props: Props) => {
 
       {props.filters.map((section: FilterSection) => {
         const activeFilters = section.key ? props.activeFilters[section.key] : getActiveFiltersForOther();
-        // Does not render project and language filters on mobile version
-        if (section.key && ['project', 'language'].includes(section.key)) return null;
+        const key = (section.key || section.title) as FilterKind;
+        // Does not render project and language filters or disabled sections on mobile version
+        if (
+          [FilterKind.Language, FilterKind.Project].includes(key) ||
+          props.disabledSections.includes(key) ||
+          section.options.length === 0
+        )
+          return null;
+
         return (
-          <React.Fragment key={`sec_${section.key}`}>
+          <React.Fragment key={`sec_${key}`}>
             <FiltersSection
               device={props.device}
               activeFilters={activeFilters}

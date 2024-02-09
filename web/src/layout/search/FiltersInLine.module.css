@@ -63,6 +63,10 @@
   max-height: 300px;
 }
 
+.tooltipArrow {
+  margin-top: 7px;
+}
+
 .dropdown label {
   font-size: 0.8rem;
 }

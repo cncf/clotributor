@@ -115,10 +115,24 @@ export interface SearchTipItem {
   example: string;
 }
 
+export interface FiltersReponse {
+  filters: Filter[];
+  extra: FiltersExtra;
+}
+
 export interface Filter {
   title: string;
   key: string;
   options: FilterOption[];
+}
+
+export interface FiltersExtra {
+  [FilterKind.Maturity]: {
+    [key in Foundation]: string[];
+  };
+  [FilterKind.Project]: {
+    [key in Foundation]: string[];
+  };
 }
 
 export interface FilterOption {
