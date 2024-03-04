@@ -587,7 +587,7 @@ mod tests {
         let result = run(&cfg, Arc::new(db), Arc::new(gh)).await;
         assert_eq!(
             result.unwrap_err().to_string(),
-            r#"configuration property "creds.githubTokens" not found"#
+            r#"configuration property "creds.githubtokens" not found"#
         );
     }
 
