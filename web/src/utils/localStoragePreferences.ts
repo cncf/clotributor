@@ -90,7 +90,7 @@ export class LocalStoragePreferences {
   }
 
   public setPrefs(prefs: Prefs) {
-    let preferences = { ...this.savedPreferences, guest: prefs };
+    const preferences = { ...this.savedPreferences, guest: prefs };
     this.savedPreferences = preferences;
 
     try {
@@ -101,11 +101,10 @@ export class LocalStoragePreferences {
   }
 
   public getPrefs(): Prefs {
-    let prefs: Prefs = {
+    return {
       ...DEFAULT_PREFS,
       ...this.savedPreferences.guest,
     };
-    return prefs;
   }
 }
 

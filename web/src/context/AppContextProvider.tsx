@@ -25,6 +25,7 @@ type Action =
 
 export const AppContext = createContext<{
   ctx: AppState;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dispatch: Dispatch<any>;
 }>({
   ctx: initialState,
@@ -56,9 +57,10 @@ export function updateActiveStyleSheet(current: string) {
 
 export function appReducer(state: AppState, action: Action) {
   let prefs;
+  let effective;
   switch (action.type) {
     case 'updateTheme':
-      const effective = action.theme === 'automatic' ? detectActiveThemeMode() : action.theme;
+      effective = action.theme === 'automatic' ? detectActiveThemeMode() : action.theme;
       prefs = {
         ...state.prefs,
         theme: {
@@ -138,7 +140,7 @@ function AppContextProvider(props: Props) {
         : activeProfilePrefs.theme.configured || activeProfilePrefs.theme.effective; // Use effective theme if configured is undefined
     updateActiveStyleSheet(theme);
     setActiveInitialTheme(theme);
-  }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
+  }, []);
 
   useSystemThemeMode(ctx.prefs.theme.configured === 'automatic', dispatch);
 

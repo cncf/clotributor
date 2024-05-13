@@ -140,7 +140,7 @@ const Search = () => {
     });
   };
 
-  const updateCurrentPage = (searchChanges: any) => {
+  const updateCurrentPage = (searchChanges: object) => {
     navigate({
       pathname: '/search',
       search: prepareQueryString({
@@ -166,7 +166,7 @@ const Search = () => {
   };
 
   const prepareFilters = (foundation: Foundation, allFilters?: FilterSection[], extra?: FiltersExtra) => {
-    let currentFilters = !isUndefined(allFilters) ? [...allFilters] : [];
+    const currentFilters = !isUndefined(allFilters) ? [...allFilters] : [];
     if (foundation && !isUndefined(extra)) {
       [FilterKind.Maturity, FilterKind.Project].forEach((k: FilterKind) => {
         const kind = k as FilterKind.Project | FilterKind.Maturity;
@@ -182,7 +182,7 @@ const Search = () => {
   };
 
   const cleanFullFilters = (f: FilterSection[]): FilterSection[] => {
-    let tmpFilters = [...f];
+    const tmpFilters = [...f];
     [FilterKind.Maturity, FilterKind.Project].forEach((k: FilterKind) => {
       const objIndex = tmpFilters.findIndex((f: FilterSection) => (f.key || f.title) === k);
       tmpFilters[objIndex] = { ...tmpFilters[objIndex], options: [] };
@@ -212,7 +212,7 @@ const Search = () => {
       }
     }
     getIssuesFilters();
-  }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
+  }, []);
 
   useEffect(() => {
     const formattedParams = buildSearchParams(searchParams);
@@ -268,11 +268,7 @@ const Search = () => {
     } else {
       searchIssues();
     }
-
-    // prettier-ignore
-    /* eslint-disable react-hooks/exhaustive-deps */
   }, [searchParams, limit, sort.by]);
-  /* eslint-enable react-hooks/exhaustive-deps */
 
   return (
     <>
