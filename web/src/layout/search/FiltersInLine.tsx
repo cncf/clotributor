@@ -78,7 +78,7 @@ const Filters = (props: FiltersProps) => {
 
 const FiltersInLine = (props: Props) => {
   const getActiveFiltersForOther = (): string[] => {
-    let otherFilters = [];
+    const otherFilters = [];
     if (props.mentorAvailable) {
       otherFilters.push('mentor_available');
     }

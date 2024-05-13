@@ -51,6 +51,13 @@
   color: var(--color-font) !important;
 }
 
+[data-theme='dark'] .btn:disabled,
+[data-theme='dark'] .btn.disabled,
+[data-theme='dark'] fieldset:disabled .btn {
+  background-color: rgba(255, 255, 255, 0.15);
+  opacity: 0.5;
+}
+
 [data-theme='dark'] .dropdown {
   background-color: var(--bg-color);
 }

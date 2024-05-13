@@ -98,7 +98,7 @@ const Card = (props: Props) => {
     }
 
     cleanTopics();
-  }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
+  }, []);
 
   return (
     <CardWrapper className={styles.card} wrapperClassName={styles.cardWrapper} hoverable={false}>
