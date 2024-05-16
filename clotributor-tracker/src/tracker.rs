@@ -43,10 +43,10 @@ impl Repository {
     #[allow(clippy::cast_possible_truncation)]
     fn update_gh_data(&mut self, gh_repo: &repo_view::RepoViewRepository) -> Result<bool> {
         // Description
-        self.description = gh_repo.description.clone();
+        self.description.clone_from(&gh_repo.description);
 
         // Homepage url
-        self.homepage_url = gh_repo.homepage_url.clone();
+        self.homepage_url.clone_from(&gh_repo.homepage_url);
 
         // Languages
         self.languages = gh_repo.languages.as_ref().and_then(|languages| {

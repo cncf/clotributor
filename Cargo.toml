@@ -13,19 +13,19 @@ edition = "2021"
 rust-version = "1.65"
 
 [workspace.dependencies]
-anyhow = "1.0.80"
-async-trait = "0.1.77"
-axum = { version = "0.7.4", features = ["macros"] }
+anyhow = "1.0.83"
+async-trait = "0.1.80"
+axum = { version = "0.7.5", features = ["macros"] }
 bincode = "1.3.3"
-clap = { version = "4.5.1", features = ["derive"] }
+clap = { version = "4.5.4", features = ["derive"] }
 config = "0.13.4"
-deadpool = "0.10.0"
-deadpool-postgres = { version = "0.12.1", features = ["serde"] }
+deadpool = "0.12.1"
+deadpool-postgres = { version = "0.13.2", features = ["serde"] }
 futures = "0.3.30"
-graphql_client = { version = "0.13.0", features = ["reqwest"] }
+graphql_client = { version = "0.14.0", features = ["reqwest"] }
 hex = "0.4.3"
-http = "1.0.0"
-hyper = "1.2.0"
+http = "1.1.0"
+hyper = "1.3.1"
 lazy_static = "1.4.0"
 mime = "0.3.17"
 mockall = "0.12.1"
@@ -33,20 +33,20 @@ mockito = "1.4.0"
 openssl = { version = "0.10.64", features = ["vendored"] }
 postgres-openssl = "0.5.0"
 postgres-types = { version = "0.2.6", features = ["derive"] }
-regex = "1.10.3"
-reqwest = { version = "0.11.24", features = ["json"] }
-serde = { version = "1.0.197", features = ["derive"] }
-serde_json = "1.0.114"
-serde_qs = "0.12.0"
-serde_yaml = "0.9.32"
+regex = "1.10.4"
+reqwest = { version = "0.12.4", features = ["json"] }
+serde = { version = "1.0.202", features = ["derive"] }
+serde_json = "1.0.117"
+serde_qs = "0.13.0"
+serde_yaml = "0.9.34"
 sha2 = "0.10.8"
-time = { version = "0.3.34", features = [
+time = { version = "0.3.36", features = [
     "formatting",
     "macros",
     "parsing",
     "serde",
 ] }
-tokio = { version = "1.36.0", features = [
+tokio = { version = "1.37.0", features = [
     "macros",
     "process",
     "rt-multi-thread",
@@ -62,4 +62,4 @@ tower = "0.4.13"
 tower-http = { version = "0.5.2", features = ["fs", "set-header", "trace"] }
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter", "json"] }
-uuid = { version = "1.7.0", features = ["serde"] }
+uuid = { version = "1.8.0", features = ["serde"] }
