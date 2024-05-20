@@ -1,5 +1,5 @@
 use crate::db::DynDB;
-use anyhow::{format_err, Context, Error, Result};
+use anyhow::{bail, format_err, Context, Error, Result};
 use config::Config;
 use futures::stream::{self, StreamExt};
 use reqwest::StatusCode;
@@ -158,10 +158,10 @@ async fn process_foundation(
     // Fetch foundation data file
     let resp = http_client.get(foundation.data_url).send().await?;
     if resp.status() != StatusCode::OK {
-        return Err(format_err!(
+        bail!(
             "unexpected status code getting data file: {}",
             resp.status()
-        ));
+        );
     }
     let data = resp.text().await?;
 
