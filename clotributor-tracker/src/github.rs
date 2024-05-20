@@ -1,5 +1,5 @@
 use crate::tracker::Issue;
-use anyhow::{format_err, Context, Result};
+use anyhow::{bail, format_err, Context, Result};
 use async_trait::async_trait;
 use graphql_client::{GraphQLQuery, Response};
 use lazy_static::lazy_static;
@@ -147,11 +147,11 @@ impl GH for GHGraphQL {
             .await
             .context("error querying graphql api")?;
         if resp.status() != StatusCode::OK {
-            return Err(format_err!(
+            bail!(
                 "unexpected status code querying graphql api: {} - {}",
                 resp.status(),
                 resp.text().await?,
-            ));
+            );
         }
 
         // Parse response body and extract repository data

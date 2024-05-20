@@ -62,7 +62,8 @@ impl DB for PgDB {
                     r.languages,
                     r.stars,
                     r.digest,
-                    p.name as project_name
+                    p.name as project_name,
+                    p.foundation_id
                 from repository r
                 join project p using (project_id)
                 where r.tracked_at is null
@@ -84,6 +85,7 @@ impl DB for PgDB {
                 stars: row.get("stars"),
                 digest: row.get("digest"),
                 project_name: row.get("project_name"),
+                foundation_id: row.get("foundation_id"),
             })
             .collect();
         Ok(repositories)
