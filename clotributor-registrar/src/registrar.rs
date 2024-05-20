@@ -12,92 +12,6 @@ use tracing::{debug, error, info, instrument};
 /// Maximum time that can take processing a foundation data file.
 const FOUNDATION_TIMEOUT: u64 = 300;
 
-/// Represents a foundation registered in the database.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub(crate) struct Foundation {
-    pub foundation_id: String,
-    pub data_url: String,
-}
-
-/// Represents a project to be registered or updated.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub(crate) struct Project {
-    pub name: String,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub display_name: Option<String>,
-
-    pub description: String,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub logo_url: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub logo_dark_url: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub devstats_url: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub accepted_at: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub maturity: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub maintainers_wanted: Option<MaintainersWanted>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub digest: Option<String>,
-
-    pub repositories: Vec<Repository>,
-}
-
-impl Project {
-    /// Set the project's digest.
-    fn set_digest(&mut self) -> Result<()> {
-        let data = bincode::serialize(&self)?;
-        let digest = hex::encode(Sha256::digest(data));
-        self.digest = Some(digest);
-        Ok(())
-    }
-}
-
-/// Represents a project's repository.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub(crate) struct Repository {
-    pub name: String,
-    pub url: String,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub exclude: Option<Vec<String>>,
-}
-
-/// Defines if the project is looking for maintainers, as well as some extra
-/// reference and contact information.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
-pub(crate) struct MaintainersWanted {
-    enabled: bool,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    links: Option<Vec<Link>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    contacts: Option<Vec<Contact>>,
-}
-
-/// Represents some information about a link.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub(crate) struct Link {
-    title: Option<String>,
-    url: String,
-}
-
-/// Represents some information about a contact.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub(crate) struct Contact {
-    github_handle: String,
-}
-
 /// Process foundations registered in the database.
 #[instrument(skip_all, err)]
 pub(crate) async fn run(cfg: &Config, db: DynDB) -> Result<()> {
@@ -215,6 +129,95 @@ async fn process_foundation(
 
     debug!(duration_secs = start.elapsed().as_secs(), "completed");
     Ok(())
+}
+
+/// Represents a foundation registered in the database.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub(crate) struct Foundation {
+    pub foundation_id: String,
+    pub data_url: String,
+}
+
+/// Represents a project to be registered or updated.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub(crate) struct Project {
+    pub name: String,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub display_name: Option<String>,
+
+    pub description: String,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub logo_url: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub logo_dark_url: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub devstats_url: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub accepted_at: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub maturity: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub maintainers_wanted: Option<MaintainersWanted>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub digest: Option<String>,
+
+    pub repositories: Vec<Repository>,
+}
+
+impl Project {
+    /// Set the project's digest.
+    fn set_digest(&mut self) -> Result<()> {
+        let data = bincode::serialize(&self)?;
+        let digest = hex::encode(Sha256::digest(data));
+        self.digest = Some(digest);
+        Ok(())
+    }
+}
+
+/// Represents a project's repository.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub(crate) struct Repository {
+    pub name: String,
+    pub url: String,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub exclude: Option<Vec<String>>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub issues_filter_label: Option<String>,
+}
+
+/// Defines if the project is looking for maintainers, as well as some extra
+/// reference and contact information.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub(crate) struct MaintainersWanted {
+    enabled: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    links: Option<Vec<Link>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    contacts: Option<Vec<Contact>>,
+}
+
+/// Represents some information about a link.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub(crate) struct Link {
+    title: Option<String>,
+    url: String,
+}
+
+/// Represents some information about a contact.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub(crate) struct Contact {
+    github_handle: String,
 }
 
 #[cfg(test)]
@@ -419,6 +422,7 @@ mod tests {
                         name: "artifact-hub".to_string(),
                         url: "https://github.com/artifacthub/hub".to_string(),
                         exclude: None,
+                        issues_filter_label: None,
                     }],
                     maintainers_wanted: None,
                 }),

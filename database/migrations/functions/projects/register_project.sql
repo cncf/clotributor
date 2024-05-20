@@ -50,15 +50,18 @@ begin
         insert into repository (
             name,
             url,
+            issues_filter_label,
             project_id
         ) values (
             v_repository->>'name',
             v_repository->>'url',
+            nullif(v_repository->>'issues_filter_label', ''),
             v_project_id
         )
         on conflict (project_id, url) do update
         set
             name = excluded.name,
+            issues_filter_label = excluded.issues_filter_label,
             updated_at = current_timestamp;
     end loop;
 

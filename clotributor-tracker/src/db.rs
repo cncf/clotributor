@@ -62,6 +62,7 @@ impl DB for PgDB {
                     r.languages,
                     r.stars,
                     r.digest,
+                    r.issues_filter_label,
                     p.name as project_name,
                     p.foundation_id
                 from repository r
@@ -84,6 +85,7 @@ impl DB for PgDB {
                 languages: row.get("languages"),
                 stars: row.get("stars"),
                 digest: row.get("digest"),
+                issues_filter_label: row.get("issues_filter_label"),
                 project_name: row.get("project_name"),
                 foundation_id: row.get("foundation_id"),
             })
