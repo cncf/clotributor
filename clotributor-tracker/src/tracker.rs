@@ -110,7 +110,9 @@ async fn track_repository(
     debug!("started");
 
     // Fetch repository data from GitHub
-    let gh_repo = gh.repository(&gh_token, &repo.url).await?;
+    let gh_repo = gh
+        .repository(&gh_token, &repo.url, &repo.issues_filter_label)
+        .await?;
 
     // Update repository's GitHub data in db if needed
     let changed = repo.update_gh_data(&gh_repo)?;
@@ -169,6 +171,7 @@ pub(crate) struct Repository {
     pub languages: Option<Vec<String>>,
     pub stars: Option<i32>,
     pub digest: Option<String>,
+    pub issues_filter_label: Option<String>,
     pub project_name: String,
     pub foundation_id: String,
 }
@@ -647,9 +650,9 @@ mod tests {
                 }])))
             });
         gh.expect_repository()
-            .with(eq(TOKEN1), eq(REPOSITORY_URL))
+            .with(eq(TOKEN1), eq(REPOSITORY_URL), eq(None))
             .times(1)
-            .returning(|_, _| Box::pin(future::ready(Err(format_err!(FAKE_ERROR)))));
+            .returning(|_, _, _| Box::pin(future::ready(Err(format_err!(FAKE_ERROR)))));
 
         let result = run(&cfg, Arc::new(db), Arc::new(gh)).await;
         assert_eq!(result.unwrap_err().root_cause().to_string(), FAKE_ERROR);
@@ -672,9 +675,9 @@ mod tests {
                 }])))
             });
         gh.expect_repository()
-            .with(eq(TOKEN1), eq(REPOSITORY_URL))
+            .with(eq(TOKEN1), eq(REPOSITORY_URL), eq(None))
             .times(1)
-            .returning(|_, _| {
+            .returning(|_, _, _| {
                 Box::pin(future::ready(Ok(RepoViewRepository {
                     description: Some("description".to_string()),
                     homepage_url: None,

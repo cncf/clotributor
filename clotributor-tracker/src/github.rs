@@ -17,6 +17,9 @@ use time::{
 /// GitHub GraphQL API URL.
 const GITHUB_GRAPHQL_API_URL: &str = "https://api.github.com/graphql";
 
+/// Label used to filter the issues we want to track.
+const DEFAULT_ISSUES_FILTER_LABEL: &str = "help wanted";
+
 lazy_static! {
     static ref GITHUB_REPO_URL: Regex =
         Regex::new("^https://github.com/(?P<owner>[^/]+)/(?P<repo>[^/]+)/?$")
@@ -112,7 +115,12 @@ impl repo_view::RepoViewRepository {
 #[cfg_attr(test, automock)]
 pub(crate) trait GH {
     /// Get repository information from GitHub.
-    async fn repository(&self, token: &str, url: &str) -> Result<repo_view::RepoViewRepository>;
+    async fn repository(
+        &self,
+        token: &str,
+        url: &str,
+        issues_filter_label: &Option<String>,
+    ) -> Result<repo_view::RepoViewRepository>;
 }
 
 /// GH implementation backed by the GitHub GraphQL API.
@@ -127,16 +135,25 @@ impl GHGraphQL {
 
 #[async_trait]
 impl GH for GHGraphQL {
-    async fn repository(&self, token: &str, url: &str) -> Result<repo_view::RepoViewRepository> {
+    async fn repository(
+        &self,
+        token: &str,
+        url: &str,
+        issues_filter_label: &Option<String>,
+    ) -> Result<repo_view::RepoViewRepository> {
         // Do request to GraphQL API
         let http_client = setup_http_client(token)?;
         let (owner, repo) = get_owner_and_repo(url)?;
         let issues_since = OffsetDateTime::now_utc()
             .saturating_sub(365.days())
             .format(&Iso8601::DEFAULT)?;
+        let issues_label = issues_filter_label
+            .as_deref()
+            .unwrap_or(DEFAULT_ISSUES_FILTER_LABEL);
         let vars = repo_view::Variables {
             repo,
             owner,
+            issues_label: issues_label.to_string(),
             issues_since,
         };
         let req_body = &RepoView::build_query(vars);
