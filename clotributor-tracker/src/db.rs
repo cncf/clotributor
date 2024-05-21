@@ -174,7 +174,8 @@ impl DB for PgDB {
                 difficulty = excluded.difficulty,
                 mentor_available = excluded.mentor_available,
                 mentor = excluded.mentor,
-                good_first_issue = excluded.good_first_issue;
+                good_first_issue = excluded.good_first_issue,
+                tsdoc = excluded.tsdoc;
             ",
             &[
                 &issue.issue_id,
