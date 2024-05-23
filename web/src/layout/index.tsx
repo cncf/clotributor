@@ -1,13 +1,16 @@
 import { useScrollRestorationFix } from 'clo-ui';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
+import { AppContext } from '../context/AppContextProvider';
 import styles from './Layout.module.css';
 import Footer from './navigation/Footer';
 import Navbar from './navigation/Navbar';
 
 const Layout = () => {
+  const { ctx } = useContext(AppContext);
   const [invisibleFooter, setInvisibleFooter] = useState<boolean>(false);
+  const isEmbed = ctx.isEmbed;
 
   useScrollRestorationFix();
 
@@ -17,7 +20,7 @@ const Layout = () => {
       <div className={`d-flex flex-column flex-grow-1 ${styles.wrapper}`}>
         <Outlet context={{ setInvisibleFooter }} />
       </div>
-      <Footer invisibleFooter={invisibleFooter} />
+      {!isEmbed && <Footer invisibleFooter={invisibleFooter} />}
     </div>
   );
 };

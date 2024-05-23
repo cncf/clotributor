@@ -79,6 +79,10 @@ label {
   max-width: calc(100% - 200px - 1.5rem);
 }
 
+.resultsInEmbed {
+  font-size: 0.9rem;
+}
+
 @media only screen and (min-width: 1400px) {
   .sidebar {
     width: 250px;

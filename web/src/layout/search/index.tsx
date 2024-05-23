@@ -15,7 +15,7 @@ import { isEmpty, isNull, isUndefined } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
 import { FaFilter } from 'react-icons/fa';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
-import { useNavigate, useOutletContext, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useOutletContext, useSearchParams } from 'react-router-dom';
 
 import API from '../../api';
 import { AppContext, updateLimit, updateSort } from '../../context/AppContextProvider';
@@ -33,9 +33,11 @@ interface FiltersProp {
 }
 
 const Search = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const { ctx, dispatch } = useContext(AppContext);
   const { limit, sort } = ctx.prefs.search;
+  const isEmbed = ctx.isEmbed;
   const [searchParams] = useSearchParams();
   const { setInvisibleFooter } = useOutletContext() as OutletContext;
   const [text, setText] = useState<string | undefined>();
@@ -53,7 +55,28 @@ const Search = () => {
   const [apiError, setApiError] = useState<string | null>(null);
   const [selectedFoundation, setSelectedFoundation] = useState<Foundation | null>(null);
   // Check if some filters are active
-  const ifActiveFilters = !isEmpty(activeFilters) || mentorAvailable || goodFirstIssue;
+  let ifActiveFilters = !isEmpty(activeFilters) || mentorAvailable || goodFirstIssue;
+  if (isEmbed) {
+    const filtersWithoutFoundation = { ...activeFilters };
+    delete filtersWithoutFoundation[FilterKind.Foundation];
+
+    ifActiveFilters = !isEmpty(filtersWithoutFoundation) || mentorAvailable || goodFirstIssue;
+  }
+
+  const getExtraFilter = () => {
+    if (isEmbed) {
+      // Scroll to top to reset filters
+      document.getElementById('clo-wrapper')!.scrollTop = 0;
+      const searchParams = new URLSearchParams(location.search);
+      if (searchParams.has(FilterKind.Foundation) && !isNull(searchParams.get(FilterKind.Foundation))) {
+        return { [FilterKind.Foundation]: [searchParams.get(FilterKind.Foundation)!] };
+      } else {
+        return undefined;
+      }
+    } else {
+      return undefined;
+    }
+  };
 
   const onResetFilters = (): void => {
     setSelectedFoundation(null);
@@ -63,7 +86,7 @@ const Search = () => {
       search: prepareQueryString({
         pageNumber: 1,
         ts_query_web: text,
-        filters: {},
+        filters: { ...getExtraFilter() },
       }),
     });
   };
@@ -157,7 +180,7 @@ const Search = () => {
       mentor_available: mentorAvailable,
       good_first_issue: goodFirstIssue,
       ts_query_web: text,
-      filters: activeFilters,
+      filters: { ...activeFilters, ...getExtraFilter() },
     };
   };
 
@@ -172,9 +195,16 @@ const Search = () => {
         const kind = k as FilterKind.Project | FilterKind.Maturity;
         const objIndex = currentFilters.findIndex((f: FilterSection) => (f.key || f.title) === k);
         const values = extra[kind][foundation];
-        const activeValues = (currentFilters[objIndex].options as FilterOption[]).filter((opt: FilterOption) =>
-          values.includes(opt.value || opt.name)
-        );
+        let activeValues:
+          | FilterOption[]
+          | {
+              [key: string]: FilterOption[];
+            } = [];
+        if (!isUndefined(values)) {
+          activeValues = (currentFilters[objIndex].options as FilterOption[]).filter((opt: FilterOption) =>
+            values.includes(opt.value || opt.name)
+          );
+        }
         currentFilters[objIndex] = { ...currentFilters[objIndex], options: activeValues };
       });
     }
@@ -188,6 +218,26 @@ const Search = () => {
       tmpFilters[objIndex] = { ...tmpFilters[objIndex], options: [] };
     });
     return tmpFilters;
+  };
+
+  const getResultsText = () => {
+    return (
+      <>
+        {total > 0 && (
+          <span className="pe-1">
+            {calculateOffset(pageNumber) + 1} - {total < limit * pageNumber ? total : limit * pageNumber}{' '}
+            <span className="ms-1">of</span>{' '}
+          </span>
+        )}
+        {total}
+        <span className="ps-1"> results </span>
+        {text && text !== '' && (
+          <span className="d-none d-sm-inline ps-1">
+            for "<span className="fw-bold">{text}</span>"
+          </span>
+        )}
+      </>
+    );
   };
 
   useEffect(() => {
@@ -273,7 +323,15 @@ const Search = () => {
   return (
     <>
       {/* Subnavbar */}
-      <nav className={`navbar navbar-expand-sm ${styles.navbar}`} role="navigation">
+      <nav
+        className={classNames(
+          'navbar navbar-expand-sm',
+          styles.navbar,
+          { 'd-block d-lg-none': isEmbed },
+          { 'd-block': !isEmbed }
+        )}
+        role="navigation"
+      >
         <div className="container-lg">
           <div className="d-flex flex-column w-100">
             <div className="d-flex flex-column flex-sm-row align-items-center justify-content-between flex-nowrap">
@@ -333,36 +391,28 @@ const Search = () => {
                   </div>
                 </Sidebar>
 
-                <div className="text-truncate fw-bold w-100 Search_searchResults__hU0s2" role="status">
-                  {total > 0 && (
-                    <span className="pe-1">
-                      {calculateOffset(pageNumber) + 1} - {total < limit * pageNumber ? total : limit * pageNumber}{' '}
-                      <span className="ms-1">of</span>{' '}
-                    </span>
-                  )}
-                  {total}
-                  <span className="ps-1"> results </span>
-                  {text && text !== '' && (
-                    <span className="d-none d-sm-inline ps-1">
-                      for "<span className="fw-bold">{text}</span>"
-                    </span>
-                  )}
+                <div className="text-truncate fw-bold w-100" role="status">
+                  {getResultsText()}
                 </div>
               </div>
 
-              <div className="d-flex flex-nowrap flex-row justify-content-sm-end ms-0 ms-md-3 w-100">
-                {/* Only display sort options when ts_query_web is defined */}
-                {text && text !== '' && (
-                  <SortOptions
-                    options={SORT_OPTIONS}
-                    by={sort.by}
-                    width={150}
-                    onSortChange={onSortChange}
-                    className="mt-3 mt-sm-0 me-2 me-md-4"
-                  />
-                )}
-                <PaginationLimitOptions limit={limit} onPaginationLimitChange={onPaginationLimitChange} />
-              </div>
+              {!isEmbed && (
+                <div className="d-flex flex-nowrap flex-row justify-content-sm-end ms-0 ms-md-3 w-100">
+                  {/* Only display sort options when ts_query_web is defined */}
+                  {text && text !== '' && (
+                    <SortOptions
+                      options={SORT_OPTIONS}
+                      by={sort.by}
+                      width={150}
+                      onSortChange={onSortChange}
+                      className="mt-3 mt-sm-0"
+                    />
+                  )}
+                  <div className="ms-2 ms-md-m4">
+                    <PaginationLimitOptions limit={limit} onPaginationLimitChange={onPaginationLimitChange} />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -387,6 +437,11 @@ const Search = () => {
               isLoadingFilters={isUndefined(filters)}
               device="desktop"
               ifActiveFilters={ifActiveFilters}
+              extraContent={
+                isEmbed ? (
+                  <div className={`text-truncate fw-bold ${styles.resultsInEmbed}`}>{getResultsText()}</div>
+                ) : undefined
+              }
             />
           </div>
         </div>

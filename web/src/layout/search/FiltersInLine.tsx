@@ -9,9 +9,10 @@ import {
   RefFiltersSection,
 } from 'clo-ui';
 import { isUndefined } from 'lodash';
-import React, { useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 
+import { AppContext } from '../../context/AppContextProvider';
 import { Filter, FilterKind } from '../../types';
 import styles from './FiltersInLine.module.css';
 
@@ -29,6 +30,7 @@ interface Props {
   isLoadingFilters?: boolean;
   device: string;
   ifActiveFilters: boolean;
+  extraContent?: JSX.Element;
 }
 
 interface FiltersProps {
@@ -77,6 +79,9 @@ const Filters = (props: FiltersProps) => {
 };
 
 const FiltersInLine = (props: Props) => {
+  const { ctx } = useContext(AppContext);
+  const isEmbed = ctx.isEmbed;
+
   const getActiveFiltersForOther = (): string[] => {
     const otherFilters = [];
     if (props.mentorAvailable) {
@@ -104,22 +109,29 @@ const FiltersInLine = (props: Props) => {
             </div>
           </button>
         )}
+        {!isUndefined(props.extraContent) && <div className="ms-auto">{props.extraContent}</div>}
       </div>
       {props.isLoadingFilters ? (
         <DotsLoading className="my-auto" />
       ) : (
-        <div className="d-flex flex-row align-items-top">
+        <div className="d-flex flex-row align-items-top justify-content-between">
           {props.filters.map((section: FilterSection, index: number) => {
             const isSearchSection = section.key && ['project', 'language'].includes(section.key);
             const activeFilters = section.key ? props.activeFilters[section.key] : getActiveFiltersForOther();
             const isDisabled = props.disabledSections.includes((section.key || section.title) as FilterKind);
 
+            if (isEmbed && section.key === FilterKind.Foundation) return null;
+
             return (
               <React.Fragment key={`sec_${section.key}`}>
                 <div
-                  className={classNames(styles.dropdownWrapper, {
-                    'me-2 me-lg-3 me-xl-4': index !== props.filters.length - 1,
-                  })}
+                  className={classNames(
+                    styles.dropdownWrapper,
+                    {
+                      'me-2 me-lg-3 me-xl-4': index !== props.filters.length - 1,
+                    },
+                    { 'w-100': isEmbed }
+                  )}
                 >
                   <ElementWithTooltip
                     element={
