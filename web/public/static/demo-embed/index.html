@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="no-js">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <title>Clotributor embed</title>
     <style>
       html {
@@ -171,6 +172,20 @@
         p {
           font-size: 0.9rem;
           line-height: 1.5rem;
+        }
+      }
+
+      @media only screen and (max-width: 575.98px) {
+        .navbar-logo svg {
+          height: 30px;
+        }
+
+        .nav-link {
+          font-size: 0.9rem;
+        }
+
+        .active::after {
+          bottom: -23px;
         }
       }
     </style>
