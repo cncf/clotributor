@@ -1,7 +1,11 @@
 import { FilterKind, SearchTipItem, SortBy } from './types';
 
 export const DEFAULT_SORT_BY = SortBy.MostRecent;
+export const DEFAULT_THEME = 'automatic';
 export const DEFAULT_SEARCH_LIMIT = 20;
+export const EMBED_SEARCH_LIMIT = 10;
+export const EMBED_PARAM = 'embed';
+export const AVAILABLE_THEMES = ['light', 'dark', 'auto'];
 
 export const SORT_OPTIONS = [
   {

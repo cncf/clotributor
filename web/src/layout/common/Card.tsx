@@ -33,10 +33,21 @@ interface Props {
 const Card = (props: Props) => {
   const navigate = useNavigate();
   const { ctx } = useContext(AppContext);
+  const isEmbed = ctx.isEmbed;
   const { effective } = ctx.prefs.theme;
   const [availableTopics, setAvailableTopics] = useState<string[]>([]);
   const isMaintainersWantedAvailable: boolean =
     !isUndefined(props.issue.project.maintainers_wanted) && props.issue.project.maintainers_wanted.enabled;
+
+  const getExtraFilter = () => {
+    if (isEmbed) {
+      // Scroll to top on every change
+      document.getElementById('clo-wrapper')!.scrollTop = 0;
+      return { [FilterKind.Foundation]: [props.issue.project.foundation] };
+    } else {
+      return undefined;
+    }
+  };
 
   const searchByText = (text: string) => {
     navigate({
@@ -44,7 +55,7 @@ const Card = (props: Props) => {
       search: prepareQueryString({
         pageNumber: 1,
         ts_query_web: text.toLowerCase(),
-        filters: {},
+        filters: { ...getExtraFilter() },
       }),
     });
   };
@@ -54,7 +65,7 @@ const Card = (props: Props) => {
       pathname: '/search',
       search: prepareQueryString({
         pageNumber: 1,
-        filters: { [filter]: [value] },
+        filters: { [filter]: [value], ...getExtraFilter() },
       }),
     });
   };
@@ -65,7 +76,7 @@ const Card = (props: Props) => {
       search: prepareQueryString({
         pageNumber: 1,
         mentor_available: true,
-        filters: {},
+        filters: { ...getExtraFilter() },
       }),
     });
   };
@@ -76,7 +87,7 @@ const Card = (props: Props) => {
       search: prepareQueryString({
         pageNumber: 1,
         good_first_issue: true,
-        filters: {},
+        filters: { ...getExtraFilter() },
       }),
     });
   };
@@ -141,11 +152,13 @@ const Card = (props: Props) => {
                 className="d-none d-sm-flex me-2"
               />
             )}
-            <FoundationBadge
-              foundation={props.issue.project.foundation}
-              maxLength={14}
-              onClick={() => searchByFilter(FilterKind.Foundation, props.issue.project.foundation)}
-            />
+            {!isEmbed && (
+              <FoundationBadge
+                foundation={props.issue.project.foundation}
+                maxLength={14}
+                onClick={() => searchByFilter(FilterKind.Foundation, props.issue.project.foundation)}
+              />
+            )}
           </div>
         </div>
 
@@ -203,13 +216,17 @@ const Card = (props: Props) => {
                   </div>
 
                   <div className="d-flex flex-row align-items-center my-2">
-                    <FoundationBadge
-                      foundation={props.issue.project.foundation}
-                      maxLength={14}
-                      onClick={() => searchByFilter(FilterKind.Foundation, props.issue.project.foundation)}
-                    />
+                    {!isEmbed && (
+                      <FoundationBadge
+                        foundation={props.issue.project.foundation}
+                        maxLength={14}
+                        className="me-2"
+                        onClick={() => searchByFilter(FilterKind.Foundation, props.issue.project.foundation)}
+                      />
+                    )}
+
                     {props.issue.project.maturity && (
-                      <MaturityBadge maturityLevel={props.issue.project.maturity} className="ms-2" maxLength={14} />
+                      <MaturityBadge maturityLevel={props.issue.project.maturity} maxLength={14} />
                     )}
                   </div>
 

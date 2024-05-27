@@ -1,9 +1,12 @@
 import classnames from 'classnames';
 import { scrollToTop, Searchbar as SearchbarForm } from 'clo-ui';
-import { useEffect, useState } from 'react';
+import isNull from 'lodash/isNull';
+import { useContext, useEffect, useState } from 'react';
 import { FaRegQuestionCircle } from 'react-icons/fa';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
+import { AppContext } from '../../context/AppContextProvider';
+import { FilterKind } from '../../types';
 import prepareQueryString from '../../utils/prepareQueryString';
 import SearchTipsModal from '../common/SearchTipsModal';
 import styles from './Searchbar.module.css';
@@ -15,11 +18,30 @@ interface Props {
 }
 
 const Searchbar = (props: Props) => {
+  const { ctx } = useContext(AppContext);
+  const isEmbed = ctx.isEmbed;
+  const location = useLocation();
   const [openTips, setOpenTips] = useState<boolean>(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [value, setValue] = useState<string>('');
   const [currentSearch, setCurrentSearch] = useState<string | null>(null);
+
+  const getExtraFilter = () => {
+    if (isEmbed) {
+      const searchParams = new URLSearchParams(location.search);
+      // Scroll to top on every search
+      document.getElementById('clo-wrapper')!.scrollTop = 0;
+
+      if (searchParams.has(FilterKind.Foundation) && !isNull(searchParams.get(FilterKind.Foundation))) {
+        return { [FilterKind.Foundation]: [searchParams.get(FilterKind.Foundation)!] };
+      } else {
+        return undefined;
+      }
+    } else {
+      return undefined;
+    }
+  };
 
   useEffect(() => {
     const text = searchParams.get('ts_query_web');
@@ -34,7 +56,7 @@ const Searchbar = (props: Props) => {
       search: prepareQueryString({
         pageNumber: 1,
         ts_query_web: value,
-        filters: {},
+        filters: { ...getExtraFilter() },
       }),
     });
   };
@@ -47,7 +69,7 @@ const Searchbar = (props: Props) => {
         search: prepareQueryString({
           pageNumber: 1,
           ts_query_web: '',
-          filters: {},
+          filters: { ...getExtraFilter() },
         }),
       });
     } else {

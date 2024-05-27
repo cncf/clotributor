@@ -13,3 +13,28 @@ code {
 .fw-semibold {
   font-weight: 600 !important;
 }
+
+/* Embed */
+.embed #clo-wrapper {
+  height: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.embed::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  border: 1px solid var(--clo-secondary);
+  pointer-events: none;
+}
+
+@media screen and (min-width: 992px) {
+  .embed .container-lg {
+    max-width: 95% !important;
+  }
+}

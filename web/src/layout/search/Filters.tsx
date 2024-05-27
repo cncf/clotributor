@@ -1,8 +1,9 @@
 import { FilterSection, FiltersSection } from 'clo-ui';
 import { isEmpty } from 'lodash';
-import React from 'react';
+import React, { useContext } from 'react';
 import { IoMdCloseCircleOutline } from 'react-icons/io';
 
+import { AppContext } from '../../context/AppContextProvider';
 import { FilterKind } from '../../types';
 
 interface Props {
@@ -20,6 +21,9 @@ interface Props {
 }
 
 const Filters = (props: Props) => {
+  const { ctx } = useContext(AppContext);
+  const isEmbed = ctx.isEmbed;
+
   const getActiveFiltersForOther = (): string[] => {
     const otherFilters = [];
     if (props.mentorAvailable) {
@@ -51,11 +55,13 @@ const Filters = (props: Props) => {
       {props.filters.map((section: FilterSection) => {
         const activeFilters = section.key ? props.activeFilters[section.key] : getActiveFiltersForOther();
         const key = (section.key || section.title) as FilterKind;
+
         // Does not render project and language filters or disabled sections on mobile version
         if (
           [FilterKind.Language, FilterKind.Project].includes(key) ||
           props.disabledSections.includes(key) ||
-          section.options.length === 0
+          section.options.length === 0 ||
+          (isEmbed && key === FilterKind.Foundation)
         )
           return null;
 
