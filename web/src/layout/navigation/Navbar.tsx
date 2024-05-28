@@ -24,7 +24,9 @@ const Navbar = () => {
           <div className="d-flex flex-row align-items-start">
             <div className="position-relative">
               {isEmbed ? (
-                <img className={styles.logo} alt="CLOTributor logo" src={logo} />
+                <ExternalLink href="https://clotributor.dev" className={styles.externalLink}>
+                  <img className={styles.logo} alt="CLOTributor logo" src={logo} />
+                </ExternalLink>
               ) : (
                 <Link to="/" onClick={() => scrollToTop()} className="cursorPointer">
                   <img className={styles.logo} alt="CLOTributor logo" src={logo} />

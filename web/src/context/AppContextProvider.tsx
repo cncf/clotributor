@@ -102,12 +102,12 @@ export function appReducer(state: AppState, action: Action) {
         theme: { ...action.theme },
         search: {
           limit: EMBED_SEARCH_LIMIT,
-          sortBy: DEFAULT_SORT_BY,
+          sort: { by: DEFAULT_SORT_BY },
         },
       };
 
       return {
-        ...state,
+        prefs: prefs,
         isEmbed: action.isEmbed,
       };
 
