@@ -5,6 +5,7 @@ import { IoMdCloseCircleOutline } from 'react-icons/io';
 
 import { AppContext } from '../../context/AppContextProvider';
 import { FilterKind } from '../../types';
+import styles from './Filters.module.css';
 
 interface Props {
   visibleTitle: boolean;
@@ -55,10 +56,10 @@ const Filters = (props: Props) => {
       {props.filters.map((section: FilterSection) => {
         const activeFilters = section.key ? props.activeFilters[section.key] : getActiveFiltersForOther();
         const key = (section.key || section.title) as FilterKind;
+        const withSearchBar = [FilterKind.Language, FilterKind.Project].includes(key);
 
-        // Does not render project and language filters or disabled sections on mobile version
+        // Does not render disabled sections on mobile version
         if (
-          [FilterKind.Language, FilterKind.Project].includes(key) ||
           props.disabledSections.includes(key) ||
           section.options.length === 0 ||
           (isEmbed && key === FilterKind.Foundation)
@@ -72,6 +73,10 @@ const Filters = (props: Props) => {
               activeFilters={activeFilters}
               section={section}
               onChange={props.onChange}
+              withSearchBar={withSearchBar}
+              contentClassName={withSearchBar ? `border overflow-auto p-3 ${styles.dropdownFilter}` : ''}
+              searchBarClassName={withSearchBar ? styles.searchBar : ''}
+              sortedBySelected={withSearchBar}
               visibleTitle
             />
           </React.Fragment>

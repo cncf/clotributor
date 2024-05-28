@@ -82,6 +82,10 @@
   font-size: 0.8rem;
 }
 
+.searchBar {
+  width: 94% !important;
+}
+
 @media only screen and (min-width: 1200px) {
   .dropdownWrapper {
     width: 119px;
