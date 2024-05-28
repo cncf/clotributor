@@ -10,18 +10,8 @@
   letter-spacing: 2px;
 }
 
-.alpha {
-  background-color: var(--color-white-25);
-  top: -8px;
-  font-size: 0.6rem;
-}
-
 .githubIcon {
   margin-top: -3px;
-}
-
-[data-theme='dark'] .alpha {
-  background-color: var(--color-black-25);
 }
 
 .externalLink {
@@ -63,9 +53,5 @@
 @media only screen and (max-width: 359.98px) {
   .logo {
     height: 19px;
-  }
-
-  .alpha {
-    font-size: 0.4rem;
   }
 }
