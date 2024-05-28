@@ -60,6 +60,16 @@ const Card = (props: Props) => {
     });
   };
 
+  const searchByProject = (project: string, foundation: string) => {
+    navigate({
+      pathname: '/search',
+      search: prepareQueryString({
+        pageNumber: 1,
+        filters: { [FilterKind.Project]: [project], [FilterKind.Foundation]: [foundation], ...getExtraFilter() },
+      }),
+    });
+  };
+
   const searchByFilter = (filter: FilterKind, value: string) => {
     navigate({
       pathname: '/search',
@@ -128,12 +138,15 @@ const Card = (props: Props) => {
                 effective_theme={effective}
               />
             </div>
-            <div className="truncateWrapper w-100">
-              <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
-                <span className={`text-truncate fw-bold mb-0 ${styles.title}`}>
+            <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
+              <button
+                className="btn btn-sm btn-link border-0 p-0 mw-100 align-baseline"
+                onClick={() => searchByProject(props.issue.project.name, props.issue.project.foundation)}
+              >
+                <div className={`text-truncate fw-bold mb-0 ${styles.title}`}>
                   {props.issue.project.display_name || props.issue.project.name}
-                </span>
-              </div>
+                </div>
+              </button>
             </div>
           </div>
 
@@ -199,7 +212,7 @@ const Card = (props: Props) => {
                     <div className="truncateWrapper">
                       <button
                         className="btn btn-sm btn-link border-0 p-0 mw-100 align-baseline"
-                        onClick={() => searchByFilter(FilterKind.Project, props.issue.project.name)}
+                        onClick={() => searchByProject(props.issue.project.name, props.issue.project.foundation)}
                       >
                         <div className="d-flex flex-row justify-content-between align-items-end text-truncate">
                           <span
@@ -308,6 +321,7 @@ const Card = (props: Props) => {
                   <GenericBadge
                     content={props.issue.repository.languages[0]}
                     className={`fw-normal text-secondary text-uppercase ms-2 bg-purple ${styles.badge}`}
+                    onClick={() => searchByFilter(FilterKind.Language, props.issue.repository.languages[0])}
                   />
                 </div>
               )}
@@ -315,13 +329,13 @@ const Card = (props: Props) => {
               <div
                 className={`d-none d-sm-flex flex-row flex-wrap overflow-hidden justify-content-end ${styles.topicsWrapper}`}
               >
-                {availableTopics.slice(0, 4).map((lg: string) => {
+                {availableTopics.slice(0, 4).map((topic: string) => {
                   return (
                     <GenericBadge
-                      content={lg}
+                      content={topic}
                       className={`text-secondary lighterText ${styles.badge} ms-2`}
-                      key={lg}
-                      onClick={() => searchByText(lg)}
+                      key={topic}
+                      onClick={() => searchByText(topic)}
                     />
                   );
                 })}

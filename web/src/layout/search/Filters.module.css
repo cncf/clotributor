@@ -1,0 +1,8 @@
+.dropdownFilter {
+  max-height: 200px;
+}
+
+.searchBar {
+  margin: 0.75rem 0.3rem !important;
+  width: calc(100% - 0.6rem);
+}

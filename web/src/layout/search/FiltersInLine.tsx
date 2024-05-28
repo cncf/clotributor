@@ -70,9 +70,11 @@ const Filters = (props: FiltersProps) => {
         contentClassName={`overflow-auto ${styles.options}`}
         section={props.section}
         withSearchBar={props.withSearchBar}
+        searchBarClassName={props.withSearchBar ? styles.searchBar : ''}
         onChange={onChangeFilter}
         visibleTitle={false}
         disabled={props.disabled}
+        sortedBySelected={props.withSearchBar}
       />
     </div>
   );
