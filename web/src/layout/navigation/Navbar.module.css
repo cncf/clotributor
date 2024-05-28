@@ -24,6 +24,10 @@
   background-color: var(--color-black-25);
 }
 
+.externalLink {
+  cursor: pointer;
+}
+
 @media (hover: hover) {
   .link:hover::before {
     content: '';
