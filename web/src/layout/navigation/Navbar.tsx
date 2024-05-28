@@ -32,12 +32,6 @@ const Navbar = () => {
                   <img className={styles.logo} alt="CLOTributor logo" src={logo} />
                 </Link>
               )}
-
-              <div
-                className={`position-relative badge rounded-0 text-uppercase fw-bold me-2 me-sm-3 ms-2 ${styles.alpha}`}
-              >
-                Alpha
-              </div>
             </div>
 
             {!isEmbed && <MobileSettings />}
