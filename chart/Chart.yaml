@@ -2,8 +2,8 @@ apiVersion: v2
 name: clotributor
 description: Discover great opportunities to become a Cloud Native contributors
 type: application
-version: 0.1.0
-appVersion: 0.1.0
+version: 1.0.0
+appVersion: 1.0.0
 kubeVersion: ">= 1.19.0-0"
 keywords:
   - cncf

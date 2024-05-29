@@ -77,10 +77,6 @@ maintainers_wanted:
 
 *NOTE: the user submitting the pull request **must** already be a project's maintainer.*
 
-## Projects and repositories
-
-**CLOTributor's** data source for projects and repositories is [**CLOMonitor**](https://github.com/cncf/clomonitor#projects), which lists most of the projects in the [CNCF](https://www.cncf.io/projects/) and [LF AI & DATA](https://lfaidata.foundation/projects/) foundations.
-
 ## Contributing
 
 Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for more details.
