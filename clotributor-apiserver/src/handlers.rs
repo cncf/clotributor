@@ -22,11 +22,14 @@ use tower_http::{
 };
 use tracing::error;
 
-/// Static files cache duration.
-const STATIC_CACHE_MAX_AGE: usize = 365 * 24 * 60 * 60;
+/// Index HTML document cache duration.
+const INDEX_CACHE_MAX_AGE: usize = 300;
 
 /// Default cache duration for some API endpoints.
 const DEFAULT_API_MAX_AGE: usize = 300;
+
+/// Static files cache duration.
+const STATIC_CACHE_MAX_AGE: usize = 365 * 24 * 60 * 60;
 
 /// Header that indicates the number of items available for pagination purposes.
 const PAGINATION_TOTAL_COUNT: &str = "pagination-total-count";
@@ -43,11 +46,18 @@ pub(crate) fn setup_router(cfg: &Arc<Config>, db: DynDB) -> Result<Router> {
     let static_path = cfg.get_string("apiserver.staticPath")?;
     let index_path = Path::new(&static_path).join("index.html");
 
+    // Setup index handler
+    let index = SetResponseHeader::overriding(
+        ServeFile::new(index_path),
+        CACHE_CONTROL,
+        HeaderValue::try_from(format!("max-age={INDEX_CACHE_MAX_AGE}"))?,
+    );
+
     // Setup router
     let router = Router::new()
         .route("/api/filters/issues", get(issues_filters))
         .route("/api/issues/search", get(search_issues))
-        .route("/", get_service(ServeFile::new(&index_path)))
+        .route("/", get_service(index.clone()))
         .nest_service(
             "/static",
             get_service(SetResponseHeader::overriding(
@@ -56,7 +66,7 @@ pub(crate) fn setup_router(cfg: &Arc<Config>, db: DynDB) -> Result<Router> {
                 HeaderValue::try_from(format!("max-age={STATIC_CACHE_MAX_AGE}"))?,
             )),
         )
-        .fallback_service(get_service(ServeFile::new(&index_path)))
+        .fallback_service(get_service(index))
         .layer(ServiceBuilder::new().layer(TraceLayer::new_for_http()))
         .with_state(RouterState { db });
 
