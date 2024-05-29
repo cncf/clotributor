@@ -1,6 +1,6 @@
 {
   "name": "clotributor",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "CLOTributor makes it easier to discover great opportunities to become a Cloud Native contributor.",
   "license": "Apache-2.0",
   "type": "module",
