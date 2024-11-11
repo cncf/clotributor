@@ -13,7 +13,7 @@ edition = "2021"
 rust-version = "1.81"
 
 [workspace.dependencies]
-anyhow = "1.0.92"
+anyhow = "1.0.93"
 async-trait = "0.1.83"
 axum = { version = "0.7.7", features = ["macros"] }
 bincode = "1.3.3"
@@ -46,7 +46,7 @@ time = { version = "0.3.36", features = [
     "parsing",
     "serde",
 ] }
-tokio = { version = "1.41.0", features = [
+tokio = { version = "1.41.1", features = [
     "macros",
     "process",
     "rt-multi-thread",
