@@ -111,7 +111,7 @@ async fn track_repository(
 
     // Fetch repository data from GitHub
     let gh_repo = gh
-        .repository(&gh_token, &repo.url, &repo.issues_filter_label)
+        .repository(&gh_token, &repo.url, repo.issues_filter_label.as_ref())
         .await?;
 
     // Update repository's GitHub data in db if needed
@@ -650,7 +650,9 @@ mod tests {
                 }])))
             });
         gh.expect_repository()
-            .with(eq(TOKEN1), eq(REPOSITORY_URL), eq(None))
+            .withf(|token, repository_url, issues_filter_label| {
+                token == TOKEN1 && repository_url == REPOSITORY_URL && issues_filter_label.is_none()
+            })
             .times(1)
             .returning(|_, _, _| Box::pin(future::ready(Err(format_err!(FAKE_ERROR)))));
 
@@ -675,7 +677,9 @@ mod tests {
                 }])))
             });
         gh.expect_repository()
-            .with(eq(TOKEN1), eq(REPOSITORY_URL), eq(None))
+            .withf(|token, repository_url, issues_filter_label| {
+                token == TOKEN1 && repository_url == REPOSITORY_URL && issues_filter_label.is_none()
+            })
             .times(1)
             .returning(|_, _, _| {
                 Box::pin(future::ready(Ok(RepoViewRepository {
