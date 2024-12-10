@@ -112,6 +112,7 @@ impl repo_view::RepoViewRepository {
 
 /// Trait that defines some operations a GH implementation must support.
 #[async_trait]
+#[allow(clippy::ref_option_ref)]
 #[cfg_attr(test, automock)]
 pub(crate) trait GH {
     /// Get repository information from GitHub.
@@ -119,7 +120,7 @@ pub(crate) trait GH {
         &self,
         token: &str,
         url: &str,
-        issues_filter_label: &Option<String>,
+        issues_filter_label: Option<&String>,
     ) -> Result<repo_view::RepoViewRepository>;
 }
 
@@ -139,7 +140,7 @@ impl GH for GHGraphQL {
         &self,
         token: &str,
         url: &str,
-        issues_filter_label: &Option<String>,
+        issues_filter_label: Option<&String>,
     ) -> Result<repo_view::RepoViewRepository> {
         // Do request to GraphQL API
         let http_client = setup_http_client(token)?;
@@ -148,12 +149,12 @@ impl GH for GHGraphQL {
             .saturating_sub(365.days())
             .format(&Iso8601::DEFAULT)?;
         let issues_label = issues_filter_label
-            .as_deref()
-            .unwrap_or(DEFAULT_ISSUES_FILTER_LABEL);
+            .cloned()
+            .unwrap_or(DEFAULT_ISSUES_FILTER_LABEL.to_string());
         let vars = repo_view::Variables {
             repo,
             owner,
-            issues_label: issues_label.to_string(),
+            issues_label,
             issues_since,
         };
         let req_body = &RepoView::build_query(vars);
