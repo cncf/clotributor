@@ -34,13 +34,13 @@ openssl = { version = "0.10.71", features = ["vendored"] }
 postgres-openssl = "0.5.1"
 postgres-types = { version = "0.2.9", features = ["derive"] }
 regex = "1.11.1"
-reqwest = { version = "0.12.14", features = ["json"] }
+reqwest = { version = "0.12.15", features = ["json"] }
 serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.140"
 serde_qs = "0.14.0"
 serde_yaml = "0.9.34"
 sha2 = "0.10.8"
-time = { version = "0.3.39", features = [
+time = { version = "0.3.41", features = [
     "formatting",
     "macros",
     "parsing",
