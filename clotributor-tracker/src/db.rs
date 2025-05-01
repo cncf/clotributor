@@ -1,11 +1,13 @@
-use crate::tracker::{Issue, Repository};
+use std::sync::Arc;
+
 use anyhow::Result;
 use async_trait::async_trait;
 use deadpool_postgres::Pool;
 #[cfg(test)]
 use mockall::automock;
-use std::sync::Arc;
 use uuid::Uuid;
+
+use crate::tracker::{Issue, Repository};
 
 /// Type alias to represent a DB trait object.
 pub(crate) type DynDB = Arc<dyn DB + Send + Sync>;

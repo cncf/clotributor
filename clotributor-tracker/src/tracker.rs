@@ -1,9 +1,5 @@
-#[cfg(not(test))]
-use crate::github;
-use crate::{
-    db::DynDB,
-    github::{repo_view, DynGH},
-};
+use std::time::{Duration, Instant};
+
 use anyhow::{bail, format_err, Context, Error, Result};
 use config::Config;
 use deadpool::unmanaged::{Object, Pool};
@@ -13,11 +9,17 @@ use serde::{Deserialize, Serialize};
 #[cfg(not(test))]
 use serde_json::Value;
 use sha2::{Digest, Sha256};
-use std::time::{Duration, Instant};
 use time::OffsetDateTime;
 use tokio::time::timeout;
 use tracing::{debug, info, instrument};
 use uuid::Uuid;
+
+#[cfg(not(test))]
+use crate::github;
+use crate::{
+    db::DynDB,
+    github::{repo_view, DynGH},
+};
 
 /// Maximum time that can take tracking a single repository.
 const REPOSITORY_TRACK_TIMEOUT: u64 = 300;
@@ -217,13 +219,16 @@ impl Repository {
 
     /// Update repository's digest.
     fn update_digest(&mut self) -> Result<()> {
-        let data = bincode::serialize(&(
-            &self.description,
-            &self.homepage_url,
-            &self.languages,
-            &self.topics,
-            &self.stars,
-        ))?;
+        let data = bincode::serde::encode_to_vec(
+            (
+                &self.description,
+                &self.homepage_url,
+                &self.languages,
+                &self.topics,
+                &self.stars,
+            ),
+            bincode::config::legacy(),
+        )?;
         let digest = hex::encode(Sha256::digest(data));
         self.digest = Some(digest);
         Ok(())
@@ -287,7 +292,9 @@ pub(crate) struct Issue {
 impl Issue {
     /// Update issue's digest.
     pub(crate) fn update_digest(&mut self) {
-        let Ok(data) = bincode::serialize(&(&self.title, &self.labels)) else {
+        let Ok(data) =
+            bincode::serde::encode_to_vec((&self.title, &self.labels), bincode::config::legacy())
+        else {
             return;
         };
         let digest = hex::encode(Sha256::digest(data));
@@ -383,7 +390,6 @@ impl Issue {
             // Good first issue
             if label == "good first issue" {
                 self.good_first_issue = Some(true);
-                continue;
             }
         }
     }
@@ -406,19 +412,16 @@ mod tests {
         github::{repo_view::*, MockGH},
     };
     use futures::future;
-    use lazy_static::lazy_static;
     use mockall::predicate::eq;
-    use std::sync::Arc;
+    use std::sync::{Arc, LazyLock};
     use time::format_description::well_known::Rfc3339;
 
     const TOKEN1: &str = "0001";
     const REPOSITORY_URL: &str = "https://repo1.url";
     const FAKE_ERROR: &str = "fake error";
 
-    lazy_static! {
-        static ref REPOSITORY_ID: Uuid =
-            Uuid::parse_str("00000000-0001-0000-0000-000000000000").unwrap();
-    }
+    static REPOSITORY_ID: LazyLock<Uuid> =
+        LazyLock::new(|| Uuid::parse_str("00000000-0001-0000-0000-000000000000").unwrap());
 
     #[test]
     fn repository_update_gh_data_no_changes() {
