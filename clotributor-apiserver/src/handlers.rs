@@ -1,4 +1,5 @@
-use crate::db::{DynDB, SearchIssuesInput};
+use std::{fmt::Display, path::Path, sync::Arc};
+
 use anyhow::{Error, Result};
 use axum::{
     body::Body,
@@ -13,7 +14,6 @@ use axum::{
 };
 use config::Config;
 use mime::APPLICATION_JSON;
-use std::{fmt::Display, path::Path, sync::Arc};
 use tower::ServiceBuilder;
 use tower_http::{
     services::{ServeDir, ServeFile},
@@ -21,6 +21,8 @@ use tower_http::{
     trace::TraceLayer,
 };
 use tracing::error;
+
+use crate::db::{DynDB, SearchIssuesInput};
 
 /// Index HTML document cache duration.
 const INDEX_CACHE_MAX_AGE: usize = 300;

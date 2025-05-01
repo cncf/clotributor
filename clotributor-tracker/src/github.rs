@@ -1,18 +1,19 @@
-use crate::tracker::Issue;
+use std::sync::{Arc, LazyLock};
+
 use anyhow::{bail, format_err, Context, Result};
 use async_trait::async_trait;
 use graphql_client::{GraphQLQuery, Response};
-use lazy_static::lazy_static;
 #[cfg(test)]
 use mockall::automock;
 use regex::Regex;
 use reqwest::StatusCode;
-use std::sync::Arc;
 use time::{
     ext::NumericalDuration,
     format_description::well_known::{Iso8601, Rfc3339},
     OffsetDateTime,
 };
+
+use crate::tracker::Issue;
 
 /// GitHub GraphQL API URL.
 const GITHUB_GRAPHQL_API_URL: &str = "https://api.github.com/graphql";
@@ -20,11 +21,10 @@ const GITHUB_GRAPHQL_API_URL: &str = "https://api.github.com/graphql";
 /// Label used to filter the issues we want to track.
 const DEFAULT_ISSUES_FILTER_LABEL: &str = "help wanted";
 
-lazy_static! {
-    static ref GITHUB_REPO_URL: Regex =
-        Regex::new("^https://github.com/(?P<owner>[^/]+)/(?P<repo>[^/]+)/?$")
-            .expect("exprs in GITHUB_REPO_URL to be valid");
-}
+static GITHUB_REPO_URL: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new("^https://github.com/(?P<owner>[^/]+)/(?P<repo>[^/]+)/?$")
+        .expect("exprs in GITHUB_REPO_URL to be valid")
+});
 
 /// Type alias to represent a GH trait object.
 pub(crate) type DynGH = Arc<dyn GH + Send + Sync>;

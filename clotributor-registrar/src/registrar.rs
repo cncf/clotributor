@@ -1,13 +1,15 @@
-use crate::db::DynDB;
+use std::{collections::HashMap, time::Duration};
+
 use anyhow::{bail, format_err, Context, Error, Result};
 use config::Config;
 use futures::stream::{self, StreamExt};
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use std::{collections::HashMap, time::Duration};
 use tokio::time::{timeout, Instant};
 use tracing::{debug, error, info, instrument};
+
+use crate::db::DynDB;
 
 /// Maximum time that can take processing a foundation data file.
 const FOUNDATION_TIMEOUT: u64 = 300;
@@ -175,7 +177,7 @@ pub(crate) struct Project {
 impl Project {
     /// Set the project's digest.
     fn set_digest(&mut self) -> Result<()> {
-        let data = bincode::serialize(&self)?;
+        let data = bincode::serde::encode_to_vec(&self, bincode::config::legacy())?;
         let digest = hex::encode(Sha256::digest(data));
         self.digest = Some(digest);
         Ok(())
