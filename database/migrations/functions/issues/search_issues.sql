@@ -129,6 +129,10 @@ begin
             case when p_input ? 'good_first_issue' and (p_input->>'good_first_issue')::boolean = true then
                 i.good_first_issue = true
             else true end
+        and
+            case when p_input ? 'no_linked_prs' and (p_input->>'no_linked_prs')::boolean = true then
+                i.has_linked_prs = false
+            else true end
     )
     select
         (

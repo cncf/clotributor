@@ -61,6 +61,13 @@ impl repo_view::RepoViewRepository {
                             return None;
                         }
 
+                        // Check if the are PRs linked to the issue
+                        let has_linked_prs = node
+                            .closed_by_pull_requests_references
+                            .as_ref()
+                            .and_then(|refs| refs.nodes.as_ref())
+                            .is_some_and(|prs| !prs.is_empty());
+
                         // Prepare labels
                         let labels = node
                             .labels
@@ -91,6 +98,7 @@ impl repo_view::RepoViewRepository {
                             number: node.number as i32,
                             labels,
                             published_at,
+                            has_linked_prs,
                             digest: None,
                             area: None,
                             kind: None,

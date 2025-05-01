@@ -175,6 +175,7 @@ mod tests {
                 mentor_available: Some(true),
                 good_first_issue: Some(true),
                 ts_query_web: Some("text".to_string()),
+                no_linked_prs: Some(true),
             }))
             .times(1)
             .returning(|_| Box::pin(future::ready(Ok((1, r#"[{"issue": "info"}]"#.to_string())))));
@@ -199,6 +200,7 @@ mod tests {
                             language[0]=rust&\
                             mentor_available=true&\
                             good_first_issue=true&\
+                            no_linked_prs=true&\
                             ts_query_web=text&\
                         ",
                     )

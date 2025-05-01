@@ -1,42 +1,52 @@
-query RepoView($repo: String!, $owner: String!, $issues_label: String!, $issues_since: DateTime!) {
-    repository(name: $repo, owner: $owner) {
-        description
-        homepageUrl
-        issues (
-            first: 50,
-            filterBy: {
-                assignee: null,
-                labels: [$issues_label],
-                since: $issues_since,
-                states: [OPEN]
-            },
-            orderBy: {field: CREATED_AT, direction: DESC},
-        ) {
-            nodes {
-                databaseId
-                title
-                url
-                number
-                publishedAt
-                labels (first: 10, orderBy: {field: NAME, direction: ASC}) {
-                    nodes {
-                        name
-                    }
-                }
-            }
+query RepoView(
+  $repo: String!
+  $owner: String!
+  $issues_label: String!
+  $issues_since: DateTime!
+) {
+  repository(name: $repo, owner: $owner) {
+    description
+    homepageUrl
+    issues(
+      first: 50
+      filterBy: {
+        assignee: null
+        labels: [$issues_label]
+        since: $issues_since
+        states: [OPEN]
+      }
+      orderBy: { field: CREATED_AT, direction: DESC }
+    ) {
+      nodes {
+        closedByPullRequestsReferences(first: 1) {
+          nodes {
+            number
+          }
         }
-        languages (first: 5, orderBy: {field: SIZE, direction: DESC}) {
-            nodes {
-                name
-            }
+        databaseId
+        title
+        url
+        number
+        publishedAt
+        labels(first: 10, orderBy: { field: NAME, direction: ASC }) {
+          nodes {
+            name
+          }
         }
-        repositoryTopics (first: 10) {
-            nodes {
-                topic {
-                    name
-                }
-            }
-        }
-        stargazerCount
+      }
     }
+    languages(first: 5, orderBy: { field: SIZE, direction: DESC }) {
+      nodes {
+        name
+      }
+    }
+    repositoryTopics(first: 10) {
+      nodes {
+        topic {
+          name
+        }
+      }
+    }
+    stargazerCount
+  }
 }

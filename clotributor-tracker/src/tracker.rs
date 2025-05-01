@@ -280,6 +280,7 @@ pub(crate) struct Issue {
     pub number: i32,
     pub labels: Vec<String>,
     pub published_at: OffsetDateTime,
+    pub has_linked_prs: bool,
     pub digest: Option<String>,
     pub area: Option<IssueArea>,
     pub kind: Option<IssueKind>,
@@ -292,9 +293,10 @@ pub(crate) struct Issue {
 impl Issue {
     /// Update issue's digest.
     pub(crate) fn update_digest(&mut self) {
-        let Ok(data) =
-            bincode::serde::encode_to_vec((&self.title, &self.labels), bincode::config::legacy())
-        else {
+        let Ok(data) = bincode::serde::encode_to_vec(
+            (&self.title, &self.labels, &self.has_linked_prs),
+            bincode::config::legacy(),
+        ) else {
             return;
         };
         let digest = hex::encode(Sha256::digest(data));
@@ -498,6 +500,7 @@ mod tests {
             number: 1,
             labels: vec!["label1".to_string()],
             published_at: OffsetDateTime::parse("1985-04-12T23:20:50.52Z", &Rfc3339).unwrap(),
+            has_linked_prs: false,
             digest: None,
             area: None,
             kind: None,
@@ -510,7 +513,7 @@ mod tests {
         issue.update_digest();
         assert_eq!(
             issue.digest,
-            Some("1538f7e131ac0277d3a4a7239fc0dd9b02e579dadb4fa1e9e9b074c9a789a594".to_string())
+            Some("bfd1f875bce09b3edc4adc1553431e887ae70f429d549cbd746adc722243aafd".to_string())
         );
     }
 
@@ -534,6 +537,7 @@ mod tests {
             number: 1,
             labels: vec!["label1".to_string(), "label2".to_string()],
             published_at: OffsetDateTime::parse("1985-04-12T23:20:50.52Z", &Rfc3339).unwrap(),
+            has_linked_prs: false,
             digest: None,
             area: None,
             kind: None,
@@ -568,6 +572,7 @@ mod tests {
                 "good first issue".to_string(),
             ],
             published_at: OffsetDateTime::parse("1985-04-12T23:20:50.52Z", &Rfc3339).unwrap(),
+            has_linked_prs: false,
             digest: None,
             area: None,
             kind: None,
@@ -690,6 +695,17 @@ mod tests {
                     homepage_url: None,
                     issues: RepoViewRepositoryIssues {
                         nodes: Some(vec![Some(RepoViewRepositoryIssuesNodes {
+                            closed_by_pull_requests_references: Some(
+                                RepoViewRepositoryIssuesNodesClosedByPullRequestsReferences {
+                                    nodes: Some(vec![
+                                        Some(
+                                            RepoViewRepositoryIssuesNodesClosedByPullRequestsReferencesNodes {
+                                                number: 1,
+                                            },
+                                        ),
+                                    ]),
+                                },
+                            ),
                             database_id: Some(1),
                             title: "issue1".to_string(),
                             url: "issue1_url".to_string(),
@@ -739,6 +755,7 @@ mod tests {
                     number: 2,
                     labels: vec![],
                     published_at: OffsetDateTime::now_utc(),
+                    has_linked_prs: true,
                     digest: None,
                     area: None,
                     kind: None,
@@ -773,8 +790,9 @@ mod tests {
                     ],
                     published_at: OffsetDateTime::parse("1985-04-12T23:20:50.52Z", &Rfc3339)
                         .unwrap(),
+                    has_linked_prs: true,
                     digest: Some(
-                        "3b9c21b338d14e57e8e590a434bdf4f5bd7e71528519ebdce8bf0907c647f94f"
+                        "b10bea4dd2f2cdc776db781bbfe376462eb395c859d916583555e61179f49007"
                             .to_string(),
                     ),
                     area: None,
