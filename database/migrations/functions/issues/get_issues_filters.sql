@@ -117,6 +117,11 @@ returns json as $$
                         "name": "Mentor available",
                         "key": "mentor_available",
                         "type": "boolean"
+                    },
+                    {
+                        "name": "No linked PRs",
+                        "key": "no_linked_prs",
+                        "type": "boolean"
                     }
                 ]
             }'::jsonb

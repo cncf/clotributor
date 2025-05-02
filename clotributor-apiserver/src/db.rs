@@ -81,4 +81,5 @@ pub(crate) struct SearchIssuesInput {
     pub mentor_available: Option<bool>,
     pub good_first_issue: Option<bool>,
     pub ts_query_web: Option<String>,
+    pub no_linked_prs: Option<bool>,
 }

@@ -25,6 +25,7 @@ interface Props {
   projects?: Filter;
   mentorAvailable: boolean;
   goodFirstIssue: boolean;
+  noLinkedPRs: boolean;
   onChange: (name: string, value: string, checked: boolean, type?: string) => void;
   onResetFilters: () => void;
   isLoadingFilters?: boolean;
@@ -91,6 +92,9 @@ const FiltersInLine = (props: Props) => {
     }
     if (props.goodFirstIssue) {
       otherFilters.push('good_first_issue');
+    }
+    if (props.noLinkedPRs) {
+      otherFilters.push('no_linked_prs');
     }
     return otherFilters;
   };

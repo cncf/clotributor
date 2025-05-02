@@ -43,6 +43,7 @@ const Search = () => {
   const [text, setText] = useState<string | undefined>();
   const [mentorAvailable, setMentorAvailable] = useState<boolean>(false);
   const [goodFirstIssue, setGoodFirstIssue] = useState<boolean>(false);
+  const [noLinkedPRs, setNoLinkedPRs] = useState<boolean>(false);
   const [fullFilters, setFullFilters] = useState<FilterSection[] | undefined>(undefined);
   const [cleanFilters, setCleanFilters] = useState<FilterSection[] | undefined>(undefined);
   const [filters, setFilters] = useState<FilterSection[] | undefined>(undefined);
@@ -60,7 +61,7 @@ const Search = () => {
     const filtersWithoutFoundation = { ...activeFilters };
     delete filtersWithoutFoundation[FilterKind.Foundation];
 
-    ifActiveFilters = !isEmpty(filtersWithoutFoundation) || mentorAvailable || goodFirstIssue;
+    ifActiveFilters = !isEmpty(filtersWithoutFoundation) || mentorAvailable || goodFirstIssue || noLinkedPRs;
   }
 
   const getExtraFilter = () => {
@@ -179,6 +180,7 @@ const Search = () => {
       pageNumber: pageNumber,
       mentor_available: mentorAvailable,
       good_first_issue: goodFirstIssue,
+      no_linked_prs: noLinkedPRs,
       ts_query_web: text,
       filters: { ...activeFilters, ...getExtraFilter() },
     };
@@ -269,6 +271,7 @@ const Search = () => {
     setText(formattedParams.ts_query_web);
     setMentorAvailable(formattedParams.mentor_available || false);
     setGoodFirstIssue(formattedParams.good_first_issue || false);
+    setNoLinkedPRs(formattedParams.no_linked_prs || false);
     setActiveFilters(formattedParams.filters || {});
     setPageNumber(formattedParams.pageNumber);
 
@@ -297,6 +300,7 @@ const Search = () => {
           ts_query_web: formattedParams.ts_query_web,
           mentor_available: formattedParams.mentor_available || false,
           good_first_issue: formattedParams.good_first_issue || false,
+          no_linked_prs: formattedParams.no_linked_prs || false,
           sort_by: sort.by,
           filters: formattedParams.filters || {},
           offset: calculateOffset(formattedParams.pageNumber),
@@ -385,6 +389,7 @@ const Search = () => {
                       activeFilters={activeFilters}
                       mentorAvailable={mentorAvailable}
                       goodFirstIssue={goodFirstIssue}
+                      noLinkedPRs={noLinkedPRs}
                       onChange={onFiltersChange}
                       visibleTitle={false}
                     />
@@ -434,6 +439,7 @@ const Search = () => {
               onResetFilters={onResetFilters}
               mentorAvailable={mentorAvailable}
               goodFirstIssue={goodFirstIssue}
+              noLinkedPRs={noLinkedPRs}
               isLoadingFilters={isUndefined(filters)}
               device="desktop"
               ifActiveFilters={ifActiveFilters}

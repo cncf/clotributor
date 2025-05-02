@@ -107,6 +107,7 @@ impl DB for PgDB {
                     number,
                     labels,
                     published_at,
+                    has_linked_prs,
                     digest,
                     area,
                     kind,
@@ -128,6 +129,7 @@ impl DB for PgDB {
                 number: row.get("number"),
                 labels: row.get("labels"),
                 published_at: row.get("published_at"),
+                has_linked_prs: row.get("has_linked_prs"),
                 digest: row.get("digest"),
                 area: row.get("area"),
                 kind: row.get("kind"),
@@ -158,14 +160,15 @@ impl DB for PgDB {
                 mentor_available,
                 mentor,
                 good_first_issue,
+                has_linked_prs,
                 published_at,
                 repository_id,
                 tsdoc
             ) values (
-                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14,
-                setweight(to_tsvector($15), 'A') ||
-                setweight(to_tsvector($16), 'B') ||
-                setweight(to_tsvector($17), 'C')
+                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15,
+                setweight(to_tsvector($16), 'A') ||
+                setweight(to_tsvector($17), 'B') ||
+                setweight(to_tsvector($18), 'C')
             ) on conflict (issue_id) do update
             set
                 title = excluded.title,
@@ -177,6 +180,7 @@ impl DB for PgDB {
                 mentor_available = excluded.mentor_available,
                 mentor = excluded.mentor,
                 good_first_issue = excluded.good_first_issue,
+                has_linked_prs = excluded.has_linked_prs,
                 tsdoc = excluded.tsdoc;
             ",
             &[
@@ -192,6 +196,7 @@ impl DB for PgDB {
                 &issue.mentor_available,
                 &issue.mentor,
                 &issue.good_first_issue,
+                &issue.has_linked_prs,
                 &issue.published_at,
                 &repository.repository_id,
                 &ts_texts.weight_a,

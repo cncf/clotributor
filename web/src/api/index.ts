@@ -137,6 +137,10 @@ class API_CLASS {
       q += '&good_first_issue=true';
     }
 
+    if (query.no_linked_prs) {
+      q += '&no_linked_prs=true';
+    }
+
     if (!isUndefined(query.filters) && !isEmpty(query.filters)) {
       Object.keys(query.filters!).forEach((k: string) => {
         query.filters![k].forEach((f: string, index: number) => {

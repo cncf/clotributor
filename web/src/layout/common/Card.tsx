@@ -391,7 +391,11 @@ const Card = (props: Props) => {
                 </ExternalLink>
               </div>
 
-              {(props.issue.good_first_issue || props.issue.kind || props.issue.difficulty || props.issue.area) && (
+              {(props.issue.good_first_issue ||
+                props.issue.kind ||
+                props.issue.difficulty ||
+                props.issue.area ||
+                props.issue.has_linked_prs) && (
                 <div
                   className={`d-flex flex-row align-items-center justify-content-end justify-content-sm-start flex-wrap overflow-hidden ms-auto ms-sm-0 ${styles.badgesWrapper}`}
                 >
@@ -432,6 +436,10 @@ const Card = (props: Props) => {
                       className={classNames('text-uppercase bg-blue', styles.badge)}
                       onClick={() => searchByFilter(FilterKind.Area, props.issue.area!)}
                     />
+                  )}
+
+                  {props.issue.has_linked_prs && (
+                    <GenericBadge content="Linked PRs" className={`text-uppercase bg-dark-orange ${styles.badge}`} />
                   )}
                 </div>
               )}
