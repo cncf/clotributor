@@ -73,6 +73,7 @@ begin
             i.difficulty as issue_difficulty,
             i.mentor_available as issue_mentor_available,
             i.good_first_issue as good_first_issue,
+            i.has_linked_prs as has_linked_prs,
             r.name as repository_name,
             r.url as repository_url,
             r.homepage_url as repository_homepage_url,
@@ -147,6 +148,7 @@ begin
                 'difficulty', issue_difficulty,
                 'mentor_available', issue_mentor_available,
                 'good_first_issue', good_first_issue,
+                'has_linked_prs', has_linked_prs,
                 'repository', json_build_object(
                     'name', repository_name,
                     'url', repository_url,
