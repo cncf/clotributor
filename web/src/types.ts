@@ -25,6 +25,7 @@ export interface Issue {
   difficulty?: string;
   mentor_available?: string;
   good_first_issue?: string;
+  has_linked_prs?: boolean;
   project: Project;
   repository: Repository;
 }
@@ -98,6 +99,7 @@ export interface BasicQuery {
   };
   mentor_available?: boolean;
   good_first_issue?: boolean;
+  no_linked_prs?: boolean;
 }
 
 export interface SearchQuery extends BasicQuery {

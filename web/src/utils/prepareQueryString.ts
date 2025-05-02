@@ -20,6 +20,9 @@ const getURLSearchParams = (query: BasicQuery): URLSearchParams => {
   if (!isUndefined(query.good_first_issue) && query.good_first_issue) {
     q.set('good_first_issue', 'true');
   }
+  if (!isUndefined(query.no_linked_prs) && query.no_linked_prs) {
+    q.set('no_linked_prs', 'true');
+  }
   return q;
 };
 
