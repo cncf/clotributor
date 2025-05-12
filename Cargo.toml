@@ -17,7 +17,7 @@ anyhow = "1.0.98"
 async-trait = "0.1.88"
 axum = { version = "0.8.4", features = ["macros"] }
 bincode = { version = "2.0.1", features = ["serde"] }
-clap = { version = "4.5.37", features = ["derive"] }
+clap = { version = "4.5.38", features = ["derive"] }
 config = "0.15.11"
 deadpool = "0.12.2"
 deadpool-postgres = { version = "0.14.1", features = ["serde"] }
@@ -45,7 +45,7 @@ time = { version = "0.3.41", features = [
     "parsing",
     "serde",
 ] }
-tokio = { version = "1.44.2", features = [
+tokio = { version = "1.45.0", features = [
     "macros",
     "process",
     "rt-multi-thread",
@@ -58,7 +58,7 @@ tokio-postgres = { version = "0.7.13", features = [
     "with-uuid-1",
 ] }
 tower = { version = "0.5.1", features = ["util"] }
-tower-http = { version = "0.6.2", features = ["fs", "set-header", "trace"] }
+tower-http = { version = "0.6.4", features = ["fs", "set-header", "trace"] }
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter", "json"] }
 uuid = { version = "1.16.0", features = ["serde"] }
