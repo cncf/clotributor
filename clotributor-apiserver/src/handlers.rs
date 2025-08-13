@@ -2,15 +2,15 @@ use std::{fmt::Display, path::Path, sync::Arc};
 
 use anyhow::{Error, Result};
 use axum::{
+    Router,
     body::Body,
     extract::{FromRef, RawQuery, State},
     http::{
-        header::{CACHE_CONTROL, CONTENT_TYPE},
         HeaderValue, Response, StatusCode,
+        header::{CACHE_CONTROL, CONTENT_TYPE},
     },
     response::IntoResponse,
     routing::{get, get_service},
-    Router,
 };
 use config::Config;
 use mime::APPLICATION_JSON;
@@ -120,7 +120,7 @@ mod tests {
     use super::*;
     use crate::db::MockDB;
     use axum::{
-        body::{to_bytes, Body},
+        body::{Body, to_bytes},
         http::Request,
     };
     use futures::future;

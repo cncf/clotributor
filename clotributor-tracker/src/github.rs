@@ -1,6 +1,6 @@
 use std::sync::{Arc, LazyLock};
 
-use anyhow::{bail, format_err, Context, Result};
+use anyhow::{Context, Result, bail, format_err};
 use async_trait::async_trait;
 use graphql_client::{GraphQLQuery, Response};
 #[cfg(test)]
@@ -8,9 +8,9 @@ use mockall::automock;
 use regex::Regex;
 use reqwest::StatusCode;
 use time::{
+    OffsetDateTime,
     ext::NumericalDuration,
     format_description::well_known::{Iso8601, Rfc3339},
-    OffsetDateTime,
 };
 
 use crate::tracker::Issue;
