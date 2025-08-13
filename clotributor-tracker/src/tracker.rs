@@ -1,6 +1,6 @@
 use std::time::{Duration, Instant};
 
-use anyhow::{bail, format_err, Context, Error, Result};
+use anyhow::{Context, Error, Result, bail, format_err};
 use config::Config;
 use deadpool::unmanaged::{Object, Pool};
 use futures::stream::{self, StreamExt};
@@ -18,7 +18,7 @@ use uuid::Uuid;
 use crate::github;
 use crate::{
     db::DynDB,
-    github::{repo_view, DynGH},
+    github::{DynGH, repo_view},
 };
 
 /// Maximum time that can take tracking a single repository.
@@ -411,7 +411,7 @@ mod tests {
     use super::*;
     use crate::{
         db::MockDB,
-        github::{repo_view::*, MockGH},
+        github::{MockGH, repo_view::*},
     };
     use futures::future;
     use mockall::predicate::eq;
