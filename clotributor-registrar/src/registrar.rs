@@ -33,7 +33,7 @@ pub(crate) async fn run(cfg: &Config, db: DynDB) -> Result<()> {
             .await
             {
                 Ok(result) => result,
-                Err(err) => Err(format_err!("{}", err)),
+                Err(err) => Err(format_err!("{err}")),
             }
             .context(format!(
                 "error processing foundation {foundation_id} data file"
@@ -49,7 +49,7 @@ pub(crate) async fn run(cfg: &Config, db: DynDB) -> Result<()> {
                 Ok(()) => final_result,
                 Err(task_err) => match final_result {
                     Ok(()) => Err(Into::into(task_err)),
-                    Err(final_err) => Err(format_err!("{:#}\n{:#}", final_err, task_err)),
+                    Err(final_err) => Err(format_err!("{final_err:#}\n{task_err:#}")),
                 },
             },
         );
