@@ -4,11 +4,13 @@ import js from '@eslint/js';
 import reactHooks from 'eslint-plugin-react-hooks';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import tseslint from 'typescript-eslint';
-import globals from "globals";
+import globals from 'globals';
+
+const tsRecommended = tseslint.plugin.configs['flat/recommended'];
 
 const config = [
   js.configs.recommended,
-  ...tseslint.configs.recommended,
+  ...tsRecommended,
   {
     linterOptions: {
       reportUnusedDisableDirectives: 'error',
