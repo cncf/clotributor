@@ -10,7 +10,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.30.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react-dom": "^19.2.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.9.2",
     "source-map-explorer": "^2.5.3"
@@ -25,7 +25,7 @@
     "@types/lodash": "^4.17.16",
     "@types/node": "^24.5.2",
     "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react-dom": "^19.2.2",
     "eslint": "^9.26.0",
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-prettier": "^5.4.0",
