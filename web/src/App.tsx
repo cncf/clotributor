@@ -1,4 +1,4 @@
-import 'clo-ui/dist/styles/default.scss';
+import 'clo-ui/styles/default.scss';
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 

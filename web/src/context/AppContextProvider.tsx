@@ -1,4 +1,5 @@
-import { detectActiveThemeMode, useSystemThemeMode } from 'clo-ui';
+import { useSystemThemeMode } from 'clo-ui/hooks/useSystemThemeMode';
+import { detectActiveThemeMode } from 'clo-ui/utils/detectActiveThemeMode';
 import isNull from 'lodash/isNull';
 import { createContext, Dispatch, useContext, useEffect, useReducer, useState } from 'react';
 

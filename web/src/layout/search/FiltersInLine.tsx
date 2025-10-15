@@ -1,13 +1,11 @@
 import classNames from 'classnames';
-import {
-  DotsLoading,
-  Dropdown,
-  ElementWithTooltip,
-  FilterOption,
-  FilterSection,
-  FiltersSection,
-  RefFiltersSection,
-} from 'clo-ui';
+import { DotsLoading } from 'clo-ui/components/DotsLoading';
+import { Dropdown } from 'clo-ui/components/Dropdown';
+import { ElementWithTooltip } from 'clo-ui/components/ElementWithTooltip';
+import { FilterOption } from 'clo-ui/components/FilterOption';
+import { FilterSection } from 'clo-ui/components/FilterSection';
+import { FiltersSection } from 'clo-ui/components/FiltersSection';
+import { RefFiltersSection } from 'clo-ui/components/RefFiltersSection';
 import { isUndefined } from 'lodash';
 import React, { useContext, useEffect, useRef } from 'react';
 import { IoMdCloseCircleOutline } from 'react-icons/io';

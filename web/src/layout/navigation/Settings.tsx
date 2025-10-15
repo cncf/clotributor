@@ -1,4 +1,4 @@
-import { Dropdown } from 'clo-ui';
+import { Dropdown } from 'clo-ui/components/Dropdown';
 import { FaCog } from 'react-icons/fa';
 
 import styles from './Settings.module.css';

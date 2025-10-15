@@ -1,4 +1,4 @@
-import { useScrollRestorationFix } from 'clo-ui';
+import { useScrollRestorationFix } from 'clo-ui/hooks/useScrollRestorationFix';
 import { useContext, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 

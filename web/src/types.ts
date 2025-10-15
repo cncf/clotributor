@@ -1,4 +1,5 @@
-import { Foundation, Maturity } from 'clo-ui';
+import { Foundation } from 'clo-ui/components/Foundation';
+import { Maturity } from 'clo-ui/components/Maturity';
 
 export interface OutletContext {
   setInvisibleFooter: (value: boolean) => void;

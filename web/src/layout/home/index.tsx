@@ -1,5 +1,6 @@
 import classnames from 'classnames';
-import { Loading, scrollToTop } from 'clo-ui';
+import { Loading } from 'clo-ui/components/Loading';
+import { scrollToTop } from 'clo-ui/utils/scrollToTop';
 import { isUndefined } from 'lodash';
 import { useEffect, useState } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
