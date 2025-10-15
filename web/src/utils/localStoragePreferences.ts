@@ -1,4 +1,4 @@
-import { detectActiveThemeMode } from 'clo-ui';
+import { detectActiveThemeMode } from 'clo-ui/utils/detectActiveThemeMode';
 import { isEmpty, sortBy } from 'lodash';
 
 import { DEFAULT_SEARCH_LIMIT, DEFAULT_SORT_BY } from '../data';

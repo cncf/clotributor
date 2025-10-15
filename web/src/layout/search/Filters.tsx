@@ -1,4 +1,5 @@
-import { FilterSection, FiltersSection } from 'clo-ui';
+import { FilterSection } from 'clo-ui/components/FilterSection';
+import { FiltersSection } from 'clo-ui/components/FiltersSection';
 import { isEmpty } from 'lodash';
 import React, { useContext } from 'react';
 import { IoMdCloseCircleOutline } from 'react-icons/io';

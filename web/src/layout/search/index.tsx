@@ -1,16 +1,14 @@
 import classNames from 'classnames';
-import {
-  FilterOption,
-  FilterSection,
-  Foundation,
-  Loading,
-  NoData,
-  Pagination,
-  PaginationLimitOptions,
-  scrollToTop,
-  Sidebar,
-  SortOptions,
-} from 'clo-ui';
+import { FilterOption } from 'clo-ui/components/FilterOption';
+import { FilterSection } from 'clo-ui/components/FilterSection';
+import { Foundation } from 'clo-ui/components/Foundation';
+import { Loading } from 'clo-ui/components/Loading';
+import { NoData } from 'clo-ui/components/NoData';
+import { Pagination } from 'clo-ui/components/Pagination';
+import { PaginationLimitOptions } from 'clo-ui/components/PaginationLimitOptions';
+import { Sidebar } from 'clo-ui/components/Sidebar';
+import { SortOptions } from 'clo-ui/components/SortOptions';
+import { scrollToTop } from 'clo-ui/utils/scrollToTop';
 import { isEmpty, isNull, isUndefined } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
 import { FaFilter } from 'react-icons/fa';

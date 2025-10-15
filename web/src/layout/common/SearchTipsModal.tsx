@@ -1,4 +1,4 @@
-import { Modal } from 'clo-ui';
+import { Modal } from 'clo-ui/components/Modal';
 import { FaRegLightbulb } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 

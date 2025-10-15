@@ -1,13 +1,11 @@
 import classNames from 'classnames';
-import {
-  Card as CardWrapper,
-  ExternalLink,
-  FoundationBadge,
-  GenericBadge,
-  Image,
-  MaturityBadge,
-  prettifyNumber,
-} from 'clo-ui';
+import { Card as CardWrapper } from 'clo-ui/components/Card';
+import { ExternalLink } from 'clo-ui/components/ExternalLink';
+import { FoundationBadge } from 'clo-ui/components/FoundationBadge';
+import { GenericBadge } from 'clo-ui/components/GenericBadge';
+import { Image } from 'clo-ui/components/Image';
+import { MaturityBadge } from 'clo-ui/components/MaturityBadge';
+import { prettifyNumber } from 'clo-ui/utils/prettifyNumber';
 import { isUndefined } from 'lodash';
 import moment from 'moment';
 import { useContext, useEffect, useState } from 'react';
