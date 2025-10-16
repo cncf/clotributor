@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/web"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     ignore:
       - dependency-name: "bootstrap"
         versions: ["5.2.x"]
@@ -19,7 +19,7 @@ updates:
   - package-ecosystem: "cargo"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     groups:
       backend:
         patterns:
@@ -31,7 +31,7 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     groups:
       github-actions:
         patterns:
@@ -40,7 +40,7 @@ updates:
   - package-ecosystem: "docker"
     directory: "/clotributor-apiserver"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     ignore:
       - dependency-name: "node"
         versions: ["19-alpine3.19", "20-alpine3.19", "21-alpine3.19", "22-alpine3.19", "22-alpine3.20", "23-alpine3.21"]
@@ -48,15 +48,15 @@ updates:
   - package-ecosystem: "docker"
     directory: "/clotributor-registrar"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
 
   - package-ecosystem: "docker"
     directory: "/clotributor-tracker"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
 
   - package-ecosystem: "docker"
     directory: "/database/migrations"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
 

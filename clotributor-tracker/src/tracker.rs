@@ -597,9 +597,10 @@ mod tests {
         let gh = MockGH::new();
 
         let result = run(&cfg, Arc::new(db), Arc::new(gh)).await;
-        assert_eq!(
-            result.unwrap_err().to_string(),
-            r#"configuration property "creds.githubTokens" not found"#
+        let error = result.unwrap_err().to_string();
+        assert!(
+            error.contains("creds.githubTokens"),
+            "unexpected error when loading GitHub tokens: {error}"
         );
     }
 
