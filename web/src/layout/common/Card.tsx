@@ -289,22 +289,22 @@ const Card = (props: Props) => {
                     >
                       {props.issue.repository.name}
                     </div>
-                    <FiExternalLink className="d-none d-md-block ms-2" />
+                    <FiExternalLink className="d-none d-md-block ms-2 flex-shrink-0" />
                   </div>
                 </div>
                 <ExternalLink
-                  className={`d-none d-sm-flex btn btn-link p-0 ${styles.repoLink}`}
+                  className={`d-none d-sm-flex btn btn-link p-0 text-truncate ${styles.repoLink}`}
                   label={`Repo ${props.issue.repository.name} link`}
                   href={props.issue.repository.url}
                 >
-                  <div className="d-flex flex-row align-items-center">
-                    <FaGithub className="me-2" />
+                  <div className="d-flex flex-row align-items-center text-truncate">
+                    <FaGithub className="flex-shrink-0 me-2" />
                     <div
                       className={`text-uppercase text-nowrap fw-bold text-truncate position-relative ${styles.repoName}`}
                     >
                       {props.issue.repository.name}
                     </div>
-                    <FiExternalLink className="d-none d-md-block ms-2" />
+                    <FiExternalLink className="d-none d-md-block ms-2 flex-shrink-0" />
                   </div>
                 </ExternalLink>
 
