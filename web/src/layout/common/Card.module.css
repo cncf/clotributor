@@ -97,6 +97,7 @@
 
 .repoInfo {
   opacity: 75%;
+  min-width: 0;
 }
 
 .tooltipMessage {
@@ -206,7 +207,6 @@
   .repoInfo {
     font-size: 0.85rem;
     width: 100%;
-    min-width: 0;
   }
 
   .repoLink,
