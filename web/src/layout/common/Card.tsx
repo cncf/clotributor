@@ -283,7 +283,7 @@ const Card = (props: Props) => {
               <div className={`d-flex flex-row align-items-baseline ${styles.repoInfo}`}>
                 <div className="d-flex d-sm-none text-truncate">
                   <div className="d-flex flex-row align-items-center text-truncate">
-                    <FaGithub className="me-2" />
+                    <FaGithub className="flex-shrink-0 me-2" />
                     <div
                       className={`text-uppercase text-nowrap fw-bold text-truncate position-relative ${styles.repoName}`}
                     >
