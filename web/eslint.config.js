@@ -35,6 +35,14 @@ const config = [
       },
     },
   },
+  {
+    files: ['src/**/*.{spec,test}.{js,jsx,ts,tsx}'],
+    languageOptions: {
+      globals: {
+        ...globals.vitest,
+      },
+    },
+  },
 ];
 
 export default config;

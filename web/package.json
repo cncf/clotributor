@@ -34,29 +34,29 @@
     "globals": "^16.0.0",
     "postcss": "^8.4.47",
     "prettier": "^3.5.3",
-    "react-scripts": "5.0.1",
     "sass": "^1.87.0",
     "shx": "^0.4.0",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.32.0"
-  },
-  "resolutions": {
-    "react-scripts/**/core-js-pure": "3.45.1"
+    "typescript-eslint": "^8.32.0",
+    "@vitejs/plugin-react": "^4.3.3",
+    "@vitest/coverage-v8": "^2.1.5",
+    "jsdom": "^25.0.1",
+    "vite": "^6.0.3",
+    "vitest": "^2.1.5"
   },
   "scripts": {
     "copy:static": "shx rm -rf src/static && shx mkdir src/static && shx cp -r public/static/* src",
-    "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "start": "yarn copy:static && DANGEROUSLY_DISABLE_HOST_CHECK=true DISABLE_ESLINT_PLUGIN=true react-scripts start",
-    "build": "yarn copy:static && INLINE_RUNTIME_CHUNK=false IMAGE_INLINE_SIZE_LIMIT=0 DISABLE_ESLINT_PLUGIN=true react-scripts build && shx cp -r build/static/* build && shx rm -rf build/static",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "analyze": "source-map-explorer 'build/assets/*.js'",
+    "start": "yarn copy:static && vite",
+    "build": "yarn copy:static && vite build",
+    "preview": "vite preview",
+    "test": "vitest --run --passWithNoTests",
     "lint": "eslint src --max-warnings 0",
     "lint:fix": "eslint src --max-warnings 0 --fix",
     "prettier:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "format:diff": "prettier --list-different \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
-  "proxy": "http://127.0.0.1:8000",
   "browserslist": {
     "production": [
       ">0.2%",
