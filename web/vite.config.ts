@@ -13,6 +13,8 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
+        quietDeps: true,
+        silenceDeprecations: ['import'],
         importers: [
           {
             findFileUrl(url: string) {
