@@ -15,6 +15,10 @@ dynamicResourceNamePrefixEnabled: false
 # Overwrites the installation's fullname generation (used for the dynamic resource name prefix)
 fullnameOverride: ""
 
+# Check database readiness init container configuration
+checkDbIsReadyInitContainer:
+  securityContext: {}
+
 # Directory path where the configuration files should be mounted
 configDir: "/home/clotributor/.config/clotributor"
 
@@ -38,9 +42,11 @@ log:
 # Database migrator configuration
 dbmigrator:
   job:
+    containerSecurityContext: {}
     image:
       # Database migrator image repository (without the tag)
       repository: clotributor/dbmigrator
+    podSecurityContext: {}
 
 # API server configuration
 apiserver:
@@ -52,24 +58,39 @@ apiserver:
     enabled: true
     annotations:
       kubernetes.io/ingress.class: nginx
+    backendServicePort: 80
     rules: []
     tls: []
   service:
+    allocateLoadBalancerNodePorts: true
+    annotations: {}
+    ports:
+      - name: http
+        port: 80
+        protocol: TCP
+        targetPort: 8000
     type: NodePort
-    port: 80
   deploy:
-    replicaCount: 1
+    containerSecurityContext: {}
     image:
       # API server image repository (without the tag)
       repository: clotributor/apiserver
+    readinessProbe:
+      httpGet:
+        path: /
+        port: 8000
+    replicaCount: 1
+    podSecurityContext: {}
     resources: {}
 
 # Registrar configuration
 registrar:
   cronjob:
+    containerSecurityContext: {}
     image:
       # Registrar image repository (without the tag)
       repository: clotributor/registrar
+    podSecurityContext: {}
     resources: {}
   # Number of foundations to process concurrently
   concurrency: 1
@@ -77,9 +98,11 @@ registrar:
 # Tracker configuration
 tracker:
   cronjob:
+    containerSecurityContext: {}
     image:
       # Tracker image repository (without the tag)
       repository: clotributor/tracker
+    podSecurityContext: {}
     resources: {}
   # Number of repositories to process concurrently
   # The number of tokens defined in creds.githubTokens must be equal or greater
@@ -90,12 +113,22 @@ tracker:
 # Values for postgresql chart dependency
 postgresql:
   enabled: true
+  auth:
+    database: clotributor
+    password: postgres
+    username: postgres
+  global:
+    security:
+      allowInsecureImages: true
   image:
-    repository: artifacthub/postgres
+    repository: docker.io/artifacthub/postgres
     tag: latest
   persistence:
     mountPath: /data
-  postgresqlUsername: postgres
-  postgresqlPassword: postgres
-  postgresqlDatabase: clotributor
-  postgresqlDataDir: /data/pgdata
+  primary:
+    extraVolumes:
+      - name: run
+        emptyDir: {}
+    extraVolumeMounts:
+      - name: run
+        mountPath: /var/run/postgresql
