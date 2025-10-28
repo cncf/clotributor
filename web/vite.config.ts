@@ -49,6 +49,7 @@ export default defineConfig({
     outDir: 'build',
     assetsDir: 'static',
     emptyOutDir: true,
+    sourcemap: true,
     rollupOptions: {
       output: {
         entryFileNames: (chunkInfo) =>
@@ -56,6 +57,23 @@ export default defineConfig({
             ? 'static/js/main.[hash].js'
             : 'static/js/[name].[hash].js',
         chunkFileNames: 'static/js/[name].[hash].js',
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            if (id.includes('react')) {
+              return 'vendor-react';
+            }
+            if (id.includes('clo-ui')) {
+              return 'vendor-cloui';
+            }
+            if (id.includes('lodash')) {
+              return 'vendor-lodash';
+            }
+            if (id.includes('moment')) {
+              return 'vendor-moment';
+            }
+            return 'vendor';
+          }
+        },
         assetFileNames: (assetInfo) => {
           if (assetInfo.name?.endsWith('.css')) {
             return 'static/css/main.[hash][extname]';
