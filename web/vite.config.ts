@@ -49,6 +49,21 @@ export default defineConfig({
     outDir: 'build',
     assetsDir: 'static',
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        entryFileNames: (chunkInfo) =>
+          chunkInfo.name === 'index'
+            ? 'static/js/main.[hash].js'
+            : 'static/js/[name].[hash].js',
+        chunkFileNames: 'static/js/[name].[hash].js',
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name?.endsWith('.css')) {
+            return 'static/css/main.[hash][extname]';
+          }
+          return 'static/media/[name].[hash][extname]';
+        },
+      },
+    },
   },
   test: {
     environment: 'jsdom',
