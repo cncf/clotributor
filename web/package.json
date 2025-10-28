@@ -6,7 +6,7 @@
   "type": "module",
   "dependencies": {
     "classnames": "^2.5.1",
-    "clo-ui": "https://github.com/cncf/clo-ui.git#v0.5.3",
+    "clo-ui": "https://github.com/cncf/clo-ui.git#v0.5.4",
     "lodash": "^4.17.21",
     "moment": "^2.30.1",
     "react": "^19.2.0",
@@ -46,9 +46,9 @@
   },
   "scripts": {
     "copy:static": "shx rm -rf src/static && shx mkdir src/static && shx cp -r public/static/* src",
-    "analyze": "source-map-explorer 'build/assets/*.js'",
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "yarn copy:static && vite",
-    "build": "yarn copy:static && vite build",
+    "build": "yarn copy:static && vite build && shx cp -r build/static/* build && shx rm -rf build/static",
     "preview": "vite preview",
     "test": "vitest --run --passWithNoTests",
     "lint": "eslint src --max-warnings 0",
