@@ -6,8 +6,8 @@ import { GenericBadge } from 'clo-ui/components/GenericBadge';
 import { Image } from 'clo-ui/components/Image';
 import { MaturityBadge } from 'clo-ui/components/MaturityBadge';
 import { prettifyNumber } from 'clo-ui/utils/prettifyNumber';
+import { format, fromUnixTime, parseISO } from 'date-fns';
 import { isUndefined } from 'lodash';
-import moment from 'moment';
 import { useContext, useEffect, useState } from 'react';
 import { BsDot } from 'react-icons/bs';
 import { FaChartBar, FaGithub } from 'react-icons/fa';
@@ -263,7 +263,7 @@ const Card = (props: Props) => {
                         className={`d-flex flex-row align-items-center ${styles.subtitle} ${styles.wrapperCalendar}`}
                       >
                         <GoCalendar className={`me-1 text-muted ${styles.calendarIcon}`} />
-                        <div>{moment(props.issue.project.accepted_at, 'YYYY-MM-DD').format('YYYY')}</div>
+                        <div>{format(parseISO(props.issue.project.accepted_at), 'yyyy')}</div>
                       </div>
                     )}
                   </div>
@@ -378,7 +378,7 @@ const Card = (props: Props) => {
 
             <div className={`d-flex flex-row align-items-center flex-nowrap ${styles.moreInfo}`}>
               <small className="text-muted text-nowrap">
-                {moment.unix(props.issue.published_at!).format('Do MMM YYYY')}
+                {format(fromUnixTime(props.issue.published_at!), 'do MMM yyyy')}
               </small>
 
               <div className="d-none d-sm-flex flex-row align-items-center">

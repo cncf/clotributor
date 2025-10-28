@@ -10,8 +10,9 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
+    "types": ["vite/client", "vitest"],
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx"

@@ -2,9 +2,9 @@ import './index.css';
 
 import { createRoot } from 'react-dom/client';
 
-import App from './App';
-
 const container = document.getElementById('clo-wrapper');
 const root = createRoot(container!);
 
-root.render(<App />);
+void import('./App').then(({ default: App }) => {
+  root.render(<App />);
+});
