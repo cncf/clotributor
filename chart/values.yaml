@@ -27,8 +27,8 @@ db:
   host: ""
   port: "5432"
   dbname: clotributor
-  user: postgres
-  password: postgres
+  user: clotributor
+  password: clotributor
 
 # Credentials
 creds:
@@ -115,13 +115,13 @@ postgresql:
   enabled: true
   auth:
     database: clotributor
-    password: postgres
-    username: postgres
+    password: clotributor
+    username: clotributor
   global:
     security:
       allowInsecureImages: true
   image:
-    repository: docker.io/artifacthub/postgres
+    repository: artifacthub/postgres
     tag: latest
   persistence:
     mountPath: /data
