@@ -6,7 +6,7 @@
   "type": "module",
   "dependencies": {
     "classnames": "^2.5.1",
-    "clo-ui": "https://github.com/cncf/clo-ui.git#v0.5.4",
+    "clo-ui": "https://github.com/cncf/clo-ui.git#v0.5.5",
     "date-fns": "^3.6.0",
     "lodash": "^4.17.21",
     "react": "^19.2.0",
