@@ -10,7 +10,7 @@ import { format, fromUnixTime, parseISO } from 'date-fns';
 import { isUndefined } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
 import { BsDot } from 'react-icons/bs';
-import { FaChartBar, FaGithub } from 'react-icons/fa';
+import { FaBook, FaChartBar, FaGithub } from 'react-icons/fa';
 import { FiExternalLink, FiStar } from 'react-icons/fi';
 import { GoCalendar } from 'react-icons/go';
 import { IoGlobeOutline } from 'react-icons/io5';
@@ -246,6 +246,14 @@ const Card = (props: Props) => {
                       <ExternalLink label="Project url" href={props.issue.repository.homepage_url} className="me-3">
                         <div className={`d-flex flex-row align-items-center text-muted ${styles.link}`}>
                           <IoGlobeOutline className={styles.urlIcon} />
+                        </div>
+                      </ExternalLink>
+                    )}
+
+                    {props.issue.repository.contributing_guidelines_url && (
+                      <ExternalLink label="Contributing guide" href={props.issue.repository.contributing_guidelines_url} className="me-3">
+                        <div className={`d-flex flex-row align-items-center text-muted ${styles.link}`}>
+                          <FaBook className={styles.urlIcon} />
                         </div>
                       </ExternalLink>
                     )}

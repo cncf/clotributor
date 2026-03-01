@@ -77,6 +77,7 @@ begin
             r.name as repository_name,
             r.url as repository_url,
             r.homepage_url as repository_homepage_url,
+            r.contributing_guidelines_url as repository_contributing_guidelines_url,
             r.topics as repository_topics,
             r.languages as repository_languages,
             r.stars as repository_stars,
@@ -153,6 +154,7 @@ begin
                     'name', repository_name,
                     'url', repository_url,
                     'homepage_url', repository_homepage_url,
+                    'contributing_guidelines_url', repository_contributing_guidelines_url,
                     'topics', repository_topics,
                     'languages', repository_languages,
                     'stars', repository_stars

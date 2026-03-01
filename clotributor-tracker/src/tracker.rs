@@ -169,6 +169,7 @@ pub(crate) struct Repository {
     pub description: Option<String>,
     pub url: String,
     pub homepage_url: Option<String>,
+    pub contributing_guidelines_url: Option<String>,
     pub topics: Option<Vec<String>>,
     pub languages: Option<Vec<String>>,
     pub stars: Option<i32>,
@@ -187,6 +188,12 @@ impl Repository {
 
         // Homepage url
         self.homepage_url.clone_from(&gh_repo.homepage_url);
+
+        // Contributing guidelines url
+        self.contributing_guidelines_url = gh_repo
+            .contributing_guidelines
+            .as_ref()
+            .and_then(|cg| cg.url.clone());
 
         // Languages
         self.languages = gh_repo.languages.as_ref().and_then(|languages| {
@@ -223,6 +230,7 @@ impl Repository {
             (
                 &self.description,
                 &self.homepage_url,
+                &self.contributing_guidelines_url,
                 &self.languages,
                 &self.topics,
                 &self.stars,

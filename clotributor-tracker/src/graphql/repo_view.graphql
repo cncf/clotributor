@@ -7,6 +7,9 @@ query RepoView(
   repository(name: $repo, owner: $owner) {
     description
     homepageUrl
+    contributingGuidelines {
+      url
+    }
     issues(
       first: 50
       filterBy: {

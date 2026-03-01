@@ -62,6 +62,7 @@ export interface Project {
 export interface Repository {
   name: string;
   homepage_url?: string;
+  contributing_guidelines_url?: string;
   url: string;
   topics: string[];
   languages: string[];

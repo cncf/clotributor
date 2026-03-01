@@ -38,6 +38,7 @@ create table if not exists repository (
     description text,
     url text not null check (url <> ''),
     homepage_url text,
+    contributing_guidelines_url text,
     topics text[],
     languages text[],
     stars integer,
