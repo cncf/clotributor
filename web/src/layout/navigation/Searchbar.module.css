@@ -2,9 +2,9 @@
   position: relative;
 }
 
-.questionButton,
-.questionButton:hover,
-.questionButton:focus {
+.bigSearch .questionButton,
+.bigSearch .questionButton:hover,
+.bigSearch .questionButton:focus {
   display: inline-flex;
   align-items: center;
   justify-content: center;
