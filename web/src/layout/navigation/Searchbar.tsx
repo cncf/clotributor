@@ -99,7 +99,9 @@ const Searchbar = (props: Props) => {
       />
       <div className={`d-none d-sm-inline-block ${styles.questionMark}`}>
         <button
-          className={classnames('btn btn-link text-decoration-none', { [styles.inNavbar]: props.inNavbar })}
+          className={classnames('btn btn-link text-decoration-none', styles.questionButton, {
+            [styles.inNavbar]: props.inNavbar,
+          })}
           onClick={() => setOpenTips(!openTips)}
         >
           <FaRegQuestionCircle className={`position-absolute ${styles.question}`} />
