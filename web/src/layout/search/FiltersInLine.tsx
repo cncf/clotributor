@@ -83,6 +83,14 @@ const FiltersInLine = (props: Props) => {
   const { ctx } = useContext(AppContext);
   const isEmbed = ctx.isEmbed;
 
+  const hasOptions = (section: FilterSection): boolean => {
+    if (Array.isArray(section.options)) {
+      return section.options.length > 0;
+    }
+
+    return Object.values(section.options).some((options: FilterOption[]) => options.length > 0);
+  };
+
   const getActiveFiltersForOther = (): string[] => {
     const otherFilters = [];
     if (props.mentorAvailable) {
@@ -122,7 +130,11 @@ const FiltersInLine = (props: Props) => {
           {props.filters.map((section: FilterSection, index: number) => {
             const isSearchSection = section.key && ['project', 'language'].includes(section.key);
             const activeFilters = section.key ? props.activeFilters[section.key] : getActiveFiltersForOther();
-            const isDisabled = props.disabledSections.includes((section.key || section.title) as FilterKind);
+            const key = (section.key || section.title) as FilterKind;
+            const isEmptyDependentSection =
+              [FilterKind.Maturity, FilterKind.Project].includes(key) && !hasOptions(section);
+            const isDisabledUntilFoundation = props.disabledSections.includes(key);
+            const isDisabled = isDisabledUntilFoundation || isEmptyDependentSection;
 
             if (isEmbed && section.key === FilterKind.Foundation) return null;
 
@@ -166,7 +178,13 @@ const FiltersInLine = (props: Props) => {
                     }
                     tooltipWidth={210}
                     tooltipArrowClassName={styles.tooltipArrow}
-                    tooltipMessage="Please select a foundation to use this filter"
+                    tooltipMessage={
+                      isDisabledUntilFoundation
+                        ? 'Please select a foundation to use this filter'
+                        : isEmptyDependentSection
+                          ? `No ${section.title.toLowerCase()} options are available for this foundation`
+                          : ''
+                    }
                     visibleTooltip={isDisabled}
                     active
                   />
