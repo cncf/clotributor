@@ -4,8 +4,8 @@ RUN apk --no-cache add musl-dev perl make
 WORKDIR /clotributor
 COPY Cargo.* ./
 COPY clotributor-apiserver clotributor-apiserver
-COPY clotributor-registrar/Cargo.* clotributor-registrar
-COPY clotributor-tracker/Cargo.* clotributor-tracker
+COPY clotributor-registrar clotributor-registrar
+COPY clotributor-tracker clotributor-tracker
 WORKDIR /clotributor/clotributor-apiserver
 RUN cargo build --release --locked
 
