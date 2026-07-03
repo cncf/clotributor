@@ -3,9 +3,9 @@ FROM rust:1.96.1-alpine3.24 as builder
 RUN apk --no-cache add musl-dev perl make
 WORKDIR /clotributor
 COPY Cargo.* ./
-COPY clotributor-apiserver/Cargo.* clotributor-apiserver
+COPY clotributor-apiserver clotributor-apiserver
 COPY clotributor-registrar clotributor-registrar
-COPY clotributor-tracker/Cargo.* clotributor-tracker
+COPY clotributor-tracker clotributor-tracker
 WORKDIR /clotributor/clotributor-registrar
 RUN cargo build --release --locked
 
