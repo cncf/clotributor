@@ -311,16 +311,14 @@ impl Issue {
         // Weight B
         let weight_b = format!(
             "{} {} {} {} {}",
-            &repo.foundation_id,
-            &repo.name,
-            &repo.description.clone().unwrap_or_default(),
-            &repo
-                .topics
+            repo.foundation_id,
+            repo.name,
+            repo.description.clone().unwrap_or_default(),
+            repo.topics
                 .as_ref()
                 .map(|topics| topics.join(" "))
                 .unwrap_or_default(),
-            &repo
-                .languages
+            repo.languages
                 .as_ref()
                 .map(|languages| languages.join(" "))
                 .unwrap_or_default()
